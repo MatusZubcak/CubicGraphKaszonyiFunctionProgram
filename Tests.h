@@ -1,0 +1,17 @@
+//
+// Created by Dell on 12. 10. 2021.
+//
+
+#ifndef CUBICGRAPHKASZONYIFUNCTIONPROGRAM_TESTS_H
+#define CUBICGRAPHKASZONYIFUNCTIONPROGRAM_TESTS_H
+
+
+class Tests {
+
+public:
+    static int run();
+
+};
+
+
+#endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_TESTS_H

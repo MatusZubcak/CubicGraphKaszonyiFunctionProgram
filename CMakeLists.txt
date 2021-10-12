@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.17)
+project(CubicGraphKaszonyiFunctionProgram)
+
+set(CMAKE_CXX_STANDARD 14)
+
+add_executable(CubicGraphKaszonyiFunctionProgram main.cpp Tests.cpp Tests.h)
