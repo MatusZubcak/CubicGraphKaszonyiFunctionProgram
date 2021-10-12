@@ -3,4 +3,4 @@ project(CubicGraphKaszonyiFunctionProgram)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(CubicGraphKaszonyiFunctionProgram main.cpp Tests.cpp Tests.h)
+add_executable(CubicGraphKaszonyiFunctionProgram main.cpp Tests.cpp Tests.h Edge.cpp Edge.h GraphExceptions.cpp GraphExceptions.h)
