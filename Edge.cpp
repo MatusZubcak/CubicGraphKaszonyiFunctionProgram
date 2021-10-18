@@ -4,12 +4,14 @@
 
 #include "Edge.h"
 
-Edge::Edge(int vertex1, int vertex2) :
+Edge::Edge(unsigned int vertex1, unsigned int vertex2) :
     incidentVertices ( std::min(vertex1, vertex2), std::max(vertex1, vertex2)){
 
     this->kaszonyiValue = -1;
     this->multiplicity = 1;
 }
+
+Edge::Edge(std::pair<unsigned int, unsigned int> vertices) : Edge(vertices.first, vertices.second) {}
 
 void Edge::setKaszonyiValue(int kaszonyiValue) {
     this->kaszonyiValue = kaszonyiValue;
@@ -43,7 +45,7 @@ void Edge::decrementMultiplicity() {
     }
 }
 
-int Edge::getMultiplicity() {
+int Edge::getMultiplicity() const {
     return multiplicity;
 }
 
@@ -82,4 +84,25 @@ bool operator>=(const Edge &e1, const Edge &e2) {
         return true;
 
     return e1 > e2;
+}
+
+bool Edge::isIncidentWith(unsigned int vertex) const {
+    if(incidentVertices.first == vertex || incidentVertices.second == vertex){
+        return true;
+    }
+    return false;
+}
+
+unsigned int Edge::getSecondVertex(unsigned int vertex) const {
+    if(incidentVertices.first == vertex){
+        return incidentVertices.second;
+    } else if(incidentVertices.second == vertex){
+        return  incidentVertices.first;
+    }
+
+    throw VertexNotIncidentException();
+}
+
+bool Edge::isLoop() const {
+    return incidentVertices.first == incidentVertices.second;
 }

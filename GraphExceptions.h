@@ -20,5 +20,16 @@ struct EdgeMaximalMultiplicityException : std::exception {
     const char *what() const noexcept override;
 };
 
+struct LoopSuppressionException : std::exception {
+    const char *what() const noexcept override;
+};
+
+struct EdgeDoesNotExistException : std::exception {
+    const char *what() const noexcept override;
+};
+
+struct VertexNotIncidentException : std::exception {
+    const char *what() const noexcept override;
+};
 
 #endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_GRAPHEXCEPTIONS_H

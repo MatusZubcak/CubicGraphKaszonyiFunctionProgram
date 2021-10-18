@@ -61,12 +61,25 @@ int Tests::run(){
             Edge(0,1), Edge(5,7), Edge(10,1)
     };
 
-    CubicGraph cg1(testVertices1, testEdges1);
+    CubicGraph cg1(testVertices1, testEdges1, 0);
     assert(cg1.getVertices() == testVertices1);
     assert(cg1.getEdges() == testEdges1);
 
+    Edge e12_another (std::pair<unsigned int, unsigned int>(1, 2));
+    assert(e12_another == e12);
+
+    Edge e11(1, 1);
+    assert(e11.isLoop());
+    assert(!e12.isLoop());
+
+    assert(e11.getSecondVertex(1) == 1);
+    assert(e12.getSecondVertex(2) == 1);
+    assert(e12.getSecondVertex(1) == 2);
+    assert(e12.isIncidentWith(1));
+    assert(e12.isIncidentWith(2));
+    assert(!e12.isIncidentWith(3));
 
 
-    assert(0 == 1);
+    //assert(0 == 1);
     return 0;
 }

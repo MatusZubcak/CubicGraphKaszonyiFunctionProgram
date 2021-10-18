@@ -16,3 +16,15 @@ const char *EdgeMinimalMultiplicityException::what() const noexcept {
 const char *EdgeMaximalMultiplicityException::what() const noexcept {
     return "Edge multiplicity can't be incremented because it already has maximal viable multiplicity of 3";
 }
+
+const char *LoopSuppressionException::what() const noexcept {
+    return "Loop can't be suppressed";
+}
+
+const char *EdgeDoesNotExistException::what() const noexcept {
+    return "Edge can't be suppressed because it does not exist";
+}
+
+const char *VertexNotIncidentException::what() const noexcept {
+    return "Second vertex can't be found because edge is not incident with entered vertex";
+}

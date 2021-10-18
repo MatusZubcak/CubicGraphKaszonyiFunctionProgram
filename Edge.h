@@ -25,7 +25,9 @@ private:
     friend bool operator>=(const Edge& e1, const Edge& e2);
 public:
 
-    Edge(int vertex1, int vertex2);
+    Edge(unsigned int vertex1,unsigned int vertex2);
+
+    explicit Edge(std::pair<unsigned int, unsigned int> vertices);
 
     void setKaszonyiValue(int kaszonyiValue);
 
@@ -39,7 +41,13 @@ public:
 
     void decrementMultiplicity();
 
-    int getMultiplicity();
+    int getMultiplicity() const;
+
+    bool isIncidentWith(unsigned int vertex) const;
+
+    unsigned int getSecondVertex(unsigned int vertex) const;
+
+    bool isLoop() const;
 
 };
 
