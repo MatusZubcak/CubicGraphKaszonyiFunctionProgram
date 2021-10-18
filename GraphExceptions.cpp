@@ -4,6 +4,11 @@
 
 #include "GraphExceptions.h"
 
+const char* BadlyDefinedGraphException::what() const noexcept
+{
+    return "Badly defined Graph exception";
+}
+
 const char *EdgeMinimalMultiplicityException::what() const noexcept {
     return "Edge multiplicity can't be decremented because it already has minimal viable multiplicity";
 }

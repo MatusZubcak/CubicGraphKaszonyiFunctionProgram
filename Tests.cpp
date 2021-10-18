@@ -3,8 +3,10 @@
 //
 
 #include <cassert>
+#include <set>
 #include "Tests.h"
 #include "Edge.h"
+#include "CubicGraph.h"
 
 int Tests::run(){
 
@@ -50,6 +52,21 @@ int Tests::run(){
     e12.decrementMultiplicity();
     assert(e12.getMultiplicity() == 1);
 
+    std::set<unsigned int> testVertices1 = {
+            0, 1, 5, 7, 10
+    };
 
+    std::set<Edge> testEdges1 ={
+            Edge(0,5), Edge(1, 7), Edge(10, 0),
+            Edge(0,1), Edge(5,7), Edge(10,1)
+    };
+
+    CubicGraph cg1(testVertices1, testEdges1);
+    assert(cg1.getVertices() == testVertices1);
+    assert(cg1.getEdges() == testEdges1);
+
+
+
+    assert(0 == 1);
     return 0;
 }

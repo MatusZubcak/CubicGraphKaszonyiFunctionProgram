@@ -8,6 +8,10 @@
 
 #include <exception>
 
+struct BadlyDefinedGraphException : std::exception {
+    const char *what() const noexcept override;
+};
+
 struct EdgeMinimalMultiplicityException : std::exception {
     const char *what() const noexcept override;
 };
