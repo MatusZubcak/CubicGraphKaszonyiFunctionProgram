@@ -5,9 +5,11 @@
 #include <cassert>
 #include <set>
 #include <iostream>
+#include <vector>
 #include "Tests.h"
 #include "Edge.h"
 #include "CubicGraph.h"
+#include "KaszonyiFactorFunction.h"
 
 int Tests::run(){
 
@@ -358,6 +360,162 @@ int Tests::run(){
     CubicGraph test14_expectedGraph(test8to14_expectedVertices, test14_expectedEdges);
     assert(test14_suppressed == test14_expectedGraph);
 
+
+
+    std::set<unsigned int> test15_vertices{1,2,3};
+    std::set<Edge> test15_edges{Edge(2,3), Edge(1,3)};
+    Edge t15e12(1,2);
+    t15e12.incrementMultiplicity();
+    test15_edges.insert(t15e12);
+    CubicGraph test15_graph(test15_vertices, test15_edges);
+
+    CubicGraph test15_suppressed = test15_graph.suppressEdge(1,2);
+    std::set<unsigned int> test15_expectedVertices{3};
+    std::set<Edge> test15_expectedEdges{Edge(3,3)};
+    CubicGraph test15_expectedGraph(test15_expectedVertices, test15_expectedEdges);
+    assert(test15_suppressed == test15_expectedGraph);
+
+
+
+    //test kedy vlavo aj v pravo je nasobna hrana/slucka
+    std::set<unsigned int> test16_vertices{1,2,3,4};
+    std::set<Edge> test16_edges{Edge(1,2)};
+    Edge t16e13(1,3);
+    Edge t16e24(2,4);
+    t16e13.incrementMultiplicity();
+    t16e24.incrementMultiplicity();
+    test16_edges.insert(t16e24);
+    test16_edges.insert(t16e13);
+    CubicGraph test16_graph(test16_vertices, test16_edges);
+
+    CubicGraph test16_suppressed = test16_graph.suppressEdge(1,2);
+    std::set<unsigned int> test16_expectedVertices{3,4};
+    std::set<Edge> test16_expectedEdges{Edge(3,3), Edge(4,4)};
+    CubicGraph test16_expectedGraph(test16_expectedVertices, test16_expectedEdges);
+    assert(test16_suppressed == test16_expectedGraph);
+
+    std::set<unsigned int> test17_vertices{1,2};
+    std::set<Edge> test17_edges{Edge(1,1), Edge(1,2), Edge(2,2)};
+    CubicGraph test17_graph(test17_vertices, test17_edges);
+
+    CubicGraph test17_suppressed = test17_graph.suppressEdge(1,2);
+    std::set<unsigned int> test17_expectedVertices{};
+    std::set<Edge> test17_expectedEdges{};
+    CubicGraph test17_expectedGraph(test17_expectedVertices, test17_expectedEdges, 2);
+    assert(test17_suppressed == test17_expectedGraph);
+
+    std::set<unsigned int> test18_vertices{1,2,3};
+    std::set<Edge> test18_edges{Edge(1,2), Edge(2,2)};
+    Edge t18e13(1,3);
+    t18e13.incrementMultiplicity();
+    test18_edges.insert(t18e13);
+    CubicGraph test18_graph(test18_vertices, test18_edges);
+
+    CubicGraph test18_suppressed = test18_graph.suppressEdge(1,2);
+    std::set<unsigned int> test18_expectedVertices{3};
+    std::set<Edge> test18_expectedEdges{Edge(3,3)};
+    CubicGraph test18_expectedGraph(test18_expectedVertices, test18_expectedEdges, 1);
+    assert(test18_suppressed == test18_expectedGraph);
+
+
+
+    //diamond test
+    std::set<unsigned int> test19_vertices{1,2,3,4,5,6};
+    std::set<Edge> test19_edges{Edge(1,2), Edge(2,3),
+                                Edge(3,5), Edge(2,4),
+                                Edge(4,5), Edge(3,4),
+                                Edge(5,6)};
+    CubicGraph test19_graph(test19_vertices, test19_edges);
+
+    CubicGraph test19_suppressed = test19_graph.suppressEdge(3,4);
+    std::set<unsigned int> test19_expectedVertices{1,2,5,6};
+    std::set<Edge> test19_expectedEdges{Edge(1,2), Edge(5,6)};
+    Edge t19e25(2,5);
+    t19e25.incrementMultiplicity();
+    test19_expectedEdges.insert(t19e25);
+    CubicGraph test19_expectedGraph(test19_expectedVertices, test19_expectedEdges);
+    assert(test19_suppressed == test19_expectedGraph);
+
+
+    std::set<unsigned int> test20_vertices{1,2,3,4};
+    std::set<Edge> test20_edges{Edge(1,2), Edge(2,3),
+                                Edge(2,4)};
+    Edge t20e34(3,4);
+    t20e34.incrementMultiplicity();
+    test20_edges.insert(t20e34);
+    CubicGraph test20_graph(test20_vertices, test20_edges);
+
+    CubicGraph test20_suppressed = test20_graph.suppressEdge(3,4);
+    std::set<unsigned int> test20_expectedVertices{1,2};
+    std::set<Edge> test20_expetedEdges{Edge(1,2), Edge(2,2)};
+    CubicGraph test20_expectedGraph(test20_expectedVertices, test20_expetedEdges);
+    assert(test20_suppressed == test20_expectedGraph);
+    assert(test20_suppressed.getEdges() == test20_expetedEdges);
+    for(auto e : test20_suppressed.getEdges()){
+        assert(e.getMultiplicity() == 1);
+    }
+
+
+
+    std::set<unsigned int> J3_vertices{1,2,3,4,5,6,7,8,9,10,11,12};
+    std::set<Edge> J3_edges{Edge(1,2), Edge(2,3),
+                            Edge(3,1), Edge(1,4),
+                            Edge(2,5), Edge(3,6),
+                            Edge(4,7), Edge(4,8),
+                            Edge(5,9), Edge(5,10),
+                            Edge(6,11), Edge(6,12),
+                            Edge(7,10), Edge(7,12),
+                            Edge(8,9), Edge(8, 11),
+                            Edge(9,12), Edge(10,11)};
+    CubicGraph J3(J3_vertices, J3_edges);
+    std::vector<unsigned int> J3_expectedKaszonyiValues{
+        0, 0, 6,
+        0, 6,
+        6,
+        3, 3,
+        3, 3,
+        3, 3,
+        3, 3, 3, 3, 3, 3
+    };
+    std::vector<unsigned int> J3_KaszonyiValuesAll;
+    for(auto e : J3_edges){
+        J3_KaszonyiValuesAll.push_back(J3.getKaszonyiValue(e));
+    }
+    assert(J3_KaszonyiValuesAll == J3_expectedKaszonyiValues);
+
+
+    //KASZONYI FUNCTION TESTS
+    KaszonyiFactorFunction kaszonyiFunction;
+
+    assert(kaszonyiFunction.getKaszonyiValue(K4_vertices, K4_edges) == 1);
+
+    std::set<unsigned int> test21_vertices={1,2};
+    std::set<Edge> test21_edges={Edge(1,1), Edge(1,2),
+                                 Edge(2,2)};
+    assert(kaszonyiFunction.getKaszonyiValue(test21_vertices, test21_edges) == 0);
+
+    std::set<unsigned int> test22_vertices={1,2,3,4};
+    std::set<Edge> test22_edges{Edge(1,2), Edge(3,4)};
+    Edge t22e23(2,3);
+    Edge t22e14(1,4);
+    t22e14.incrementMultiplicity();
+    t22e23.incrementMultiplicity();
+    test22_edges.insert(t22e23);
+    test22_edges.insert(t22e14);
+    assert(kaszonyiFunction.getKaszonyiValue(test22_vertices, test22_edges) == 2);
+
+    std::set<unsigned int> test23_vertices={1,2};
+    Edge t23e12(1,2);
+    t23e12.incrementMultiplicity();
+    t23e12.incrementMultiplicity();
+    std::set<Edge> test23_edges={t23e12};
+    assert(kaszonyiFunction.getKaszonyiValue(test23_vertices, test23_edges) == 1);
+
+
+
+
+
     std::cout << "ALL TESTS PASSED" << std::endl;
+    //assert(0 == 1);
     return 0;
 }

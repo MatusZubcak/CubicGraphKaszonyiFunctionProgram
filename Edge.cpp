@@ -21,7 +21,7 @@ int Edge::getKaszonyiValue() const {
     return kaszonyiValue;
 }
 
-std::pair<int, int> Edge::getIncidentvertices() {
+std::pair<unsigned int, unsigned int> Edge::getIncidentvertices() {
     return incidentVertices;
 }
 

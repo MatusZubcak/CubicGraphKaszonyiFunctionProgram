@@ -33,7 +33,7 @@ public:
 
     int getKaszonyiValue() const;
 
-    std::pair<int, int> getIncidentvertices();
+    std::pair<unsigned int, unsigned int> getIncidentvertices();
 
     std::string toString() const;
 

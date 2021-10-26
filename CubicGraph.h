@@ -7,7 +7,9 @@
 
 
 #include <set>
+#include <memory>
 #include "Edge.h"
+#include "KaszonyiFunction.h"
 
 class CubicGraph {
 private:
@@ -15,6 +17,7 @@ private:
     std::set<Edge> edges;
     unsigned int depth;
     unsigned int numberOfIsolatedCircles;
+    std::shared_ptr<KaszonyiFunction> strategy;
 
     void addEdge(Edge e);
     CubicGraph suppressEdgeWithMultiplicity1(Edge edge);
@@ -36,6 +39,8 @@ public:
     unsigned int getNumberOfIsolatedCircles() const;
 
     unsigned int getDepth() const;
+
+    unsigned int getKaszonyiValue(Edge edge);
 
     CubicGraph suppressEdge(Edge edge);
     CubicGraph suppressEdge(unsigned int v1, unsigned int v2);

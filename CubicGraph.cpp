@@ -4,13 +4,14 @@
 
 #include <iostream>
 #include "CubicGraph.h"
-#include "GraphExceptions.h"
+#include "KaszonyiFactorFunction.h"
 
 CubicGraph::CubicGraph(std::set<unsigned int> &vertices, std::set<Edge> &edges, unsigned int numberOfIsolatedCircles) {
     this->vertices = vertices;
     this->edges = edges;
     depth = 0;
     this->numberOfIsolatedCircles = numberOfIsolatedCircles;
+    strategy = std::shared_ptr<KaszonyiFunction>(new KaszonyiFactorFunction());
 
     for(auto e : edges){
         if( vertices.find(e.getIncidentvertices().first) == vertices.end() ||
@@ -37,6 +38,26 @@ unsigned int CubicGraph::getNumberOfIsolatedCircles() const {
 
 unsigned int CubicGraph::getDepth() const {
     return depth;
+}
+
+unsigned int CubicGraph::getKaszonyiValue(Edge edge) {
+    if(edges.find(edge) == edges.end()){
+        throw EdgeDoesNotExistException();
+    }
+
+    if(edges.find(edge)->getKaszonyiValue() == -1){
+        Edge edgeToBeUpdated = *edges.find(edge);
+        CubicGraph suppressedGraph = this->suppressEdge(edge);
+        edgeToBeUpdated.setKaszonyiValue
+            (this->strategy->getKaszonyiValue(suppressedGraph.vertices,
+                                              suppressedGraph.edges,
+                                              suppressedGraph.numberOfIsolatedCircles));
+
+        edges.erase(edge);
+        edges.insert(edgeToBeUpdated);
+    }
+
+    return edges.find(edge)->getKaszonyiValue();
 }
 
 bool operator==(const CubicGraph &cg1, const CubicGraph &cg2) {
@@ -96,10 +117,10 @@ void CubicGraph::addEdge(Edge e) {
         if(edges.find(e) == edges.end()) {
             edges.insert(e);
         }else {
-            Edge tmpEdge = *edges.find(e);
-            tmpEdge.incrementMultiplicity();
+            Edge incrementedEdge = *edges.find(e);
+            incrementedEdge.incrementMultiplicity();
             edges.erase(e);
-            edges.insert(tmpEdge);
+            edges.insert(incrementedEdge);
         }
     }
 }
@@ -203,7 +224,6 @@ CubicGraph CubicGraph::suppressEdgeWithMultiplicity2(Edge edge) {
     edges.erase(edge);
     std::set<unsigned int> newVertices = verticesAfterSuppressedEdge(edge);
     std::set<Edge> newEdges;
-    newEdges.erase(edge);
 
     unsigned int v1 = edge.getIncidentvertices().first;
     unsigned int v2 = edge.getIncidentvertices().second;
