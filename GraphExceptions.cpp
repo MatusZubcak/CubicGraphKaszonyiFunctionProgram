@@ -28,3 +28,17 @@ const char *EdgeDoesNotExistException::what() const noexcept {
 const char *VertexNotIncidentException::what() const noexcept {
     return "Second vertex can't be found because edge is not incident with entered vertex";
 }
+
+const char *GraphloaderEmptyException::what() const noexcept {
+    return "You tried to get element from empty GraphLoader";
+}
+
+const char* WrongNumberOfVerticesException::what() const noexcept
+{
+    return "Bad number of vertices in file from which you tried loading CubicGraph";
+}
+
+const char* BadFileEndingException::what() const noexcept
+{
+    return "There is a small amount of remaining adjacency lists at the end of the file that cannot belong to any graph of given size";
+}

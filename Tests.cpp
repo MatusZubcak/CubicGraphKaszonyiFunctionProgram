@@ -10,6 +10,7 @@
 #include "Edge.h"
 #include "CubicGraph.h"
 #include "KaszonyiFactorFunction.h"
+#include "AdjListsGraphLoader.h"
 
 int Tests::run(){
 
@@ -510,6 +511,50 @@ int Tests::run(){
     t23e12.incrementMultiplicity();
     std::set<Edge> test23_edges={t23e12};
     assert(kaszonyiFunction.getKaszonyiValue(test23_vertices, test23_edges) == 1);
+
+
+    AdjListsGraphLoader graphLoader("GraphLoader_test1.txt");
+
+    std::set<unsigned int> graphLoader_test1_vertices{0,1,2,3};
+    std::set<Edge> graphLoader_test1_edges1{Edge(0,0), Edge(0,1),
+                                           Edge(1,2), Edge(1,3)};
+    Edge gl_t1e23 (2,3);
+    gl_t1e23.incrementMultiplicity();
+    graphLoader_test1_edges1.insert(gl_t1e23);
+    CubicGraph graphLoader_test1_graph1(graphLoader_test1_vertices, graphLoader_test1_edges1);
+    assert(graphLoader.hasNext());
+    assert(graphLoader.nextGraph() == graphLoader_test1_graph1);
+
+    std::set<Edge> graphLoader_test1_edges2;
+    Edge gl_t1e01(0,1);
+    gl_t1e01.incrementMultiplicity();
+    gl_t1e01.incrementMultiplicity();
+    gl_t1e23.incrementMultiplicity();
+    graphLoader_test1_edges2.insert(gl_t1e01);
+    graphLoader_test1_edges2.insert(gl_t1e23);
+    CubicGraph graphLoader_test1_graph2(graphLoader_test1_vertices, graphLoader_test1_edges2);
+    assert(graphLoader.hasNext());
+    assert(graphLoader.nextGraph() == graphLoader_test1_graph2);
+
+    std::set<Edge> graphLoader_test1_edges3{Edge(0,1), Edge(0,2),
+                                            Edge(0,3), Edge(1,2),
+                                            Edge(1,3), Edge(2,3)};
+    CubicGraph graphLoader_test1_graph3(graphLoader_test1_vertices, graphLoader_test1_edges3);
+    assert(graphLoader.hasNext());
+    assert(graphLoader.nextGraph() == graphLoader_test1_graph3);
+
+    std::set<Edge> graphLoader_test1_edges4{Edge(0,3), Edge(1,2)};
+    Edge gl_t1e02 (0,2);
+    Edge gl_t1e13 (1,3);
+    gl_t1e02.incrementMultiplicity();
+    gl_t1e13.incrementMultiplicity();
+    graphLoader_test1_edges4.insert(gl_t1e02);
+    graphLoader_test1_edges4.insert(gl_t1e13);
+    CubicGraph graphLoader_test1_graph4(graphLoader_test1_vertices, graphLoader_test1_edges4);
+    assert(graphLoader.hasNext());
+    assert(graphLoader.nextGraph() == graphLoader_test1_graph4);
+
+    assert(!graphLoader.hasNext());
 
 
 

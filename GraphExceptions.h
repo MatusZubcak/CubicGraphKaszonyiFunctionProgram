@@ -32,4 +32,16 @@ struct VertexNotIncidentException : std::exception {
     const char *what() const noexcept override;
 };
 
+struct GraphloaderEmptyException : std::exception {
+    const char *what() const noexcept override;
+};
+
+struct WrongNumberOfVerticesException : std::exception {
+    const char* what() const noexcept override;
+};
+
+struct BadFileEndingException : std::exception{
+    const char* what() const noexcept override;
+};
+
 #endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_GRAPHEXCEPTIONS_H
