@@ -24,6 +24,7 @@ public:
     explicit AdjListsGraphLoader(const std::string& filename);
     CubicGraph nextGraph() override;
     bool hasNext() override;
+    bool loadNewGraphs(const std::string& filename) override;
 };
 
 

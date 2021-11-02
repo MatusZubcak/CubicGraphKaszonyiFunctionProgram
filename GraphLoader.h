@@ -12,6 +12,7 @@ public:
     virtual CubicGraph nextGraph() =0;
     virtual bool hasNext() = 0;
     virtual ~GraphLoader()= default;;
+    virtual bool loadNewGraphs(const std::string& filename) = 0;
 
 };
 

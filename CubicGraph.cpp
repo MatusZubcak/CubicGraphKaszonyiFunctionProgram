@@ -32,6 +32,10 @@ std::set<unsigned int> CubicGraph::getVertices() {
     return vertices;
 }
 
+unsigned int CubicGraph::size() {
+    return vertices.size();
+}
+
 unsigned int CubicGraph::getNumberOfIsolatedCircles() const {
     return numberOfIsolatedCircles;
 }

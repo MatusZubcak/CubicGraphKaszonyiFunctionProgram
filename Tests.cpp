@@ -6,11 +6,13 @@
 #include <set>
 #include <iostream>
 #include <vector>
+#include <fstream>
 #include "Tests.h"
 #include "Edge.h"
 #include "CubicGraph.h"
 #include "KaszonyiFactorFunction.h"
 #include "AdjListsGraphLoader.h"
+#include "GraphPrinter.h"
 
 int Tests::run(){
 
@@ -556,8 +558,51 @@ int Tests::run(){
 
     assert(!graphLoader.hasNext());
 
+    /*
+    std::ofstream of1;
+    try {
+        graphLoader.loadNewGraphs("GraphLoader_test1.txt");
+        GraphPrinter graphPrinter;
+        of1.open("tmp.txt");
+        of1 << "4" << std::endl;
+        of1.close();
+        CubicGraph graphPrinter_test1_graph = graphLoader.nextGraph();
+        graphPrinter.printGraph_adjListsFormat(graphPrinter_test1_graph, "tmp.txt", APPEND);
+        while (graphLoader.hasNext()) {
+            of1.open("tmp.txt", std::ios::app);
+            of1 << std::endl;
+            of1.close();
+            graphPrinter_test1_graph = graphLoader.nextGraph();
+            graphPrinter.printGraph_adjListsFormat(graphPrinter_test1_graph, "tmp.txt", APPEND);
+        }
+    }catch(std::exception &e) {
+        std::cout << "..." << std::endl;
+        std::cout << e.what() << std::endl;
+        of1.close();
+    }
 
-
+    std::ifstream if1;
+    std::ifstream if2;
+    try {
+        if1.open("GraphPrinter_test1_expectedFile.txt");
+        if2.open("tmp.txt");
+        std::string if1_getlineString;
+        std::string if2_getlineString;
+        while(!if1.eof() && !if2.eof()){
+            assert(if1.get() == if2.get());
+        }
+        assert(if1.eof());
+        assert(if2.eof());
+        if1.close();
+        if2.close();
+    }catch(std::exception &e) {
+        std::cout << "..." << std::endl;
+        std::cout << e.what() << std::endl;
+        if1.close();
+        if2.close();
+    }
+    std::remove("tmp.txt");
+     */
 
 
     std::cout << "ALL TESTS PASSED" << std::endl;

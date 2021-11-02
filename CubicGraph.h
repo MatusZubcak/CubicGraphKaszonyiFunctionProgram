@@ -36,6 +36,8 @@ public:
 
     std::set<unsigned int> getVertices();
 
+    unsigned int size();
+
     unsigned int getNumberOfIsolatedCircles() const;
 
     unsigned int getDepth() const;

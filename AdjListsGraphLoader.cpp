@@ -12,6 +12,11 @@ AdjListsGraphLoader::AdjListsGraphLoader(const std::string& filename) {
     graphList = loadGraphs(filename);
 }
 
+bool AdjListsGraphLoader::loadNewGraphs(const std::string& filename) {
+    graphList = loadGraphs(filename);
+    return true;
+}
+
 CubicGraph AdjListsGraphLoader::nextGraph() {
     if(graphList.empty()){
         throw GraphloaderEmptyException();
@@ -105,14 +110,15 @@ std::queue<CubicGraph> AdjListsGraphLoader::loadGraphs(const std::string& filena
             }
         }
         if(currentVertex == 0) {
+            f.close();
             return graphQueue;
         }else {
             throw BadFileEndingException();
         }
     } catch (std::exception &e) {
-        f.close();
         std::cout << "..." << std::endl;
         std::cout << e.what() << std::endl;
+        f.close();
     }
 
 
