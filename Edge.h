@@ -15,6 +15,7 @@ class Edge {
 private:
     int kaszonyiValue;
     int multiplicity;
+    bool original;
     const std::pair<const unsigned int, const unsigned int> incidentVertices;
 
     friend bool operator==(const Edge& e1, const Edge& e2);
@@ -25,9 +26,9 @@ private:
     friend bool operator>=(const Edge& e1, const Edge& e2);
 public:
 
+    Edge(unsigned int vertex1, unsigned int vertex2, bool isOriginal);
+    Edge(std::pair<unsigned int, unsigned int> vertices, bool isOriginal);
     Edge(unsigned int vertex1,unsigned int vertex2);
-
-    explicit Edge(std::pair<unsigned int, unsigned int> vertices);
 
     void setKaszonyiValue(int kaszonyiValue);
 
@@ -48,6 +49,8 @@ public:
     unsigned int getSecondVertex(unsigned int vertex) const;
 
     bool isLoop() const;
+
+    bool isOriginal() const;
 
 };
 

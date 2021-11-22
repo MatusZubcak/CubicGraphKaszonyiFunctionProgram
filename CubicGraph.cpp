@@ -6,10 +6,13 @@
 #include "CubicGraph.h"
 #include "KaszonyiFactorFunction.h"
 
-CubicGraph::CubicGraph(std::set<unsigned int> &vertices, std::set<Edge> &edges, unsigned int numberOfIsolatedCircles) {
+
+CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int> &vertices, std::set<Edge> &edges, unsigned int numberOfIsolatedCircles) {
+    this->unique_id = id;
+    this->parent_id = 0;
+    this->depth = 0;
     this->vertices = vertices;
     this->edges = edges;
-    depth = 0;
     this->numberOfIsolatedCircles = numberOfIsolatedCircles;
     strategy = std::shared_ptr<KaszonyiFunction>(new KaszonyiFactorFunction());
 
@@ -22,7 +25,10 @@ CubicGraph::CubicGraph(std::set<unsigned int> &vertices, std::set<Edge> &edges, 
 
 }
 
-CubicGraph::CubicGraph(std::set<unsigned int> &vertices, std::set<Edge> &edges) : CubicGraph(vertices, edges, 0) {}
+CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int> &vertices, std::set<Edge> &edges) : CubicGraph(id, vertices, edges, 0) {}
+CubicGraph::CubicGraph(std::set<unsigned int> &vertices, std::set<Edge> &edges, unsigned int numberOfIsolatedCircles) : CubicGraph(0, vertices, edges, numberOfIsolatedCircles) {}
+CubicGraph::CubicGraph(std::set<unsigned int> &vertices, std::set<Edge> &edges) : CubicGraph(0,vertices, edges, 0) {};
+
 
 std::set<Edge> CubicGraph::getEdges() {
     return edges;
@@ -40,8 +46,16 @@ unsigned int CubicGraph::getNumberOfIsolatedCircles() const {
     return numberOfIsolatedCircles;
 }
 
-unsigned int CubicGraph::getDepth() const {
+unsigned int CubicGraph::getDepth() const{
     return depth;
+}
+
+unsigned int CubicGraph::getId() const{
+    return unique_id;
+}
+
+unsigned int CubicGraph::getParentId() const{
+    return parent_id;
 }
 
 unsigned int CubicGraph::getKaszonyiValue(Edge edge) {
@@ -86,8 +100,7 @@ bool operator==(const CubicGraph &cg1, const CubicGraph &cg2) {
 bool operator!=(const CubicGraph &cg1, const CubicGraph &cg2) {
     return !(cg1 == cg2);
 }
-
-CubicGraph CubicGraph::suppressEdge(Edge edge) {
+CubicGraph CubicGraph::suppressEdge(unsigned int id, Edge edge) {
     if(edges.find(edge) == edges.end()){
         throw EdgeDoesNotExistException();
     }
@@ -99,16 +112,24 @@ CubicGraph CubicGraph::suppressEdge(Edge edge) {
 
     switch(suppressedEdge.getMultiplicity()){
         case 1:
-            return suppressEdgeWithMultiplicity1(suppressedEdge);
+            return suppressEdgeWithMultiplicity1(id, suppressedEdge);
         case 2:
-            return suppressEdgeWithMultiplicity2(suppressedEdge);
+            return suppressEdgeWithMultiplicity2(id, suppressedEdge);
         case 3:
-            return suppressEdgeWithMultiplicity3(suppressedEdge);
+            return suppressEdgeWithMultiplicity3(id, suppressedEdge);
     }
 }
 
+CubicGraph CubicGraph::suppressEdge(unsigned int id, unsigned int v1, unsigned int v2) {
+    return suppressEdge(id, Edge(v1, v2));
+}
+
+CubicGraph CubicGraph::suppressEdge(Edge edge) {
+    return suppressEdge(0, edge);
+}
+
 CubicGraph CubicGraph::suppressEdge(unsigned int v1, unsigned int v2) {
-    return suppressEdge(Edge(v1, v2));
+    return suppressEdge(0, v1, v2);
 }
 
 //PRIVATE FUNCTIONS
@@ -137,7 +158,7 @@ std::set<unsigned int> CubicGraph::verticesAfterSuppressedEdge(Edge edge) {
     return newVertices;
 }
 
-CubicGraph CubicGraph::suppressEdgeWithMultiplicity1(Edge edge) {
+CubicGraph CubicGraph::suppressEdgeWithMultiplicity1(unsigned int id, Edge edge) {
     /* has to be removed because we don't want to FOR through
     * suppressed edge, it causes bugs
     * don't forget to add edge to edges in the end,
@@ -206,20 +227,24 @@ CubicGraph CubicGraph::suppressEdgeWithMultiplicity1(Edge edge) {
     CubicGraph newGraph(newVertices, newEdges, numberOfIsolatedCircles);
 
     //here we also solve isolatedCircles
-    newGraph.addEdge(Edge(v1Neighbours));
-    newGraph.addEdge(Edge(v2Neighbours));
-    //newGraph depth++
+    // new Edge is not original -> isOriginal = false
+    newGraph.addEdge(Edge(v1Neighbours, false));
+    newGraph.addEdge(Edge(v2Neighbours, false));
+
+    //set depth, unique_id and parent_id
+    newGraph.unique_id = id;
+    newGraph.parent_id = this->unique_id;
     newGraph.depth = this->depth + 1;
 
     /* has to be added back again,
      * because it was temporarily removed
-     * in the beggining of this function
+     * in the beginning of this function
      */
     edges.insert(edge);
     return newGraph;
 }
 
-CubicGraph CubicGraph::suppressEdgeWithMultiplicity2(Edge edge) {
+CubicGraph CubicGraph::suppressEdgeWithMultiplicity2(unsigned int id, Edge edge) {
     /* has to be removed because we don't want to FOR through
     * suppressed edge, it causes bugs
     * don't forget to add edge to edges in the end,
@@ -247,25 +272,33 @@ CubicGraph CubicGraph::suppressEdgeWithMultiplicity2(Edge edge) {
 
     CubicGraph newGraph(newVertices, newEdges, numberOfIsolatedCircles);
     //here we also solve isolatedCircles
-    newGraph.addEdge(Edge(v1Neighbour, v2Neighbour));
-    //newGraph depth++
+    // new Edge is not original -> isOriginal = false
+    newGraph.addEdge(Edge(v1Neighbour, v2Neighbour, false));
+
+    //set depth, unique_id and parent_id
+    newGraph.unique_id = id;
+    newGraph.parent_id = this->unique_id;
     newGraph.depth = this->depth + 1;
 
     /* has to be added back again,
      * because it was temporarily removed
-     * in the beggining of this function
+     * in the beginning of this function
      */
     edges.insert(edge);
     return newGraph;
 }
 
-CubicGraph CubicGraph::suppressEdgeWithMultiplicity3(Edge edge) {
+CubicGraph CubicGraph::suppressEdgeWithMultiplicity3(unsigned int id, Edge edge) {
     std::set<unsigned int> newVertices = verticesAfterSuppressedEdge(edge);
     std::set<Edge> newEdges = edges;
     newEdges.erase(edge);
 
     CubicGraph newGraph(newVertices, newEdges, numberOfIsolatedCircles + 1);
-    //newGraph depth++
+
+    //set depth, unique_id and parent_id
+    newGraph.unique_id = id;
+    newGraph.parent_id = this->unique_id;
     newGraph.depth = this->depth + 1;
+
     return newGraph;
 }

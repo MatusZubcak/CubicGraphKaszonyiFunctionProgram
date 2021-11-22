@@ -71,8 +71,8 @@ bool GraphPrinterSemestralProjectFormat::printGraph(CubicGraph &cubicGraph, cons
 
 
 bool GraphPrinterSemestralProjectFormat::printKaszonyiValue_forSingleEdge(CubicGraph &cubicGraph, const std::string &filename,
-                                                                   Edge edge,
-                                                                   append append) {
+                                                                          Edge edge,
+                                                                          append append) {
     std::ofstream f;
     if(append == APPEND)
         f.open(filename, std::ios::app);
@@ -100,7 +100,7 @@ bool GraphPrinterSemestralProjectFormat::printKaszonyiValue_forSingleEdge(CubicG
 }
 
 bool GraphPrinterSemestralProjectFormat::printKaszonyiValue_forAllEdges(CubicGraph &cubicGraph, const std::string &filename,
-                                                                 append append) {
+                                                                        append append) {
     std::ofstream f;
     if(append == APPEND)
         f.open(filename, std::ios::app);

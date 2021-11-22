@@ -19,7 +19,7 @@ public:
 
     bool printGraph(CubicGraph& cubicGraph, const std::string& filename, append append) override;
     bool printKaszonyiValue_forSingleEdge(CubicGraph& cubicGraph, const std::string& filename, Edge edge,
-                                                  append append) override;
+                                          append append) override;
     bool printKaszonyiValue_forAllEdges(CubicGraph& cubicGraph, const std::string& filename, append append) override;
     bool printGraphQueue(std::queue<CubicGraph>& graphQueue, const std::string& filename, append append);
 };

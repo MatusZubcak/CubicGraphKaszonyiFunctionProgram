@@ -17,8 +17,8 @@ public:
         GraphPrinterSemestralProjectFormat()=default;;
 
         bool printGraph(CubicGraph& cubicGraph, const std::string& filename, append append) override;
-        bool printKaszonyiValue_forSingleEdge(CubicGraph& cubicGraph, const std::string& filename,Edge edge,
-        append append) override;
+        bool printKaszonyiValue_forSingleEdge(CubicGraph& cubicGraph, const std::string& filename, Edge edge,
+                                              append append) override;
         bool printKaszonyiValue_forAllEdges(CubicGraph& cubicGraph, const std::string& filename, append append) override;
 };
 

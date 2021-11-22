@@ -4,14 +4,16 @@
 
 #include "Edge.h"
 
-Edge::Edge(unsigned int vertex1, unsigned int vertex2) :
+Edge::Edge(unsigned int vertex1, unsigned int vertex2, bool isOriginal) :
     incidentVertices ( std::min(vertex1, vertex2), std::max(vertex1, vertex2)){
 
     this->kaszonyiValue = -1;
     this->multiplicity = 1;
+    this->original = isOriginal;
 }
 
-Edge::Edge(std::pair<unsigned int, unsigned int> vertices) : Edge(vertices.first, vertices.second) {}
+Edge::Edge(unsigned int vertex1, unsigned int vertex2) : Edge(vertex1, vertex2, true) {};
+Edge::Edge(std::pair<unsigned int, unsigned int> vertices, bool isOriginal) : Edge(vertices.first, vertices.second, isOriginal) {}
 
 void Edge::setKaszonyiValue(int kaszonyiValue) {
     this->kaszonyiValue = kaszonyiValue;
@@ -105,4 +107,8 @@ unsigned int Edge::getSecondVertex(unsigned int vertex) const {
 
 bool Edge::isLoop() const {
     return incidentVertices.first == incidentVertices.second;
+}
+
+bool Edge::isOriginal() const{
+    return original;
 }
