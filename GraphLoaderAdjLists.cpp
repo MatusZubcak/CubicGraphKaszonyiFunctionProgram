@@ -6,44 +6,37 @@
 #include <iostream>
 #include <unordered_map>
 #include <algorithm>
-#include "AdjListsGraphLoader.h"
+#include "GraphLoaderAdjLists.h"
 
-AdjListsGraphLoader::AdjListsGraphLoader(const std::string& filename) {
-    graphList = loadGraphs(filename);
-}
-
-bool AdjListsGraphLoader::loadNewGraphs(const std::string& filename) {
-    graphList = loadGraphs(filename);
-    return true;
-}
-
-CubicGraph AdjListsGraphLoader::nextGraph() {
+/*
+CubicGraph& GraphLoaderAdjLists::nextGraph() {
     if(graphList.empty()){
         throw GraphloaderEmptyException();
     }
 
-    CubicGraph graph = graphList.front();
+    CubicGraph& graph = graphList.front();
+    for(auto e : graph.getEdges()){
+        std::cout << e.toString() << std::endl;
+    } std::cout << "___\n";
     graphList.pop();
+
     return graph;
 }
+*/
 
-bool AdjListsGraphLoader::hasNext() {
-    return !graphList.empty();
-}
-
-std::queue<CubicGraph> AdjListsGraphLoader::loadGraphs(const std::string& filename) {
+std::queue<CubicGraph> GraphLoaderAdjLists::loadNewGraphs(const std::string& filename) {
     std::queue<CubicGraph> graphQueue;
     std::ifstream f;
     f.open(filename);
-    if (!f) {
-        std::cerr << "Unable to open file " << filename;
-        exit(1);   // call system to stop
-    }
+
 
     unsigned int numberOfVertices;
     unsigned int neighbour1, neighbour2, neighbour3;
     /*Pokusi sa pomocou txt suboru vytvorit korektny kubicky graf */
     try {
+        if (!f) {
+            throw FileCannotBeOpenedException();
+        }
         f >> numberOfVertices;
         if (numberOfVertices < 0) throw WrongNumberOfVerticesException();
 
@@ -111,7 +104,6 @@ std::queue<CubicGraph> AdjListsGraphLoader::loadGraphs(const std::string& filena
         }
         if(currentVertex == 0) {
             f.close();
-            return graphQueue;
         }else {
             throw BadFileEndingException();
         }
@@ -120,11 +112,10 @@ std::queue<CubicGraph> AdjListsGraphLoader::loadGraphs(const std::string& filena
         std::cout << e.what() << std::endl;
         f.close();
     }
-
-
+    return graphQueue;
 }
 
-void AdjListsGraphLoader::insertEdgeWithMultiplicity(std::set<Edge> &edges,
+void GraphLoaderAdjLists::insertEdgeWithMultiplicity(std::set<Edge> &edges,
                                                      unsigned int vertex,
                                                      unsigned int multipleVertex,
                                                      unsigned int singleVertex){
@@ -136,7 +127,7 @@ void AdjListsGraphLoader::insertEdgeWithMultiplicity(std::set<Edge> &edges,
     edges.insert(edgeWithMultiplicity);
 }
 
-bool AdjListsGraphLoader::correctlyDefinedGraph(std::set<unsigned int> &vertices,
+bool GraphLoaderAdjLists::correctlyDefinedGraph(std::set<unsigned int> &vertices,
                                                 std::set<Edge> &edges) {
     std::unordered_map<unsigned int, int> map_vertex_degree;
     for(int i = 0; i < vertices.size(); i++){

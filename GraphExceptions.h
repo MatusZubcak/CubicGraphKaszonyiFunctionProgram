@@ -44,4 +44,7 @@ struct BadFileEndingException : std::exception{
     const char* what() const noexcept override;
 };
 
+struct FileCannotBeOpenedException : std::exception{
+    const char* what() const noexcept override;
+};
 #endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_GRAPHEXCEPTIONS_H

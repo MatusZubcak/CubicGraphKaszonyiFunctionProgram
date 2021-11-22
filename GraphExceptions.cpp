@@ -42,3 +42,8 @@ const char* BadFileEndingException::what() const noexcept
 {
     return "There is a small amount of remaining adjacency lists at the end of the file that cannot belong to any graph of given size";
 }
+
+const char* FileCannotBeOpenedException::what() const noexcept
+{
+    return "Unable to open file";
+}

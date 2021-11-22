@@ -11,8 +11,10 @@
 #include "Edge.h"
 #include "CubicGraph.h"
 #include "KaszonyiFactorFunction.h"
-#include "AdjListsGraphLoader.h"
-#include "GraphPrinter.h"
+#include "GraphLoaderAdjLists.h"
+#include "GraphPrinterZeroDepthFormat.h"
+#include "GraphPrinterSemestralProjectFormat.h"
+#include "FileTester.h"
 
 int Tests::run(){
 
@@ -515,7 +517,8 @@ int Tests::run(){
     assert(kaszonyiFunction.getKaszonyiValue(test23_vertices, test23_edges) == 1);
 
 
-    AdjListsGraphLoader graphLoader("GraphLoader_test1.txt");
+    GraphLoaderAdjLists graphLoader;
+    std::queue<CubicGraph> graphQueue1 = graphLoader.loadNewGraphs("GraphLoader_test1.txt");
 
     std::set<unsigned int> graphLoader_test1_vertices{0,1,2,3};
     std::set<Edge> graphLoader_test1_edges1{Edge(0,0), Edge(0,1),
@@ -524,8 +527,10 @@ int Tests::run(){
     gl_t1e23.incrementMultiplicity();
     graphLoader_test1_edges1.insert(gl_t1e23);
     CubicGraph graphLoader_test1_graph1(graphLoader_test1_vertices, graphLoader_test1_edges1);
-    assert(graphLoader.hasNext());
-    assert(graphLoader.nextGraph() == graphLoader_test1_graph1);
+    assert(!graphQueue1.empty());
+    assert(graphQueue1.front() == graphLoader_test1_graph1);
+    graphQueue1.pop();
+
 
     std::set<Edge> graphLoader_test1_edges2;
     Edge gl_t1e01(0,1);
@@ -535,15 +540,17 @@ int Tests::run(){
     graphLoader_test1_edges2.insert(gl_t1e01);
     graphLoader_test1_edges2.insert(gl_t1e23);
     CubicGraph graphLoader_test1_graph2(graphLoader_test1_vertices, graphLoader_test1_edges2);
-    assert(graphLoader.hasNext());
-    assert(graphLoader.nextGraph() == graphLoader_test1_graph2);
+    assert(!graphQueue1.empty());
+    assert(graphQueue1.front() == graphLoader_test1_graph2);
+    graphQueue1.pop();
 
     std::set<Edge> graphLoader_test1_edges3{Edge(0,1), Edge(0,2),
                                             Edge(0,3), Edge(1,2),
                                             Edge(1,3), Edge(2,3)};
     CubicGraph graphLoader_test1_graph3(graphLoader_test1_vertices, graphLoader_test1_edges3);
-    assert(graphLoader.hasNext());
-    assert(graphLoader.nextGraph() == graphLoader_test1_graph3);
+    assert(!graphQueue1.empty());
+    assert(graphQueue1.front() == graphLoader_test1_graph3);
+    graphQueue1.pop();
 
     std::set<Edge> graphLoader_test1_edges4{Edge(0,3), Edge(1,2)};
     Edge gl_t1e02 (0,2);
@@ -553,16 +560,18 @@ int Tests::run(){
     graphLoader_test1_edges4.insert(gl_t1e02);
     graphLoader_test1_edges4.insert(gl_t1e13);
     CubicGraph graphLoader_test1_graph4(graphLoader_test1_vertices, graphLoader_test1_edges4);
-    assert(graphLoader.hasNext());
-    assert(graphLoader.nextGraph() == graphLoader_test1_graph4);
+    assert(!graphQueue1.empty());
+    assert(graphQueue1.front() == graphLoader_test1_graph4);
+    graphQueue1.pop();
 
-    assert(!graphLoader.hasNext());
+    assert(graphQueue1.empty());
+
 
     /*
     std::ofstream of1;
     try {
         graphLoader.loadNewGraphs("GraphLoader_test1.txt");
-        GraphPrinter graphPrinter;
+        GraphPrinterZeroDepthFormat graphPrinter;
         of1.open("tmp.txt");
         of1 << "4" << std::endl;
         of1.close();
@@ -604,6 +613,31 @@ int Tests::run(){
     std::remove("tmp.txt");
      */
 
+
+    GraphPrinterZeroDepthFormat graphPrinter;
+    std::queue<CubicGraph> graphQueue2 = graphLoader.loadNewGraphs("16g3e.txt");
+    graphPrinter.printGraphQueue(graphQueue2, "outro.txt", NO_APPEND);
+
+
+    /*std::ofstream f;
+    f.open("outro.txt");
+    f << "16" << std::endl;
+    f.close();
+    while(!graphQueue2.empty()){
+        CubicGraph cg = graphQueue2.front();
+        graphQueue2.pop();
+        graphPrinter.printGraph(cg, "outro.txt", APPEND);
+        graphPrinter.printKaszonyiValue_forAllEdges(cg, "outro.txt", APPEND);
+        f.open("outro.txt", std::ios::app);
+        f << std::endl;
+        f.close();
+    }*/
+
+    FileTester fileTester = FileTester();
+    assert(fileTester.compareFiles("16g3e.txt", "16g3e-copy.txt"));
+    assert(fileTester.compareFiles("outro.txt", "outro-copy.txt"));
+    assert(!fileTester.compareFiles("16g3e.txt", "16g3e-missingLastLine.txt"));
+    assert(!fileTester.compareFiles("16g3e.txt","16g3e-differentLines.txt"));
 
     std::cout << "ALL TESTS PASSED" << std::endl;
     //assert(0 == 1);
