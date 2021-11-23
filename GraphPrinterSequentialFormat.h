@@ -1,19 +1,20 @@
 //
-// Created by Dell on 2. 11. 2021.
+// Created by Dell on 22. 11. 2021.
 //
 
-#ifndef CUBICGRAPHKASZONYIFUNCTIONPROGRAM_GRAPHPRINTERZERODEPTHFORMAT_H
-#define CUBICGRAPHKASZONYIFUNCTIONPROGRAM_GRAPHPRINTERZERODEPTHFORMAT_H
+#ifndef CUBICGRAPHKASZONYIFUNCTIONPROGRAM_GRAPHPRINTERSEQUENTIALFORMAT_H
+#define CUBICGRAPHKASZONYIFUNCTIONPROGRAM_GRAPHPRINTERSEQUENTIALFORMAT_H
 
 
+#include <vector>
 #include <queue>
 #include "CubicGraph.h"
 #include "Enums.h"
 #include "GraphPrinter.h"
 
-class GraphPrinterZeroDepthFormat : GraphPrinter {
+class GraphPrinterSequentialFormat : GraphPrinter {
 public:
-    GraphPrinterZeroDepthFormat()=default;;
+    GraphPrinterSequentialFormat()=default;;
 
     bool printGraph(CubicGraph& cubicGraph, const std::string& filename, append append) override;
     bool printKaszonyiValues(CubicGraph& cubicGraph, const std::string& filename, append append) override;
@@ -21,4 +22,4 @@ public:
 };
 
 
-#endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_GRAPHPRINTERZERODEPTHFORMAT_H
+#endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_GRAPHPRINTERSEQUENTIALFORMAT_H

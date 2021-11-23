@@ -15,6 +15,8 @@
 #include "GraphPrinterZeroDepthFormat.h"
 #include "GraphPrinterSemestralProjectFormat.h"
 #include "FileTester.h"
+#include "GraphPrinterSequentialFormat.h"
+#include "GraphPrinterParallelFormat.h"
 
 int Tests::run(){
 
@@ -786,9 +788,10 @@ int Tests::run(){
      */
 
 
-    GraphPrinterZeroDepthFormat graphPrinter;
+    GraphPrinterSemestralProjectFormat graphPrinter;
     std::queue<CubicGraph> graphQueue2 = graphLoader.loadNewGraphs("16g3e.txt");
-    graphPrinter.printGraphQueue(graphQueue2, "outro.txt", NO_APPEND);
+    graphPrinter.printKaszonyiValues(graphQueue2, "outro_semestral.txt", NO_APPEND);
+
 
 
     /*std::ofstream f;
@@ -810,6 +813,13 @@ int Tests::run(){
     assert(fileTester.compareFiles("outro.txt", "outro-copy.txt"));
     assert(!fileTester.compareFiles("16g3e.txt", "16g3e-missingLastLine.txt"));
     assert(!fileTester.compareFiles("16g3e.txt","16g3e-differentLines.txt"));
+
+    GraphPrinterSequentialFormat graphPrinterSequentialFormat = GraphPrinterSequentialFormat();
+    GraphPrinterParallelFormat graphPrinterParallelFormat = GraphPrinterParallelFormat();
+    CubicGraph cubicGraphSequential1 = graphLoader.loadNewGraphs("16g3e.txt").front();
+    graphPrinterSequentialFormat.printKaszonyiValues(cubicGraphSequential1, "16ge3 firstGraph - sequential.txt", NO_APPEND);
+    graphPrinterSequentialFormat.printKaszonyiValues(cubicGraphSequential1, "16ge3 firstGraph - parallel.txt", NO_APPEND);
+
 
     std::cout << "ALL TESTS PASSED" << std::endl;
     //assert(0 == 1);
