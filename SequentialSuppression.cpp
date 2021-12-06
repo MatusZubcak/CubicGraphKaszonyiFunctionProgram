@@ -18,12 +18,14 @@ std::queue<CubicGraph> SequentialSuppression::findDepth(const CubicGraph& cubicG
         CubicGraph graph = graphQueue.front();
         graphQueue.pop();
         for(auto e : graph.getEdges()) {
-            if(!e.isLoop() && graph.getKaszonyiValue(e) == 0) {
-                graphQueue.push(graph.suppressEdge(unique_id, e));
-                unique_id++;
-            }else {
-                coloringFound = true;
-                depth = graph.getDepth();
+            if(!e.isLoop()) {
+                if (graph.getKaszonyiValue(e) == 0) {
+                    graphQueue.push(graph.suppressEdge(unique_id, e));
+                    unique_id++;
+                } else {
+                    coloringFound = true;
+                    depth = graph.getDepth();
+                }
             }
         }
         finalGraphQueue.push(graph);
@@ -33,9 +35,11 @@ std::queue<CubicGraph> SequentialSuppression::findDepth(const CubicGraph& cubicG
         CubicGraph graph = graphQueue.front();
         graphQueue.pop();
         if(graph.getDepth() <= depth){
+            /*
             for(auto e : graph.getEdges()){
                 graph.getKaszonyiValue(e);
             }
+            */
             finalGraphQueue.push(graph);
         }
     }

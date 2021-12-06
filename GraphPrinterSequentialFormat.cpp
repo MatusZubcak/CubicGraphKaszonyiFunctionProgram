@@ -58,10 +58,11 @@ bool GraphPrinterSequentialFormat::printKaszonyiValues(CubicGraph &cubicGraph, c
         SequentialSuppression sequentialSuppression = SequentialSuppression();
         std::queue<CubicGraph> graphQueue = sequentialSuppression.findDepth(cubicGraph);
         bool firstGraph = true;
+        unsigned int maxDepth = 0;
         while(!graphQueue.empty()){
             CubicGraph graph = graphQueue.front();
             graphQueue.pop();
-            std::cout<< graph.getId() << "\n";
+            maxDepth = std::max(maxDepth, graph.getDepth());
 
             if(firstGraph){
                 f << graph.size() << std::endl;
@@ -100,6 +101,7 @@ bool GraphPrinterSequentialFormat::printKaszonyiValues(CubicGraph &cubicGraph, c
                 f << std::endl;
             }
         }
+        f << "Depth: " << maxDepth << std::endl;
         f.close();
     }catch (std::exception &e) {
         std::cout << "..." << std::endl;

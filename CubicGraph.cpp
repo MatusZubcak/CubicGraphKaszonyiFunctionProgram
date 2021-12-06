@@ -63,7 +63,14 @@ unsigned int CubicGraph::getKaszonyiValue(Edge edge) {
         throw EdgeDoesNotExistException();
     }
 
-    if(edges.find(edge)->getKaszonyiValue() == -1){
+    if(edges.find(edge)->isLoop()){
+        Edge edgeToBeUpdated = *edges.find(edge);
+        edgeToBeUpdated.setKaszonyiValue(0);
+        edges.erase(edge);
+        edges.insert(edgeToBeUpdated);
+    }
+
+    if(!edges.find(edge)->isLoop() && edges.find(edge)->getKaszonyiValue() == -1){
         Edge edgeToBeUpdated = *edges.find(edge);
         CubicGraph suppressedGraph = this->suppressEdge(edge);
         edgeToBeUpdated.setKaszonyiValue

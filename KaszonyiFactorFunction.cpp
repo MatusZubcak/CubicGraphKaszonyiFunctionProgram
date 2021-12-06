@@ -175,21 +175,38 @@ void KaszonyiFactorFunction::reccursivellyCountKaszonyi
 int KaszonyiFactorFunction::getKaszonyiValue(std::set<unsigned int>& vertices,
                                              std::set<Edge>& edges,
                                              unsigned int numberOfIsolatedCircles) {
+    //TODO remove eventually
+    bool isEmpty = vertices.empty() && edges.empty();
+
     kaszonyiValue = 0;
     std::vector<std::pair<unsigned int, bool>> linearGraphRepresentation =
             convertToLinearGraphRepresentation(vertices, edges);
 
-    //fixne nastavime jednu pevnu hranu v 1-faktore, aby sme negenerovali moznosti navyse
-    linearGraphRepresentation[0].second = true;
-    unsigned int neighbour = linearGraphRepresentation[0].first;
-    for(int j = 0; j < 3; j++){
-        if(linearGraphRepresentation[ 3*neighbour + j].first == 0){
-            linearGraphRepresentation[ 3*neighbour + j].second = true;
-            break;
+    if(!linearGraphRepresentation.empty()) {
+        //fixne nastavime jednu pevnu hranu v 1-faktore, aby sme negenerovali moznosti navyse
+        linearGraphRepresentation[0].second = true;
+        unsigned int neighbour = linearGraphRepresentation[0].first;
+        for (int j = 0; j < 3; j++) {
+            if (linearGraphRepresentation[3 * neighbour + j].first == 0) {
+                linearGraphRepresentation[3 * neighbour + j].second = true;
+                break;
+            }
+        }
+        //pre zvysne volame rekurzivnu funkciu na hladanie 1-faktoru
+        reccursivellyCountKaszonyi(linearGraphRepresentation, 1);
+    } else{
+        kaszonyiValue = 1;
+    }
+
+    //TODO remove eventually
+    if(isEmpty != linearGraphRepresentation.empty()){
+        std::cout << "LGR contradicts reality(empty graph), ";
+        if(isEmpty){
+            std::cout << "graph is empty\n";
+        }else{
+            std::cout << "graph is NOT empty\n";
         }
     }
-    //pre zvysne volame rekurzivnu funkciu na hladanie 1-faktoru
-    reccursivellyCountKaszonyi(linearGraphRepresentation, 1);
 
     kaszonyiValue *= int(std::pow(double(3), double(numberOfIsolatedCircles)));
     return kaszonyiValue;

@@ -635,7 +635,6 @@ int Tests::run(){
     }
 
 
-
     std::set<unsigned int> J3_vertices{1,2,3,4,5,6,7,8,9,10,11,12};
     std::set<Edge> J3_edges{Edge(1,2), Edge(2,3),
                             Edge(3,1), Edge(1,4),
@@ -690,6 +689,18 @@ int Tests::run(){
     std::set<Edge> test23_edges={t23e12};
     assert(kaszonyiFunction.getKaszonyiValue(test23_vertices, test23_edges) == 1);
 
+
+    std::set<unsigned int> test24_vertices = {1, 2};
+    std::set<Edge> test24_edges = {Edge(1,1), Edge(1,2), Edge(2,2)};
+    CubicGraph test24_graph = CubicGraph(test24_vertices, test24_edges);
+
+    CubicGraph test24_suppressed = test24_graph.suppressEdge(1, 2);
+    std::set<unsigned int> test24_expectedVertices{};
+    std::set<Edge> test24_expetedEdges{};
+    CubicGraph test24_expectedGraph(test24_expectedVertices, test24_expetedEdges, 2);
+    assert(test24_suppressed == test24_expectedGraph);
+    assert(test24_suppressed.getEdges() == test24_expetedEdges);
+    std::cout << test24_graph.getKaszonyiValue(Edge(1,2)) << std::endl;
 
     GraphLoaderAdjLists graphLoader;
     std::queue<CubicGraph> graphQueue1 = graphLoader.loadNewGraphs("GraphLoader_test1.txt");
@@ -816,12 +827,30 @@ int Tests::run(){
 
     GraphPrinterSequentialFormat graphPrinterSequentialFormat = GraphPrinterSequentialFormat();
     GraphPrinterParallelFormat graphPrinterParallelFormat = GraphPrinterParallelFormat();
+
+    /*
     CubicGraph cubicGraphSequential1 = graphLoader.loadNewGraphs("16g3e.txt").front();
     graphPrinterSequentialFormat.printKaszonyiValues(cubicGraphSequential1, "16ge3 firstGraph - sequential.txt", NO_APPEND);
     graphPrinterSequentialFormat.printKaszonyiValues(cubicGraphSequential1, "16ge3 firstGraph - parallel.txt", NO_APPEND);
+
+    CubicGraph scrit = graphLoader.loadNewGraphs("SCRIT34.txt").front();
+    graphPrinterSequentialFormat.printKaszonyiValues(scrit, "SCRIT34 firstGraph - sequential.txt", NO_APPEND);
+    graphPrinterParallelFormat.printKaszonyiValues(scrit, "SCRIT34 firstGraph - parallel.txt", NO_APPEND);
+
+    GraphPrinterSemestralProjectFormat graphPrinterSemestralProjectFormat = GraphPrinterSemestralProjectFormat();
+    graphPrinterSemestralProjectFormat.printKaszonyiValues(scrit, "SCRIT34 semestral.txt", NO_APPEND);
+    */
+
+
+    std::cout << "XXX" << std::endl;
+    CubicGraph cg_test = graphLoader.loadNewGraphs("xxx.txt").front();
+    graphPrinterParallelFormat.printKaszonyiValues(cg_test, "xxxOutroP.txt", NO_APPEND);
+    graphPrinterSequentialFormat.printKaszonyiValues(cg_test, "xxxOutroS.txt", NO_APPEND);
+
 
 
     std::cout << "ALL TESTS PASSED" << std::endl;
     //assert(0 == 1);
     return 0;
 }
+

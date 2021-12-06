@@ -59,15 +59,20 @@ bool GraphPrinterParallelFormat::printKaszonyiValues(CubicGraph &cubicGraph, con
         ParallelSuppression parallelSuppression = ParallelSuppression();
         std::queue<CubicGraph> graphQueue = parallelSuppression.findDepth(cubicGraph);
         bool firstGraph = true;
+        unsigned int maxDepth = 0;
         while(!graphQueue.empty()){
+            //TODO look for commented parts here (remove)
+
             CubicGraph graph = graphQueue.front();
             graphQueue.pop();
+            maxDepth = std::max(maxDepth, graph.getDepth());
 
             if(firstGraph){
                 f << graph.size() << std::endl;
                 firstGraph = false;
             }
 
+            /*
             f << "Graph id: " << graph.getId() << std::endl;
             f << "Parent id: " << graph.getParentId() << std::endl;
             f << "Depth: " << graph.getDepth() << std::endl;
@@ -87,19 +92,41 @@ bool GraphPrinterParallelFormat::printKaszonyiValues(CubicGraph &cubicGraph, con
             }
 
             f << "Number of isolated circles: " << graph.getNumberOfIsolatedCircles() << std::endl;
+             */
+
+
+            /*if(graphQueue.size() <= 1000){
+                std::cout << "Queue_size: " << graphQueue.size() << std::endl;
+                std::cout << "ID: " <<graph.getId() << " PARENT: " << graph.getParentId() << std::endl;
+                std::cout << "Depth: " << graph.getDepth() << std::endl;
+                std::cout << graph.getVertices().size() << std::endl;
+                for(auto e : graph.getEdges()){
+                    std::cout << e.toString() << " " << e.isOriginal() << std::endl;
+                }
+                std::cout << std::endl;
+            }*/
+
 
 
             for(auto e : graph.getEdges()) {
-                if(graph.getKaszonyiValue(e) != 0)
-                    f << "****************" << std::endl
+                if(graph.getKaszonyiValue(e) != 0 && e.isOriginal()){
+                    //TODO remove this temporary part
+                    std::cout << "Graph id: " << graph.getId() << std::endl;
+                    std::cout << "Parent id: " << graph.getParentId() << std::endl;
+                    std::cout << "Depth: " << graph.getDepth() << std::endl;
+
+
+                    std::cout << "****************" << std::endl
                       << e.toString() << ": " << graph.getKaszonyiValue(e) << std::endl
                       << "****************" << std::endl;
+                }
             }
 
             if(!graphQueue.empty()){
                 f << std::endl;
             }
         }
+        f << "Depth: " << maxDepth << std::endl;
         f.close();
     }catch (std::exception &e) {
         std::cout << "..." << std::endl;
