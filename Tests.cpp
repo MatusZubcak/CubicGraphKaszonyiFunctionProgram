@@ -49,9 +49,6 @@ int Tests::run(){
     assert(e24 >= e12);
     assert(e13 <= e24);
 
-    e12.setKaszonyiValue(7);
-    assert(e12.getKaszonyiValue() == 7);
-
     assert(e12.getMultiplicity() == 1);
     e12.incrementMultiplicity();
     assert(e12.getMultiplicity() == 2);
@@ -700,10 +697,13 @@ int Tests::run(){
     CubicGraph test24_expectedGraph(test24_expectedVertices, test24_expetedEdges, 2);
     assert(test24_suppressed == test24_expectedGraph);
     assert(test24_suppressed.getEdges() == test24_expetedEdges);
-    std::cout << test24_graph.getKaszonyiValue(Edge(1,2)) << std::endl;
+    assert(test24_graph.getKaszonyiValue(Edge(1,2)) == 9);
 
+
+
+    //GRAPG LOADER TESTS
     GraphLoaderAdjLists graphLoader;
-    std::queue<CubicGraph> graphQueue1 = graphLoader.loadNewGraphs("GraphLoader_test1.txt");
+    std::queue<CubicGraph> graphQueue1 = graphLoader.loadNewGraphs("test1_GraphLoader.txt");
 
     std::set<unsigned int> graphLoader_test1_vertices{0,1,2,3};
     std::set<Edge> graphLoader_test1_edges1{Edge(0,0), Edge(0,1),
@@ -752,101 +752,30 @@ int Tests::run(){
     assert(graphQueue1.empty());
 
 
-    /*
-    std::ofstream of1;
-    try {
-        graphLoader.loadNewGraphs("GraphLoader_test1.txt");
-        GraphPrinterZeroDepthFormat graphPrinter;
-        of1.open("tmp.txt");
-        of1 << "4" << std::endl;
-        of1.close();
-        CubicGraph graphPrinter_test1_graph = graphLoader.nextGraph();
-        graphPrinter.printGraph_adjListsFormat(graphPrinter_test1_graph, "tmp.txt", APPEND);
-        while (graphLoader.hasNext()) {
-            of1.open("tmp.txt", std::ios::app);
-            of1 << std::endl;
-            of1.close();
-            graphPrinter_test1_graph = graphLoader.nextGraph();
-            graphPrinter.printGraph_adjListsFormat(graphPrinter_test1_graph, "tmp.txt", APPEND);
-        }
-    }catch(std::exception &e) {
-        std::cout << "..." << std::endl;
-        std::cout << e.what() << std::endl;
-        of1.close();
-    }
-
-    std::ifstream if1;
-    std::ifstream if2;
-    try {
-        if1.open("GraphPrinter_test1_expectedFile.txt");
-        if2.open("tmp.txt");
-        std::string if1_getlineString;
-        std::string if2_getlineString;
-        while(!if1.eof() && !if2.eof()){
-            assert(if1.get() == if2.get());
-        }
-        assert(if1.eof());
-        assert(if2.eof());
-        if1.close();
-        if2.close();
-    }catch(std::exception &e) {
-        std::cout << "..." << std::endl;
-        std::cout << e.what() << std::endl;
-        if1.close();
-        if2.close();
-    }
-    std::remove("tmp.txt");
-     */
-
-
-    GraphPrinterSemestralProjectFormat graphPrinter;
-    std::queue<CubicGraph> graphQueue2 = graphLoader.loadNewGraphs("16g3e.txt");
-    graphPrinter.printKaszonyiValues(graphQueue2, "outro_semestral.txt", NO_APPEND);
-
-
-
-    /*std::ofstream f;
-    f.open("outro.txt");
-    f << "16" << std::endl;
-    f.close();
-    while(!graphQueue2.empty()){
-        CubicGraph cg = graphQueue2.front();
-        graphQueue2.pop();
-        graphPrinter.printGraph(cg, "outro.txt", APPEND);
-        graphPrinter.printKaszonyiValue_forAllEdges(cg, "outro.txt", APPEND);
-        f.open("outro.txt", std::ios::app);
-        f << std::endl;
-        f.close();
-    }*/
 
     FileTester fileTester = FileTester();
-    assert(fileTester.compareFiles("16g3e.txt", "16g3e-copy.txt"));
-    assert(fileTester.compareFiles("outro.txt", "outro-copy.txt"));
-    assert(!fileTester.compareFiles("16g3e.txt", "16g3e-missingLastLine.txt"));
-    assert(!fileTester.compareFiles("16g3e.txt","16g3e-differentLines.txt"));
+    assert(fileTester.compareFiles("test2_FileTester.txt", "test2_FileTester_copy.txt"));
+    assert(fileTester.compareFiles("test3_FileTester.txt", "test3_FileTester_copy.txt"));
+    assert(!fileTester.compareFiles("test2_FileTester.txt", "test2_FileTester_missingLastLine.txt"));
+    assert(!fileTester.compareFiles("test2_FileTester.txt","test2_FileTester_differentLines.txt"));
 
     GraphPrinterSequentialFormat graphPrinterSequentialFormat = GraphPrinterSequentialFormat();
     GraphPrinterParallelFormat graphPrinterParallelFormat = GraphPrinterParallelFormat();
 
-    /*
-    CubicGraph cubicGraphSequential1 = graphLoader.loadNewGraphs("16g3e.txt").front();
-    graphPrinterSequentialFormat.printKaszonyiValues(cubicGraphSequential1, "16ge3 firstGraph - sequential.txt", NO_APPEND);
-    graphPrinterSequentialFormat.printKaszonyiValues(cubicGraphSequential1, "16ge3 firstGraph - parallel.txt", NO_APPEND);
-
-    CubicGraph scrit = graphLoader.loadNewGraphs("SCRIT34.txt").front();
-    graphPrinterSequentialFormat.printKaszonyiValues(scrit, "SCRIT34 firstGraph - sequential.txt", NO_APPEND);
-    graphPrinterParallelFormat.printKaszonyiValues(scrit, "SCRIT34 firstGraph - parallel.txt", NO_APPEND);
-
-    GraphPrinterSemestralProjectFormat graphPrinterSemestralProjectFormat = GraphPrinterSemestralProjectFormat();
-    graphPrinterSemestralProjectFormat.printKaszonyiValues(scrit, "SCRIT34 semestral.txt", NO_APPEND);
-    */
 
 
-    std::cout << "XXX" << std::endl;
-    CubicGraph cg_test = graphLoader.loadNewGraphs("xxx.txt").front();
-    graphPrinterParallelFormat.printKaszonyiValues(cg_test, "xxxOutroP.txt", NO_APPEND);
-    graphPrinterSequentialFormat.printKaszonyiValues(cg_test, "xxxOutroS.txt", NO_APPEND);
-
+    std::set<unsigned int> test25_vertices = {0, 1, 2, 3, 4, 7, 8,9, 10, 11, 12, 13};
+    std::set<Edge> test25_edges = {Edge(1,2), Edge(2,3), Edge(3,4),
+                            Edge(1,4), Edge(1,3), Edge(2,4),
+                            Edge(0,11), Edge(0,12), Edge(0,13),
+                            Edge(11,13), Edge(12,13),
+                            Edge(9, 10), Edge(10,11), Edge(10,12),
+                            Edge(9,8), Edge(9,7)};
+    Edge e = Edge(7,8);
+    e.incrementMultiplicity();
+    test25_edges.insert(e);
+    CubicGraph test25_graph = CubicGraph(test25_vertices, test25_edges);
+    assert(test25_graph.getKaszonyiValue(Edge(10,9)) > 0);
 
 
     std::cout << "ALL TESTS PASSED" << std::endl;

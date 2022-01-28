@@ -31,18 +31,16 @@ std::queue<CubicGraph> SequentialSuppression::findDepth(const CubicGraph& cubicG
         finalGraphQueue.push(graph);
     }
 
+    //TODO This was for time being removed, so the last graph in queue is the first graph with coloring
+    /*
     while(!graphQueue.empty()){
         CubicGraph graph = graphQueue.front();
         graphQueue.pop();
         if(graph.getDepth() <= depth){
-            /*
-            for(auto e : graph.getEdges()){
-                graph.getKaszonyiValue(e);
-            }
-            */
             finalGraphQueue.push(graph);
         }
     }
+    */
 
     return finalGraphQueue;
 }

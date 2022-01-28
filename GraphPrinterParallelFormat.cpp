@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <map>
 #include "GraphPrinterParallelFormat.h"
 #include "ParallelSuppression.h"
 
@@ -60,9 +61,85 @@ bool GraphPrinterParallelFormat::printKaszonyiValues(CubicGraph &cubicGraph, con
         std::queue<CubicGraph> graphQueue = parallelSuppression.findDepth(cubicGraph);
         bool firstGraph = true;
         unsigned int maxDepth = 0;
-        while(!graphQueue.empty()){
-            //TODO look for commented parts here (remove)
 
+        //TODO this is new
+        std::map<unsigned int, CubicGraph> graphDict;
+        CubicGraph lastGraph = graphQueue.back();
+        maxDepth = lastGraph.getDepth();
+        while(!graphQueue.empty()) {
+            CubicGraph cg = graphQueue.front();
+            unsigned int cg_id = cg.getId();
+            graphDict.insert({cg_id, cg});
+            graphQueue.pop();
+        }
+
+        CubicGraph parentGraph = lastGraph;
+        std::vector<CubicGraph> listOfSuppressedGraphs;
+        while(parentGraph.getId() != 0) {
+            listOfSuppressedGraphs.push_back(parentGraph);
+            unsigned int parent_id = parentGraph.getParentId();
+            parentGraph = graphDict[parent_id];
+        }
+        listOfSuppressedGraphs.push_back(parentGraph);
+
+
+        // TODO NEW PART - ONLY SUCCESSFUL PATH PRINTED
+        while(!listOfSuppressedGraphs.empty()) {
+            CubicGraph graph = listOfSuppressedGraphs.back();
+            listOfSuppressedGraphs.pop_back();
+            if (firstGraph) {
+                f << graph.size() << std::endl;
+                firstGraph = false;
+            }
+
+            f << "Graph id: " << graph.getId() << std::endl;
+            f << "Parent id: " << graph.getParentId() << std::endl;
+            f << "Depth: " << graph.getDepth() << std::endl;
+
+            std::vector<std::pair<unsigned int, bool>> linearGraphRepresentation =
+                    getLinearGraphRepresentation(graph);
+            std::set<unsigned int> vertices = graph.getVertices();
+
+            auto it = vertices.begin();
+            for (int i = 0; i < graph.size(); i++) {
+                f << *it << ": "
+                  << linearGraphRepresentation[3 * i].first << " "
+                  << linearGraphRepresentation[3 * i + 1].first << " "
+                  << linearGraphRepresentation[3 * i + 2].first
+                  << std::endl;
+                it++;
+            }
+
+            f << "Number of isolated circles: " << graph.getNumberOfIsolatedCircles() << std::endl;
+
+            for (auto e : graph.getEdges()) {
+                //if(graph.getKaszonyiValue(e) != 0)
+                //TODO fix output format
+                if(e.isOriginal())
+                    f << e.toString() << ": " << graph.getKaszonyiValue(e) << " is original" << std::endl;
+                else
+                    f << e.toString() << ": " << graph.getKaszonyiValue(e) << std::endl;
+            }
+
+            if (!graphQueue.empty()) {
+                f << std::endl;
+            }
+        }
+            f << "Depth: " << maxDepth << std::endl;
+            f.close();
+    }catch (std::exception &e) {
+        std::cout << "..." << std::endl;
+        std::cout << e.what() << std::endl;
+        f.close();
+    }
+    return true;
+}
+
+
+
+    //TODO OLD PART - WITH QUEUE - ALL GRAPHS PRINTED - look for commented parts here (remove)
+    /*
+        while(!graphQueue.empty()){
             CubicGraph graph = graphQueue.front();
             graphQueue.pop();
             maxDepth = std::max(maxDepth, graph.getDepth());
@@ -72,7 +149,7 @@ bool GraphPrinterParallelFormat::printKaszonyiValues(CubicGraph &cubicGraph, con
                 firstGraph = false;
             }
 
-            /*
+
             f << "Graph id: " << graph.getId() << std::endl;
             f << "Parent id: " << graph.getParentId() << std::endl;
             f << "Depth: " << graph.getDepth() << std::endl;
@@ -92,40 +169,18 @@ bool GraphPrinterParallelFormat::printKaszonyiValues(CubicGraph &cubicGraph, con
             }
 
             f << "Number of isolated circles: " << graph.getNumberOfIsolatedCircles() << std::endl;
-             */
-
-
-            /*if(graphQueue.size() <= 1000){
-                std::cout << "Queue_size: " << graphQueue.size() << std::endl;
-                std::cout << "ID: " <<graph.getId() << " PARENT: " << graph.getParentId() << std::endl;
-                std::cout << "Depth: " << graph.getDepth() << std::endl;
-                std::cout << graph.getVertices().size() << std::endl;
-                for(auto e : graph.getEdges()){
-                    std::cout << e.toString() << " " << e.isOriginal() << std::endl;
-                }
-                std::cout << std::endl;
-            }*/
-
-
 
             for(auto e : graph.getEdges()) {
-                if(graph.getKaszonyiValue(e) != 0 && e.isOriginal()){
-                    //TODO remove this temporary part
-                    std::cout << "Graph id: " << graph.getId() << std::endl;
-                    std::cout << "Parent id: " << graph.getParentId() << std::endl;
-                    std::cout << "Depth: " << graph.getDepth() << std::endl;
-
-
-                    std::cout << "****************" << std::endl
-                      << e.toString() << ": " << graph.getKaszonyiValue(e) << std::endl
-                      << "****************" << std::endl;
-                }
+                //if(graph.getKaszonyiValue(e) != 0)
+                //TODO fix output format
+                f << e.toString() << ": " << graph.getKaszonyiValue(e) << std::endl;
             }
 
             if(!graphQueue.empty()){
                 f << std::endl;
             }
         }
+
         f << "Depth: " << maxDepth << std::endl;
         f.close();
     }catch (std::exception &e) {
@@ -135,6 +190,7 @@ bool GraphPrinterParallelFormat::printKaszonyiValues(CubicGraph &cubicGraph, con
     }
     return true;
 }
+     */
 
 bool GraphPrinterParallelFormat::printKaszonyiValues(std::queue<CubicGraph> &graphQueue, const std::string &filename,
                                                        append append) {

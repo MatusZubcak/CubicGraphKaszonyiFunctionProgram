@@ -13,12 +13,12 @@
 
 class CubicGraph {
 private:
-    unsigned int unique_id;
-    unsigned int parent_id;
-    unsigned int depth;
+    unsigned int unique_id{};
+    unsigned int parent_id{};
+    unsigned int depth{};
     std::set<unsigned int> vertices;
     std::set<Edge> edges;
-    unsigned int numberOfIsolatedCircles;
+    unsigned int numberOfIsolatedCircles{};
     std::shared_ptr<KaszonyiFunction> strategy;
 
     void addEdge(Edge e);
@@ -35,6 +35,7 @@ public:
     CubicGraph(unsigned int id, std::set<unsigned int>& vertices, std::set<Edge>& edges);
     CubicGraph(std::set<unsigned int>& vertices, std::set<Edge>& edges, unsigned int numberOfIsolatedCircles);
     CubicGraph(std::set<unsigned int>& vertices, std::set<Edge>& edges);
+    CubicGraph()= default;
 
     std::set<Edge> getEdges();
 

@@ -13,7 +13,6 @@
 class Edge {
 
 private:
-    int kaszonyiValue;
     int multiplicity;
     bool original;
     const std::pair<const unsigned int, const unsigned int> incidentVertices;
@@ -29,10 +28,6 @@ public:
     Edge(unsigned int vertex1, unsigned int vertex2, bool isOriginal);
     Edge(std::pair<unsigned int, unsigned int> vertices, bool isOriginal);
     Edge(unsigned int vertex1,unsigned int vertex2);
-
-    void setKaszonyiValue(int kaszonyiValue);
-
-    int getKaszonyiValue() const;
 
     std::pair<unsigned int, unsigned int> getIncidentvertices();
 

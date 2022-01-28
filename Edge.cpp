@@ -7,21 +7,12 @@
 Edge::Edge(unsigned int vertex1, unsigned int vertex2, bool isOriginal) :
     incidentVertices ( std::min(vertex1, vertex2), std::max(vertex1, vertex2)){
 
-    this->kaszonyiValue = -1;
     this->multiplicity = 1;
     this->original = isOriginal;
 }
 
 Edge::Edge(unsigned int vertex1, unsigned int vertex2) : Edge(vertex1, vertex2, true) {};
 Edge::Edge(std::pair<unsigned int, unsigned int> vertices, bool isOriginal) : Edge(vertices.first, vertices.second, isOriginal) {}
-
-void Edge::setKaszonyiValue(int kaszonyiValue) {
-    this->kaszonyiValue = kaszonyiValue;
-}
-
-int Edge::getKaszonyiValue() const {
-    return kaszonyiValue;
-}
 
 std::pair<unsigned int, unsigned int> Edge::getIncidentvertices() {
     return incidentVertices;

@@ -6,7 +6,6 @@
 #include "CubicGraph.h"
 #include "KaszonyiFactorFunction.h"
 
-
 CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int> &vertices, std::set<Edge> &edges, unsigned int numberOfIsolatedCircles) {
     this->unique_id = id;
     this->parent_id = 0;
@@ -64,25 +63,14 @@ unsigned int CubicGraph::getKaszonyiValue(Edge edge) {
     }
 
     if(edges.find(edge)->isLoop()){
-        Edge edgeToBeUpdated = *edges.find(edge);
-        edgeToBeUpdated.setKaszonyiValue(0);
-        edges.erase(edge);
-        edges.insert(edgeToBeUpdated);
+        return 0;
     }
 
-    if(!edges.find(edge)->isLoop() && edges.find(edge)->getKaszonyiValue() == -1){
-        Edge edgeToBeUpdated = *edges.find(edge);
-        CubicGraph suppressedGraph = this->suppressEdge(edge);
-        edgeToBeUpdated.setKaszonyiValue
-            (this->strategy->getKaszonyiValue(suppressedGraph.vertices,
+    CubicGraph suppressedGraph = this->suppressEdge(edge);
+    unsigned int KaszonyiValue = this->strategy->getKaszonyiValue(suppressedGraph.vertices,
                                               suppressedGraph.edges,
-                                              suppressedGraph.numberOfIsolatedCircles));
-
-        edges.erase(edge);
-        edges.insert(edgeToBeUpdated);
-    }
-
-    return edges.find(edge)->getKaszonyiValue();
+                                              suppressedGraph.numberOfIsolatedCircles);
+    return KaszonyiValue;
 }
 
 bool operator==(const CubicGraph &cg1, const CubicGraph &cg2) {

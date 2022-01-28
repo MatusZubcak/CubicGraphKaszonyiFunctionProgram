@@ -15,28 +15,9 @@ std::queue<CubicGraph> ParallelSuppression::findDepth(const CubicGraph& cubicGra
     bool coloringFound = false;
 
     while(!graphQueue.empty() && !coloringFound){
-        //TODO look for commented parts here (remove)
-
-        /*
-         if(unique_id % 1000 == 0) {
-            std::cout << unique_id << std::endl;
-        }
-        */
 
         CubicGraph graph = graphQueue.front();
         graphQueue.pop();
-
-        /*
-        if(unique_id >= 3985000){
-            std::cout << "Queue_size: " << graphQueue.size() << std::endl;
-            std::cout << "ID: " <<graph.getId() << " PARENT: " << graph.getParentId() << std::endl;
-            std::cout << "Depth: " << graph.getDepth() << std::endl;
-            std::cout << graph.getVertices().size() << std::endl;
-            for(auto e : graph.getEdges()){
-                std::cout << e.toString() << " " << e.isOriginal() << std::endl;
-            }
-            std::cout << std::endl;
-        }*/
 
         for(auto e : graph.getEdges()) {
             if(e.isOriginal()) {
@@ -54,22 +35,17 @@ std::queue<CubicGraph> ParallelSuppression::findDepth(const CubicGraph& cubicGra
         finalGraphQueue.push(graph);
     }
 
+    //TODO This was for time being removed, so the last graph in queue is the first graph with coloring
+    /*
     while(!graphQueue.empty()){
         CubicGraph graph = graphQueue.front();
         graphQueue.pop();
 
         if(graph.getDepth() <= depth){
-            /*
-            for(auto e : graph.getEdges()){
-                graph.getKaszonyiValue(e);
-            }
-            */
             finalGraphQueue.push(graph);
         }
     }
-
-    //TODO remove this eventually
-    std::cout << "RETURNING..." << std::endl;
+     */
 
     return finalGraphQueue;
 }
