@@ -58,17 +58,15 @@ bool GraphPrinterSequentialFormat::printKaszonyiValues(CubicGraph &cubicGraph, c
         }
 
         SequentialSuppression sequentialSuppression = SequentialSuppression();
-        std::queue<CubicGraph> graphQueue = sequentialSuppression.findDepth(cubicGraph);
+        std::vector<CubicGraph> graphList = sequentialSuppression.findDepth(cubicGraph);
         bool firstGraph = true;
         unsigned int maxDepth = 0;
 
         std::map<unsigned int, CubicGraph> graphDict;
-        CubicGraph lastGraph = graphQueue.back();
+        CubicGraph lastGraph = graphList.back();
         maxDepth = lastGraph.getDepth();
-        while(!graphQueue.empty()) {
-            CubicGraph cg = graphQueue.front();
-            graphDict.insert({cg.getId(), cg});
-            graphQueue.pop();
+        for(const auto& graph : graphList){
+            graphDict.insert({graph.getId(), graph});
         }
 
         CubicGraph parentGraph = lastGraph;
@@ -115,9 +113,7 @@ bool GraphPrinterSequentialFormat::printKaszonyiValues(CubicGraph &cubicGraph, c
                 f << e.toString() << ": " << graph.getKaszonyiValue(e) << std::endl;
             }
 
-            if (!graphQueue.empty()) {
-                f << std::endl;
-            }
+            f << std::endl;
         }
         f << "Depth: " << maxDepth << std::endl;
         f.close();
@@ -191,7 +187,7 @@ bool GraphPrinterSequentialFormat::printKaszonyiValues(CubicGraph &cubicGraph, c
     return true;
 }*/
 
-bool GraphPrinterSequentialFormat::printKaszonyiValues(std::queue<CubicGraph> &graphQueue, const std::string &filename,
+bool GraphPrinterSequentialFormat::printKaszonyiValues(std::vector<CubicGraph> &graphList, const std::string &filename,
                                                        append append) {
     return false;
 }

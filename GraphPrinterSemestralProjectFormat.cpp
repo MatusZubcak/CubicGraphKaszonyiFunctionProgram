@@ -97,7 +97,7 @@ bool GraphPrinterSemestralProjectFormat::printKaszonyiValues(CubicGraph &cubicGr
     return true;
 }
 
-bool GraphPrinterSemestralProjectFormat::printKaszonyiValues(std::queue<CubicGraph> &graphQueue,
+bool GraphPrinterSemestralProjectFormat::printKaszonyiValues(std::vector<CubicGraph> &graphList,
                                                              const std::string &filename,
                                                              append append) {
     std::ofstream f;
@@ -111,16 +111,14 @@ bool GraphPrinterSemestralProjectFormat::printKaszonyiValues(std::queue<CubicGra
             throw FileCannotBeOpenedException();
         }
 
-        while(!graphQueue.empty()){
-            CubicGraph cubicGraph = graphQueue.front();
-            graphQueue.pop();
+        for(auto graph : graphList){
 
             std::vector<std::pair<unsigned int, bool>> linearGraphRepresentation =
-                    getLinearGraphRepresentation(cubicGraph);
-            std::set<unsigned int> vertices = cubicGraph.getVertices();
+                    getLinearGraphRepresentation(graph);
+            std::set<unsigned int> vertices = graph.getVertices();
 
             auto it = vertices.begin();
-            for(int i = 0; i < cubicGraph.size(); i++){
+            for(int i = 0; i < graph.size(); i++){
                 f << linearGraphRepresentation[3*i].first << " "
                   << linearGraphRepresentation[3*i+1].first << " "
                   << linearGraphRepresentation[3*i+2].first
@@ -128,21 +126,18 @@ bool GraphPrinterSemestralProjectFormat::printKaszonyiValues(std::queue<CubicGra
                 it++;
             }
 
-            for(auto e : cubicGraph.getEdges()) {
+            for(auto e : graph.getEdges()) {
                 f << "potlacena hrana: ( "
                   << e.getIncidentvertices().first
                   << ", "
                   << e.getIncidentvertices().second
                   << " )    hodnota psi: "
-                  << cubicGraph.getKaszonyiValue(e)
+                  << graph.getKaszonyiValue(e)
                   << std::endl;
             }
-
-            if(!graphQueue.empty()){
-                f << std::endl;
-                f << std::endl;
-            }
         }
+        f << std::endl
+          << std::endl;
         f.close();
     }catch (std::exception &e) {
         std::cout << "..." << std::endl;

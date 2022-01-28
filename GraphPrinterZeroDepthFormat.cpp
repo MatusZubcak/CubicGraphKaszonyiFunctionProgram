@@ -90,7 +90,7 @@ bool GraphPrinterZeroDepthFormat::printKaszonyiValues(CubicGraph &cubicGraph, co
     return true;
 }
 
-bool GraphPrinterZeroDepthFormat::printKaszonyiValues(std::queue<CubicGraph> &graphQueue, const std::string &filename,
+bool GraphPrinterZeroDepthFormat::printKaszonyiValues(std::vector<CubicGraph> &graphList, const std::string &filename,
                                                       append append) {
     std::ofstream f;
     if(append == APPEND)
@@ -104,22 +104,20 @@ bool GraphPrinterZeroDepthFormat::printKaszonyiValues(std::queue<CubicGraph> &gr
         }
         bool firstGraph = true;
 
-        while(!graphQueue.empty()){
-            CubicGraph cubicGraph = graphQueue.front();
-            graphQueue.pop();
+        for(auto graph : graphList){
 
             if(firstGraph){
-                f << cubicGraph.size() << std::endl;
+                f << graph.size() << std::endl;
                 firstGraph = false;
             }
 
 
             std::vector<std::pair<unsigned int, bool>> linearGraphRepresentation =
-                    getLinearGraphRepresentation(cubicGraph);
-            std::set<unsigned int> vertices = cubicGraph.getVertices();
+                    getLinearGraphRepresentation(graph);
+            std::set<unsigned int> vertices = graph.getVertices();
 
             auto it = vertices.begin();
-            for(int i = 0; i < cubicGraph.size(); i++){
+            for(int i = 0; i < graph.size(); i++){
                 f << *it << ": "
                   << linearGraphRepresentation[3*i].first << " "
                   << linearGraphRepresentation[3*i+1].first << " "
@@ -128,16 +126,13 @@ bool GraphPrinterZeroDepthFormat::printKaszonyiValues(std::queue<CubicGraph> &gr
                 it++;
             }
 
-            f << "Number of isolated circles: " << cubicGraph.getNumberOfIsolatedCircles() << std::endl;
+            f << "Number of isolated circles: " << graph.getNumberOfIsolatedCircles() << std::endl;
 
-            for(auto e : cubicGraph.getEdges()) {
-                f << e.toString() << ": " << cubicGraph.getKaszonyiValue(e) << std::endl;
-            }
-
-            if(!graphQueue.empty()){
-                f << std::endl;
+            for(auto e : graph.getEdges()) {
+                f << e.toString() << ": " << graph.getKaszonyiValue(e) << std::endl;
             }
         }
+        f << std::endl;
         f.close();
     }catch (std::exception &e) {
         std::cout << "..." << std::endl;

@@ -58,19 +58,16 @@ bool GraphPrinterParallelFormat::printKaszonyiValues(CubicGraph &cubicGraph, con
         }
 
         ParallelSuppression parallelSuppression = ParallelSuppression();
-        std::queue<CubicGraph> graphQueue = parallelSuppression.findDepth(cubicGraph);
+        std::vector<CubicGraph> graphList = parallelSuppression.findDepth(cubicGraph);
         bool firstGraph = true;
         unsigned int maxDepth = 0;
 
         //TODO this is new
         std::map<unsigned int, CubicGraph> graphDict;
-        CubicGraph lastGraph = graphQueue.back();
+        CubicGraph lastGraph = graphList.back();
         maxDepth = lastGraph.getDepth();
-        while(!graphQueue.empty()) {
-            CubicGraph cg = graphQueue.front();
-            unsigned int cg_id = cg.getId();
-            graphDict.insert({cg_id, cg});
-            graphQueue.pop();
+        for(const auto& graph : graphList) {
+            graphDict.insert({graph.getId(), graph});
         }
 
         CubicGraph parentGraph = lastGraph;
@@ -121,10 +118,8 @@ bool GraphPrinterParallelFormat::printKaszonyiValues(CubicGraph &cubicGraph, con
                     f << e.toString() << ": " << graph.getKaszonyiValue(e) << std::endl;
             }
 
-            if (!graphQueue.empty()) {
                 f << std::endl;
             }
-        }
             f << "Depth: " << maxDepth << std::endl;
             f.close();
     }catch (std::exception &e) {
@@ -192,7 +187,7 @@ bool GraphPrinterParallelFormat::printKaszonyiValues(CubicGraph &cubicGraph, con
 }
      */
 
-bool GraphPrinterParallelFormat::printKaszonyiValues(std::queue<CubicGraph> &graphQueue, const std::string &filename,
+bool GraphPrinterParallelFormat::printKaszonyiValues(std::vector<CubicGraph> &graphList, const std::string &filename,
                                                        append append) {
     return false;
 }

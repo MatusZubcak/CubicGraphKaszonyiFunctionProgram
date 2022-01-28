@@ -15,7 +15,7 @@ public:
 
         bool printGraph(CubicGraph& cubicGraph, const std::string& filename, append append) override;
         bool printKaszonyiValues(CubicGraph& cubicGraph, const std::string& filename, append append) override;
-        bool printKaszonyiValues(std::queue<CubicGraph>& graphQueue, const std::string& filename, append append) override;
+        bool printKaszonyiValues(std::vector<CubicGraph>& graphList, const std::string& filename, append append) override;
 };
 
 

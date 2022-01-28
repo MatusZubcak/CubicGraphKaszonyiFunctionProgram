@@ -5,9 +5,9 @@
 #ifndef CUBICGRAPHKASZONYIFUNCTIONPROGRAM_GRAPHPRINTER_H
 #define CUBICGRAPHKASZONYIFUNCTIONPROGRAM_GRAPHPRINTER_H
 
-#include <queue>
 #include "CubicGraph.h"
 #include "Enums.h"
+#include <vector>
 
 class GraphPrinter{
 protected:
@@ -16,7 +16,7 @@ protected:
 public:
     virtual bool printGraph(CubicGraph& cubicGraph, const std::string& filename, append append) =0;
     virtual bool printKaszonyiValues(CubicGraph& cubicGraph, const std::string& filename, append append) =0;
-    virtual bool printKaszonyiValues(std::queue<CubicGraph>& graphQueue, const std::string& filename, append append) =0;
+    virtual bool printKaszonyiValues(std::vector<CubicGraph>& graphList, const std::string& filename, append append) =0;
     virtual ~GraphPrinter()= default;;
 
 };

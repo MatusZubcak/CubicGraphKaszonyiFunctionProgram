@@ -703,7 +703,8 @@ int Tests::run(){
 
     //GRAPG LOADER TESTS
     GraphLoaderAdjLists graphLoader;
-    std::queue<CubicGraph> graphQueue1 = graphLoader.loadNewGraphs("test1_GraphLoader.txt");
+    std::vector<CubicGraph> graphList1 = graphLoader.loadNewGraphs("test1_GraphLoader.txt");
+    std::queue<CubicGraph> graphQueue1(std::deque<CubicGraph>(graphList1.begin(), graphList1.end()));
 
     std::set<unsigned int> graphLoader_test1_vertices{0,1,2,3};
     std::set<Edge> graphLoader_test1_edges1{Edge(0,0), Edge(0,1),

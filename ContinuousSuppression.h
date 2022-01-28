@@ -5,12 +5,12 @@
 #ifndef CUBICGRAPHKASZONYIFUNCTIONPROGRAM_CONTINUOUSSUPPRESSION_H
 #define CUBICGRAPHKASZONYIFUNCTIONPROGRAM_CONTINUOUSSUPPRESSION_H
 
-#include <queue>
 #include "CubicGraph.h"
+#include <vector>
 
 class ContinuousSuppression{
 public:
-    virtual std::queue<CubicGraph> findDepth(const CubicGraph& cubicGraph) =0;
+    virtual std::vector<CubicGraph> findDepth(const CubicGraph& cubicGraph) =0;
 };
 
 #endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_CONTINUOUSSUPPRESSION_H

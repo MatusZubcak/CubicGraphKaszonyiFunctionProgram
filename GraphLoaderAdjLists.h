@@ -19,7 +19,7 @@ private:
 
 public:
     GraphLoaderAdjLists()= default;;
-    std::queue<CubicGraph> loadNewGraphs(const std::string& filename) override;
+    std::vector<CubicGraph> loadNewGraphs(const std::string& filename) override;
 };
 
 

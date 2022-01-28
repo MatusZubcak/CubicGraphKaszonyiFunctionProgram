@@ -57,6 +57,11 @@ unsigned int CubicGraph::getParentId() const{
     return parent_id;
 }
 
+//TODO optimise this function - now it only calls count_all_colorings function and returns true if > 0, which is dumb
+bool CubicGraph::isColorable() {
+    return this->strategy->getKaszonyiValue(this->vertices, this->edges, this->numberOfIsolatedCircles);
+}
+
 unsigned int CubicGraph::getKaszonyiValue(Edge edge) {
     if(edges.find(edge) == edges.end()){
         throw EdgeDoesNotExistException();

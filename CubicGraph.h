@@ -38,7 +38,6 @@ public:
     CubicGraph()= default;
 
     std::set<Edge> getEdges();
-
     std::set<unsigned int> getVertices();
 
     unsigned int size();
@@ -51,7 +50,9 @@ public:
 
     unsigned int getParentId() const;
 
+
     unsigned int getKaszonyiValue(Edge edge);
+    bool isColorable();
 
     CubicGraph suppressEdge(unsigned int id, Edge edge);
     CubicGraph suppressEdge(Edge edge);

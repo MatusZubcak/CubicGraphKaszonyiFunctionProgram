@@ -6,13 +6,12 @@
 #define CUBICGRAPHKASZONYIFUNCTIONPROGRAM_PARALLELSUPPRESSION_H
 
 
-#include <queue>
 #include "CubicGraph.h"
 #include "ContinuousSuppression.h"
 
 class ParallelSuppression : ContinuousSuppression {
 public:
-    std::queue<CubicGraph> findDepth(const CubicGraph& cubicGraph) override;
+    std::vector<CubicGraph> findDepth(const CubicGraph& cubicGraph) override;
 };
 
 

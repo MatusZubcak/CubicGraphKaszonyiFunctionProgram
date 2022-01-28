@@ -10,7 +10,7 @@
 class SequentialSuppression : ContinuousSuppression {
 
 public:
-    std::queue<CubicGraph> findDepth(const CubicGraph& cubicGraph) override;
+    std::vector<CubicGraph> findDepth(const CubicGraph& cubicGraph) override;
 };
 
 

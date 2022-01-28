@@ -24,8 +24,8 @@ CubicGraph& GraphLoaderAdjLists::nextGraph() {
 }
 */
 
-std::queue<CubicGraph> GraphLoaderAdjLists::loadNewGraphs(const std::string& filename) {
-    std::queue<CubicGraph> graphQueue;
+std::vector<CubicGraph> GraphLoaderAdjLists::loadNewGraphs(const std::string& filename) {
+    std::vector<CubicGraph> graphList;
     std::ifstream f;
     f.open(filename);
 
@@ -98,7 +98,7 @@ std::queue<CubicGraph> GraphLoaderAdjLists::loadNewGraphs(const std::string& fil
                 if (!correctlyDefinedGraph(vertices, edges)) {
                     throw BadlyDefinedGraphException();
                 }
-                graphQueue.push(CubicGraph(vertices, edges));
+                graphList.emplace_back(vertices,edges);
                 edges.clear();
             }
         }
@@ -112,7 +112,7 @@ std::queue<CubicGraph> GraphLoaderAdjLists::loadNewGraphs(const std::string& fil
         std::cout << e.what() << std::endl;
         f.close();
     }
-    return graphQueue;
+    return graphList;
 }
 
 void GraphLoaderAdjLists::insertEdgeWithMultiplicity(std::set<Edge> &edges,
