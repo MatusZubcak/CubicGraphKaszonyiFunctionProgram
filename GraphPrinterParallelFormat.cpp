@@ -6,7 +6,7 @@
 #include <iostream>
 #include <map>
 #include "GraphPrinterParallelFormat.h"
-#include "ParallelSuppression.h"
+#include "ParallelSuppressionNaive.h"
 
 
 bool GraphPrinterParallelFormat::printGraph(CubicGraph &cubicGraph, const std::string& filename, append append) {
@@ -57,9 +57,9 @@ bool GraphPrinterParallelFormat::printKaszonyiValues(CubicGraph &cubicGraph, con
             throw FileCannotBeOpenedException();
         }
 
-        ParallelSuppression parallelSuppression = ParallelSuppression();
-        std::vector<CubicGraph> graphList = parallelSuppression.findDepth(cubicGraph);
-        bool firstGraph = true;
+        ParallelSuppressionNaive parallelSuppression = ParallelSuppressionNaive();
+        std::vector<CubicGraph> suppressionSequence = parallelSuppression.findSuppressionSequence(cubicGraph);
+        /*bool firstGraph = true;
         unsigned int maxDepth = 0;
 
         //TODO this is new
@@ -77,13 +77,12 @@ bool GraphPrinterParallelFormat::printKaszonyiValues(CubicGraph &cubicGraph, con
             unsigned int parent_id = parentGraph.getParentId();
             parentGraph = graphDict[parent_id];
         }
-        listOfSuppressedGraphs.push_back(parentGraph);
+        listOfSuppressedGraphs.push_back(parentGraph);*/
 
 
+        bool firstGraph = true;
         // TODO NEW PART - ONLY SUCCESSFUL PATH PRINTED
-        while(!listOfSuppressedGraphs.empty()) {
-            CubicGraph graph = listOfSuppressedGraphs.back();
-            listOfSuppressedGraphs.pop_back();
+        for(auto graph : suppressionSequence) {
             if (firstGraph) {
                 f << graph.size() << std::endl;
                 firstGraph = false;
@@ -120,7 +119,7 @@ bool GraphPrinterParallelFormat::printKaszonyiValues(CubicGraph &cubicGraph, con
 
                 f << std::endl;
             }
-            f << "Depth: " << maxDepth << std::endl;
+            f << "Depth: " << suppressionSequence.back().getDepth() << std::endl;
             f.close();
     }catch (std::exception &e) {
         std::cout << "..." << std::endl;

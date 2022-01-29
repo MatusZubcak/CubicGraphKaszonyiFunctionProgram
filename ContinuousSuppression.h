@@ -10,7 +10,10 @@
 
 class ContinuousSuppression{
 public:
-    virtual std::vector<CubicGraph> findDepth(const CubicGraph& cubicGraph) =0;
+    virtual std::vector<CubicGraph> findSuppressionSequence(const CubicGraph& cubicGraph) =0;
+
+protected:
+    std::vector<CubicGraph> toSuppressionSequence(const std::vector<CubicGraph>& graphList);
 };
 
 #endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_CONTINUOUSSUPPRESSION_H

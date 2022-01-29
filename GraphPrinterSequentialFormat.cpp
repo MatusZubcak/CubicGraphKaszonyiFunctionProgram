@@ -6,7 +6,7 @@
 #include <iostream>
 #include <map>
 #include "GraphPrinterSequentialFormat.h"
-#include "SequentialSuppression.h"
+#include "SequentialSuppressionNaive.h"
 
 bool GraphPrinterSequentialFormat::printGraph(CubicGraph &cubicGraph, const std::string& filename, append append) {
     std::ofstream f;
@@ -57,9 +57,9 @@ bool GraphPrinterSequentialFormat::printKaszonyiValues(CubicGraph &cubicGraph, c
             throw FileCannotBeOpenedException();
         }
 
-        SequentialSuppression sequentialSuppression = SequentialSuppression();
-        std::vector<CubicGraph> graphList = sequentialSuppression.findDepth(cubicGraph);
-        bool firstGraph = true;
+        SequentialSuppressionNaive sequentialSuppression = SequentialSuppressionNaive();
+        std::vector<CubicGraph> suppressionSequence = sequentialSuppression.findSuppressionSequence(cubicGraph);
+        /*bool firstGraph = true;
         unsigned int maxDepth = 0;
 
         std::map<unsigned int, CubicGraph> graphDict;
@@ -77,11 +77,10 @@ bool GraphPrinterSequentialFormat::printKaszonyiValues(CubicGraph &cubicGraph, c
             parentGraph = graphDict[parent_id];
         }
         listOfSuppressedGraphs.push_back(parentGraph);
+        */
 
-
-        while(!listOfSuppressedGraphs.empty()) {
-            CubicGraph graph = listOfSuppressedGraphs.back();
-            listOfSuppressedGraphs.pop_back();
+        bool firstGraph = true;
+        for(auto graph : suppressionSequence){
             if (firstGraph) {
                 f << graph.size() << std::endl;
                 firstGraph = false;
@@ -115,7 +114,7 @@ bool GraphPrinterSequentialFormat::printKaszonyiValues(CubicGraph &cubicGraph, c
 
             f << std::endl;
         }
-        f << "Depth: " << maxDepth << std::endl;
+        f << "Depth: " << suppressionSequence.back().getDepth() << std::endl;
         f.close();
     }catch (std::exception &e) {
         std::cout << "..." << std::endl;
@@ -132,7 +131,7 @@ bool GraphPrinterSequentialFormat::printKaszonyiValues(CubicGraph &cubicGraph, c
             throw FileCannotBeOpenedException();
         }
 
-        SequentialSuppression sequentialSuppression = SequentialSuppression();
+        SequentialSuppressionNaive sequentialSuppression = SequentialSuppressionNaive();
         std::queue<CubicGraph> graphQueue = sequentialSuppression.findDepth(cubicGraph);
         bool firstGraph = true;
         unsigned int maxDepth = 0;

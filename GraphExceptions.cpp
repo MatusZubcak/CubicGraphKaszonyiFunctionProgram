@@ -47,3 +47,8 @@ const char* FileCannotBeOpenedException::what() const noexcept
 {
     return "Unable to open file";
 }
+
+const char* ConversionFromListToSequenceFailed::what() const noexcept
+{
+    return "While converting list of all generated graphs to the final suppression sequence an error occured";
+}

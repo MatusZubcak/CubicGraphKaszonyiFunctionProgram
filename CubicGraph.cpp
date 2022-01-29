@@ -29,15 +29,15 @@ CubicGraph::CubicGraph(std::set<unsigned int> &vertices, std::set<Edge> &edges, 
 CubicGraph::CubicGraph(std::set<unsigned int> &vertices, std::set<Edge> &edges) : CubicGraph(0,vertices, edges, 0) {};
 
 
-std::set<Edge> CubicGraph::getEdges() {
+std::set<Edge> CubicGraph::getEdges() const{
     return edges;
 }
 
-std::set<unsigned int> CubicGraph::getVertices() {
+std::set<unsigned int> CubicGraph::getVertices() const{
     return vertices;
 }
 
-unsigned int CubicGraph::size() {
+unsigned int CubicGraph::size() const{
     return vertices.size();
 }
 

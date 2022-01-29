@@ -42,14 +42,14 @@ void print(CubicGraph graph, const std::string& output, int& counter){
     std::cout << counter << std::endl;
     counter++;
 }
-
+/*
 int main(){
     Tests::run();
     return 0;
 }
+*/
 
 
-/*
 int main() {
     GraphLoaderAdjLists graphLoaderAdjLists = GraphLoaderAdjLists();
     std::string input;
@@ -69,10 +69,9 @@ int main() {
         f.open(output + "_semestral.txt");
         f.close();
 
-        std::queue<CubicGraph> graphQueue = graphLoaderAdjLists.loadNewGraphs(input);
-        while(!graphQueue.empty()) {
-            print(graphQueue.front(), output, counter);
-            graphQueue.pop();
+        std::vector<CubicGraph> graphList = graphLoaderAdjLists.loadNewGraphs(input);
+        for(const auto& graph : graphList) {
+            print(graph, output, counter);
         }
         std::cin >> input;
     }
@@ -80,7 +79,7 @@ int main() {
     //return Tests::run();
     return 0;
 }
-*/
+
 
 /*
 int main(){

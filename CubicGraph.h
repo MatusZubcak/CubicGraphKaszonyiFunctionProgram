@@ -37,10 +37,10 @@ public:
     CubicGraph(std::set<unsigned int>& vertices, std::set<Edge>& edges);
     CubicGraph()= default;
 
-    std::set<Edge> getEdges();
-    std::set<unsigned int> getVertices();
+    std::set<Edge> getEdges() const;
+    std::set<unsigned int> getVertices() const;
 
-    unsigned int size();
+    unsigned int size() const;
 
     unsigned int getNumberOfIsolatedCircles() const;
 
