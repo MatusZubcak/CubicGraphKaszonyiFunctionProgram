@@ -10,4 +10,9 @@ enum append{
     NO_APPEND
 };
 
+enum suppression{
+    PARALLEL,
+    SEQUENTIAL
+};
+
 #endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_ENUMS_H
