@@ -7,6 +7,7 @@
 #include <map>
 #include "GraphPrinterSequentialFormat.h"
 #include "SequentialSuppressionNaive.h"
+#include "SequentialSuppressionMemoized.h"
 
 bool GraphPrinterSequentialFormat::printGraph(CubicGraph &cubicGraph, const std::string& filename, append append) {
     std::ofstream f;
@@ -57,7 +58,12 @@ bool GraphPrinterSequentialFormat::printKaszonyiValues(CubicGraph &cubicGraph, c
             throw FileCannotBeOpenedException();
         }
 
+        //NAIVE SUPPRESSION
         SequentialSuppressionNaive sequentialSuppression = SequentialSuppressionNaive();
+
+        //MEMOIZED SUPPRESSION
+        //SequentialSuppressionMemoized sequentialSuppression = SequentialSuppressionMemoized();
+
         std::vector<CubicGraph> suppressionSequence = sequentialSuppression.findSuppressionSequence(cubicGraph);
         /*bool firstGraph = true;
         unsigned int maxDepth = 0;

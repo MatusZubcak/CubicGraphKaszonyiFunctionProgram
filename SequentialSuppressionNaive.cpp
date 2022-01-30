@@ -3,8 +3,6 @@
 //
 
 #include "SequentialSuppressionNaive.h"
-#include <queue>
-#include <iostream>
 
 std::vector<CubicGraph> SequentialSuppressionNaive::findSuppressionSequence(const CubicGraph& cubicGraph) {
     unsigned int unique_id = cubicGraph.getId() +1;

@@ -7,6 +7,7 @@
 #include <map>
 #include "GraphPrinterParallelFormat.h"
 #include "ParallelSuppressionNaive.h"
+#include "ParallelSuppressionMemoized.h"
 
 
 bool GraphPrinterParallelFormat::printGraph(CubicGraph &cubicGraph, const std::string& filename, append append) {
@@ -57,7 +58,12 @@ bool GraphPrinterParallelFormat::printKaszonyiValues(CubicGraph &cubicGraph, con
             throw FileCannotBeOpenedException();
         }
 
-        ParallelSuppressionNaive parallelSuppression = ParallelSuppressionNaive();
+        //NAIVE SUPPRESSION
+        //ParallelSuppressionNaive parallelSuppression = ParallelSuppressionNaive();
+
+        //MEMOIZED SUPPRESSION
+        ParallelSuppressionMemoized parallelSuppression = ParallelSuppressionMemoized();
+
         std::vector<CubicGraph> suppressionSequence = parallelSuppression.findSuppressionSequence(cubicGraph);
         /*bool firstGraph = true;
         unsigned int maxDepth = 0;
