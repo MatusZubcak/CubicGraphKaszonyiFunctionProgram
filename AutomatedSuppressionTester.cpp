@@ -42,6 +42,7 @@ bool AutomatedSuppressionTester::validDepth(const std::vector<CubicGraph> &suppr
 }
 
 bool AutomatedSuppressionTester::validSequence(std::vector<CubicGraph> &suppressionSequence, suppression suppression) {
+    std::set<Edge> originalEdges = suppressionSequence.front().getEdges();
 
     for(int i = 0; i < suppressionSequence.size() - 1; i++){
 
@@ -50,9 +51,14 @@ bool AutomatedSuppressionTester::validSequence(std::vector<CubicGraph> &suppress
         bool suppressionExists = false;
 
         for(auto edge : currentGraph.getEdges()){
-            if(currentGraph.suppressEdge(edge) == nextGraph){
-                suppressionExists = true;
-                break;
+            bool edge_isOriginal = originalEdges.find(edge) != originalEdges.end() &&
+                                   edge.getMultiplicity() == originalEdges.find(edge)->getMultiplicity();
+
+            if(suppression == SEQUENTIAL || (suppression == PARALLEL && edge_isOriginal)){
+                if(currentGraph.suppressEdge(edge) == nextGraph){
+                    suppressionExists = true;
+                    break;
+                }
             }
         }
         if(!suppressionExists){
