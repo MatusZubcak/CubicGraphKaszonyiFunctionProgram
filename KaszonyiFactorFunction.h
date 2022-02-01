@@ -17,7 +17,7 @@ class KaszonyiFactorFunction : public KaszonyiFunction {
 private:
     int kaszonyiValue;
 
-    void reccursivellyCountKaszonyi(std::vector<std::pair<unsigned int,bool>> linearGraphRepresentation,
+    void reccursivellyCountKaszonyi(std::vector<std::pair<unsigned int,bool>> &linearGraphRepresentation,
                                     unsigned int vertex);
 
     bool cycleIsEven(std::vector<std::pair<unsigned int, bool>> &linearGraphRepresentation,

@@ -110,7 +110,7 @@ bool KaszonyiFactorFunction::cycleIsEven
 
 /* rekurzivne zgeneruje vsetky mozne 1-faktory a vypocita pre kazdy z nich pocet ofarbeni */
 void KaszonyiFactorFunction::reccursivellyCountKaszonyi
-            (std::vector<std::pair<unsigned int, bool>>linearGraphRepresentation,
+            (std::vector<std::pair<unsigned int, bool>> &linearGraphRepresentation,
              unsigned int vertex){
     if(3*vertex >= linearGraphRepresentation.size()){
 
@@ -175,8 +175,6 @@ void KaszonyiFactorFunction::reccursivellyCountKaszonyi
 int KaszonyiFactorFunction::getKaszonyiValue(std::set<unsigned int>& vertices,
                                              std::set<Edge>& edges,
                                              unsigned int numberOfIsolatedCircles) {
-    //TODO remove eventually
-    bool isEmpty = vertices.empty() && edges.empty();
 
     kaszonyiValue = 0;
     std::vector<std::pair<unsigned int, bool>> linearGraphRepresentation =
@@ -196,16 +194,6 @@ int KaszonyiFactorFunction::getKaszonyiValue(std::set<unsigned int>& vertices,
         reccursivellyCountKaszonyi(linearGraphRepresentation, 1);
     } else{
         kaszonyiValue = 1;
-    }
-
-    //TODO remove eventually
-    if(isEmpty != linearGraphRepresentation.empty()){
-        std::cout << "LGR contradicts reality(empty graph), ";
-        if(isEmpty){
-            std::cout << "graph is empty\n";
-        }else{
-            std::cout << "graph is NOT empty\n";
-        }
     }
 
     kaszonyiValue *= int(std::pow(double(3), double(numberOfIsolatedCircles)));
