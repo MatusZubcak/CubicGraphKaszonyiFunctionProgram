@@ -11,12 +11,14 @@
 
 class GraphPrinter{
 protected:
-    std::vector<std::pair<unsigned int, bool>> getLinearGraphRepresentation(CubicGraph& cubicGraph);
+    std::vector<std::vector<unsigned int>> toAdjacencyList(CubicGraph& cubicGraph);
+    bool printGraph(CubicGraph &cubicGraph, std::ofstream &f);
+    bool printKaszonyiValues(CubicGraph &cubicGraph, std::ofstream &f, edgesFormat edgesFormat);
+    bool printIdAndDepth(CubicGraph& cubicGraph, std::ofstream &f);
 
 public:
-    virtual bool printGraph(CubicGraph& cubicGraph, const std::string& filename, append append) =0;
-    virtual bool printKaszonyiValues(CubicGraph& cubicGraph, const std::string& filename, append append) =0;
-    virtual bool printKaszonyiValues(std::vector<CubicGraph>& graphList, const std::string& filename, append append) =0;
+    virtual bool print(CubicGraph& cubicGraph, const std::string& filename, append append) =0;
+    virtual bool print(std::vector<CubicGraph>& graphList, const std::string& filename, append append) =0;
     virtual ~GraphPrinter()= default;;
 
 };

@@ -6,17 +6,15 @@
 #include <set>
 #include <iostream>
 #include <vector>
-#include <fstream>
 #include "Tests.h"
 #include "Edge.h"
 #include "CubicGraph.h"
 #include "KaszonyiFactorFunction.h"
 #include "GraphLoaderAdjLists.h"
-#include "GraphPrinterZeroDepthFormat.h"
-#include "GraphPrinterSemestralProjectFormat.h"
-#include "FileTester.h"
-#include "GraphPrinterSequentialFormat.h"
-#include "GraphPrinterParallelFormat.h"
+#include "KaszonyiValuesPrinter.h"
+#include "ControlSequentialFormatPrinter.h"
+#include "ControlParallelFormatPrinter.h"
+#include "AutomatedSuppressionTester.h"
 
 int Tests::run(){
 
@@ -701,9 +699,9 @@ int Tests::run(){
 
 
 
-    //GRAPG LOADER TESTS
+    //GRAPH LOADER TESTS
     GraphLoaderAdjLists graphLoader;
-    std::vector<CubicGraph> graphList1 = graphLoader.loadNewGraphs("test1_GraphLoader.txt");
+    std::vector<CubicGraph> graphList1 = graphLoader.loadNewGraphs("Tests/test1_GraphLoader.txt");
     std::queue<CubicGraph> graphQueue1(std::deque<CubicGraph>(graphList1.begin(), graphList1.end()));
 
     std::set<unsigned int> graphLoader_test1_vertices{0,1,2,3};
@@ -752,16 +750,8 @@ int Tests::run(){
 
     assert(graphQueue1.empty());
 
-
-
-    FileTester fileTester = FileTester();
-    assert(fileTester.compareFiles("test2_FileTester.txt", "test2_FileTester_copy.txt"));
-    assert(fileTester.compareFiles("test3_FileTester.txt", "test3_FileTester_copy.txt"));
-    assert(!fileTester.compareFiles("test2_FileTester.txt", "test2_FileTester_missingLastLine.txt"));
-    assert(!fileTester.compareFiles("test2_FileTester.txt","test2_FileTester_differentLines.txt"));
-
-    GraphPrinterSequentialFormat graphPrinterSequentialFormat = GraphPrinterSequentialFormat();
-    GraphPrinterParallelFormat graphPrinterParallelFormat = GraphPrinterParallelFormat();
+    ControlSequentialFormatPrinter graphPrinterSequentialFormat = ControlSequentialFormatPrinter();
+    ControlParallelFormatPrinter graphPrinterParallelFormat = ControlParallelFormatPrinter();
 
 
 
@@ -772,12 +762,64 @@ int Tests::run(){
                             Edge(11,13), Edge(12,13),
                             Edge(9, 10), Edge(10,11), Edge(10,12),
                             Edge(9,8), Edge(9,7)};
-    Edge e = Edge(7,8);
-    e.incrementMultiplicity();
-    test25_edges.insert(e);
+    Edge test25_e = Edge(7,8);
+    test25_e.incrementMultiplicity();
+    test25_edges.insert(test25_e);
     CubicGraph test25_graph = CubicGraph(test25_vertices, test25_edges);
     assert(test25_graph.getKaszonyiValue(Edge(10,9)) > 0);
 
+
+    //AUTOMATED SUPPRESSION TESTS
+    AutomatedSuppressionTester automatedSuppressionTester = AutomatedSuppressionTester();
+
+    std::string test26_input = "Tests/test26_14g3e.txt";
+    std::vector<CubicGraph> test26_graphList = GraphLoaderAdjLists().loadNewGraphs(test26_input);
+    std::vector<int> test26_expectedDepthList(test26_graphList.size());
+    test26_expectedDepthList[0] = 2;
+    for(int i = 1; i < test26_graphList.size(); i++){
+        if(test26_graphList[i].isColorable()){
+            test26_expectedDepthList[i] = 0;
+        }else{
+            test26_expectedDepthList[i] = 1;
+        }
+    }
+    assert(automatedSuppressionTester.testWithInputFile(test26_input, SEQUENTIAL, test26_expectedDepthList));
+    assert(automatedSuppressionTester.testWithInputFile(test26_input, PARALLEL, test26_expectedDepthList));
+
+
+    std::string test27_input = "Tests/test27_16g3e.txt";
+    std::vector<CubicGraph> test27_graphList = GraphLoaderAdjLists().loadNewGraphs(test27_input);
+    std::vector<int> test27_expectedSequentialDepthList(test27_graphList.size(), 1);
+    std::vector<int> test27_expectedParallelDepthList(test27_graphList.size(), 1);
+    unsigned int test27_tmpCounter = 0;
+    for(int i = 0; i < test27_graphList.size(); i++){
+
+        if(test27_graphList[i].isColorable()){
+            test27_expectedSequentialDepthList[i] = 0;
+            test27_expectedParallelDepthList[i] = 0;
+        }else {
+            bool hasZeroDepth = false;
+
+            for (Edge e : test27_graphList[i].getEdges()) {
+                if (test27_graphList[i].getKaszonyiValue(e) > 0) {
+                    hasZeroDepth = true;
+                    break;
+                }
+            }
+
+            if (!hasZeroDepth) {
+                test27_expectedSequentialDepthList[i] = 2;
+                if (test27_tmpCounter == 8) {
+                    test27_expectedParallelDepthList[i] = -1;
+                } else {
+                    test27_expectedParallelDepthList[i] = 2;
+                }
+                test27_tmpCounter++;
+            }
+        }
+    }
+    assert(automatedSuppressionTester.testWithInputFile(test27_input, SEQUENTIAL, test27_expectedSequentialDepthList));
+    assert(automatedSuppressionTester.testWithInputFile(test27_input, PARALLEL, test27_expectedParallelDepthList));
 
     std::cout << "ALL TESTS PASSED" << std::endl;
     //assert(0 == 1);

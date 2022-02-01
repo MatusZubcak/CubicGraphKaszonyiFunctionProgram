@@ -4,11 +4,15 @@
 
 #include "SequentialSuppressionNaive.h"
 
-std::vector<CubicGraph> SequentialSuppressionNaive::findSuppressionSequence(const CubicGraph& cubicGraph) {
-    unsigned int unique_id = cubicGraph.getId() +1;
+std::vector<CubicGraph> SequentialSuppressionNaive::findSuppressionSequence(CubicGraph cubicGraph) {
+    if(cubicGraph.isColorable()){
+        return std::vector<CubicGraph>{cubicGraph};
+    }
 
+    unsigned int unique_id = cubicGraph.getId() +1;
     std::vector<CubicGraph> graphList;
     unsigned int i = 0;
+
     graphList.push_back(cubicGraph);
     bool coloringFound = false;
 

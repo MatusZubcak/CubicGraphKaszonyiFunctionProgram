@@ -10,7 +10,7 @@
 class SequentialSuppressionNaive : ContinuousSuppression {
 
 public:
-    std::vector<CubicGraph> findSuppressionSequence(const CubicGraph& cubicGraph) override;
+    std::vector<CubicGraph> findSuppressionSequence(CubicGraph cubicGraph) override;
 };
 
 #endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_SEQUENTIALSUPPRESSIONNAIVE_H

@@ -52,3 +52,7 @@ const char* ConversionFromListToSequenceFailed::what() const noexcept
 {
     return "While converting list of all generated graphs to the final suppression sequence an error occured";
 }
+
+const char *ExpectedDepthListWrongSize::what() const noexcept {
+    return "Size of the expected depth values is different from the number of graphs located in the file";
+}

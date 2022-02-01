@@ -2,9 +2,11 @@
 #include <fstream>
 #include "Tests.h"
 #include "GraphLoaderAdjLists.h"
-#include "GraphPrinterSequentialFormat.h"
-#include "GraphPrinterParallelFormat.h"
-#include "GraphPrinterSemestralProjectFormat.h"
+#include "ControlSequentialFormatPrinter.h"
+#include "ControlParallelFormatPrinter.h"
+#include "KaszonyiValuesPrinter.h"
+#include "ResistanceValuesPrinter.h"
+
 
 void print(CubicGraph graph, const std::string& output, int& counter){
 
@@ -14,10 +16,8 @@ void print(CubicGraph graph, const std::string& output, int& counter){
     }
 
 
-    GraphPrinterSequentialFormat graphPrinterSequentialFormat = GraphPrinterSequentialFormat();
-    GraphPrinterParallelFormat graphPrinterParallelFormat = GraphPrinterParallelFormat();
-    GraphPrinterSemestralProjectFormat graphPrinterSemestralProjectFormat = GraphPrinterSemestralProjectFormat();
-
+    ControlSequentialFormatPrinter graphPrinterSequentialFormat = ControlSequentialFormatPrinter();
+    ControlParallelFormatPrinter graphPrinterParallelFormat = ControlParallelFormatPrinter();
     std::ofstream f;
     std::ofstream g;
     std::ofstream h;
@@ -35,13 +35,13 @@ void print(CubicGraph graph, const std::string& output, int& counter){
     g.close();
     h.close();
     std::cout << counter << " BEFORE PARALLEL" << std::endl;
-    graphPrinterParallelFormat.printKaszonyiValues(graph, parallel_output, NO_APPEND);
-    graphPrinterSequentialFormat.printKaszonyiValues(graph, sequential_output, APPEND);
-    graphPrinterSemestralProjectFormat.printKaszonyiValues(graph, semestral_output, APPEND);
+    graphPrinterParallelFormat.print(graph, parallel_output, NO_APPEND);
+    graphPrinterSequentialFormat.print(graph, sequential_output, APPEND);
 
     std::cout << counter << std::endl;
     counter++;
 }
+
 /*
 int main(){
     Tests::run();
@@ -50,6 +50,35 @@ int main(){
 */
 
 
+int main(){
+    GraphLoaderAdjLists graphLoaderAdjLists = GraphLoaderAdjLists();
+    std::string input;
+    std::cin >> input;
+
+    while(input != "-1"){
+        std::string output = input;
+        output.erase(output.find(".txt"), 4);
+        std::string output_single = output;
+        std::string kas_output = output + "_KaszonyiValues.txt";
+        std::string parallel_output = output + "_Parallel.txt";
+        std::string sequential_output = output + "_Sequential.txt";
+        std::string normal_output = output + "_Normal.txt";
+
+        std::vector<CubicGraph> graphList = graphLoaderAdjLists.loadNewGraphs(input);
+
+        KaszonyiValuesPrinter().print(graphList, kas_output, NO_APPEND);
+        ControlParallelFormatPrinter().print(graphList, parallel_output, NO_APPEND);
+        ControlSequentialFormatPrinter().print(graphList, sequential_output, NO_APPEND);
+        ResistanceValuesPrinter().print(graphList,normal_output,NO_APPEND);
+
+        std::cin >> input;
+    }
+
+    return 0;
+}
+
+
+/*
 int main() {
     GraphLoaderAdjLists graphLoaderAdjLists = GraphLoaderAdjLists();
     std::string input;
@@ -79,6 +108,7 @@ int main() {
     //return Tests::run();
     return 0;
 }
+*/
 
 
 /*
@@ -88,8 +118,8 @@ int main(){
     std::string input;
     std::cin >> input;
     GraphLoaderAdjLists graphLoaderAdjLists;
-    GraphPrinterSequentialFormat graphPrinterSequentialFormat;
-    GraphPrinterParallelFormat graphPrinterParallelFormat;
+    ControlSequentialFormatPrinter graphPrinterSequentialFormat;
+    ControlParallelFormatPrinter graphPrinterParallelFormat;
     auto graphs = graphLoaderAdjLists.loadNewGraphs(input);
     while(!graphs.empty()) {
         auto g = graphs.front();

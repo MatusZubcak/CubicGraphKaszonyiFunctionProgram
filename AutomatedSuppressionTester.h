@@ -14,12 +14,12 @@
 class AutomatedSuppressionTester {
 
 public:
-    bool testWithInputFile(const std::string& filename, suppression suppression, unsigned int expectedDepth);
+    bool testWithInputFile(const std::string& filename, suppression suppression, std::vector<int> expectedDepthList);
 
 private:
-    bool validDepth(const std::vector<CubicGraph>& suppressionSequenceMemoized,
-                    const std::vector<CubicGraph>& suppressionSequenceNaive,
-                    unsigned int expectedDepth);
+    bool validDepth(std::vector<CubicGraph>& suppressionSequenceMemoized,
+                    std::vector<CubicGraph>& suppressionSequenceNaive,
+                    int expectedDepth);
 
     bool validSequence(std::vector<CubicGraph>& suppressionSequence, suppression suppression);
 

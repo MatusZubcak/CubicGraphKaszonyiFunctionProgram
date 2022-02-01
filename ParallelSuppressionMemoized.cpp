@@ -7,11 +7,15 @@
 #include <unordered_set>
 #include <iostream>
 
-std::vector<CubicGraph> ParallelSuppressionMemoized::findSuppressionSequence(const CubicGraph &cubicGraph) {
-    unsigned long long unique_id = cubicGraph.getId() + 1;
+std::vector<CubicGraph> ParallelSuppressionMemoized::findSuppressionSequence(CubicGraph cubicGraph) {
+    if(cubicGraph.isColorable()){
+        return std::vector<CubicGraph>{cubicGraph};
+    }
 
+    unsigned long long unique_id = cubicGraph.getId() + 1;
     std::vector<CubicGraph> graphList;
     unsigned int i = 0;
+
     graphList.push_back(cubicGraph);
     bool coloringFound = false;
 

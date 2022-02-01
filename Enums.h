@@ -15,4 +15,9 @@ enum suppression{
     SEQUENTIAL
 };
 
+enum edgesFormat{
+    MARK_ORIGINAL_EDGES,
+    IGNORE_EDGE_ORIGINALITY
+};
+
 #endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_ENUMS_H

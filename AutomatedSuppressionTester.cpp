@@ -2,19 +2,28 @@
 // Created by Dell on 30. 1. 2022.
 //
 
+#include <iostream>
 #include "AutomatedSuppressionTester.h"
 #include "GraphLoaderAdjLists.h"
 #include "SequentialSuppressionMemoized.h"
 #include "SequentialSuppressionNaive.h"
 #include "ParallelSuppressionMemoized.h"
 #include "ParallelSuppressionNaive.h"
+#include "GraphExceptions.h"
 
 bool AutomatedSuppressionTester::testWithInputFile(const std::string &filename, suppression suppression,
-                                                   unsigned int expectedDepth) {
+                                                   std::vector<int> expectedDepthList) {
     bool isCorrect = true;
+    bool firstTime = true;
     std::vector<CubicGraph> graphList = GraphLoaderAdjLists().loadNewGraphs(filename);
 
-    for(const auto& graph : graphList){
+    if(graphList.size() != expectedDepthList.size()){
+        throw ExpectedDepthListWrongSize();
+    }
+
+    for(int i = 0; i < graphList.size(); i++){
+        CubicGraph& graph = graphList[i];
+        int expectedDepth = expectedDepthList[i];
         std::vector<CubicGraph> suppressionSequenceMemoized;
         std::vector<CubicGraph> suppressionSequenceNaive;
 
@@ -34,11 +43,19 @@ bool AutomatedSuppressionTester::testWithInputFile(const std::string &filename, 
     return isCorrect;
 }
 
-bool AutomatedSuppressionTester::validDepth(const std::vector<CubicGraph> &suppressionSequenceMemoized,
-                                            const std::vector<CubicGraph> &suppressionSequenceNaive,
-                                            unsigned int expectedDepth) {
-    return suppressionSequenceMemoized.back().getDepth() == expectedDepth &&
-           suppressionSequenceNaive.back().getDepth() == expectedDepth;
+bool AutomatedSuppressionTester::validDepth(std::vector<CubicGraph> &suppressionSequenceMemoized,
+                                            std::vector<CubicGraph> &suppressionSequenceNaive,
+                                            int expectedDepth) {
+    if(suppressionSequenceNaive.back().isColorable() != suppressionSequenceMemoized.back().isColorable()){
+        return false;
+
+    } else if(suppressionSequenceNaive.back().isColorable()){
+        return suppressionSequenceMemoized.back().getDepth() == expectedDepth &&
+               suppressionSequenceNaive.back().getDepth() == expectedDepth;
+
+    } else{
+        return expectedDepth == -1;
+    }
 }
 
 bool AutomatedSuppressionTester::validSequence(std::vector<CubicGraph> &suppressionSequence, suppression suppression) {
@@ -51,8 +68,7 @@ bool AutomatedSuppressionTester::validSequence(std::vector<CubicGraph> &suppress
         bool suppressionExists = false;
 
         for(auto edge : currentGraph.getEdges()){
-            bool edge_isOriginal = originalEdges.find(edge) != originalEdges.end() &&
-                                   edge.getMultiplicity() == originalEdges.find(edge)->getMultiplicity();
+            bool edge_isOriginal = originalEdges.find(edge) != originalEdges.end();
 
             if(suppression == SEQUENTIAL || (suppression == PARALLEL && edge_isOriginal)){
                 if(currentGraph.suppressEdge(edge) == nextGraph){
