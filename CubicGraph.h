@@ -9,7 +9,7 @@
 #include <set>
 #include <memory>
 #include "Edge.h"
-#include "KaszonyiFunction.h"
+#include "ColoringFinder.h"
 
 class CubicGraph {
 private:
@@ -19,7 +19,7 @@ private:
     std::set<unsigned int> vertices;
     std::set<Edge> edges;
     unsigned int numberOfIsolatedCircles{};
-    std::shared_ptr<KaszonyiFunction> strategy;
+    std::shared_ptr<ColoringFinder> strategy;
 
     void addEdge(Edge e);
     CubicGraph suppressEdgeWithMultiplicity1(unsigned int id, Edge edge);

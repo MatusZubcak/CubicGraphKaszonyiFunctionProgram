@@ -9,9 +9,6 @@
 
 class GraphLoader{
 public:
-    //virtual CubicGraph& nextGraph() =0;
-    //virtual bool hasNext() = 0;
-    //virtual ~GraphLoader()= default;;
     virtual std::vector<CubicGraph> loadNewGraphs(const std::string& filename) = 0;
 
 };

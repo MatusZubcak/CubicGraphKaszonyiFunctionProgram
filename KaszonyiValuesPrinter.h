@@ -10,7 +10,7 @@
 #include "Enums.h"
 #include "GraphPrinter.h"
 
-class KaszonyiValuesPrinter : GraphPrinter {
+class KaszonyiValuesPrinter : public GraphPrinter {
 public:
     KaszonyiValuesPrinter()=default;;
 

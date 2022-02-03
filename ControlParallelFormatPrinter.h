@@ -8,7 +8,7 @@
 
 #include "GraphPrinter.h"
 
-class ControlParallelFormatPrinter : GraphPrinter{
+class ControlParallelFormatPrinter : public GraphPrinter{
 public:
     ControlParallelFormatPrinter()=default;;
 

@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "CubicGraph.h"
-#include "KaszonyiFactorFunction.h"
+#include "ColoringFinderFactor.h"
 
 CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int> &vertices, std::set<Edge> &edges, unsigned int numberOfIsolatedCircles) {
     this->unique_id = id;
@@ -13,7 +13,7 @@ CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int> &vertices, std::s
     this->vertices = vertices;
     this->edges = edges;
     this->numberOfIsolatedCircles = numberOfIsolatedCircles;
-    strategy = std::shared_ptr<KaszonyiFunction>(new KaszonyiFactorFunction());
+    strategy = std::shared_ptr<ColoringFinder>(new ColoringFinderFactor());
 
     for(auto e : edges){
         if( vertices.find(e.getIncidentvertices().first) == vertices.end() ||
@@ -59,7 +59,7 @@ unsigned int CubicGraph::getParentId() const{
 
 //TODO optimise this function - now it only calls count_all_colorings function and returns true if > 0, which is dumb
 bool CubicGraph::isColorable() {
-    return this->strategy->getKaszonyiValue(this->vertices, this->edges, this->numberOfIsolatedCircles);
+    return this->strategy->isColorable(this->vertices, this->edges);
 }
 
 unsigned int CubicGraph::getKaszonyiValue(Edge edge) {
@@ -72,7 +72,7 @@ unsigned int CubicGraph::getKaszonyiValue(Edge edge) {
     }
 
     CubicGraph suppressedGraph = this->suppressEdge(edge);
-    unsigned int KaszonyiValue = this->strategy->getKaszonyiValue(suppressedGraph.vertices,
+    unsigned int KaszonyiValue = this->strategy->computeColorings(suppressedGraph.vertices,
                                               suppressedGraph.edges,
                                               suppressedGraph.numberOfIsolatedCircles);
     return KaszonyiValue;

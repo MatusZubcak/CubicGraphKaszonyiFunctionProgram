@@ -7,7 +7,7 @@
 
 #include "ContinuousSuppression.h"
 
-class ParallelSuppressionMemoized : ContinuousSuppression {
+class ParallelSuppressionMemoized : public ContinuousSuppression {
 public:
     std::vector<CubicGraph> findSuppressionSequence(CubicGraph cubicGraph) override;
 

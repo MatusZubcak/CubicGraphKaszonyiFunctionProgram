@@ -10,7 +10,7 @@
 #include "Enums.h"
 #include "GraphPrinter.h"
 
-class ControlSequentialFormatPrinter : GraphPrinter {
+class ControlSequentialFormatPrinter : public GraphPrinter {
 public:
     ControlSequentialFormatPrinter()=default;;
 

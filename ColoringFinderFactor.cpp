@@ -4,9 +4,9 @@
 
 #include <iostream>
 #include <cmath>
-#include "KaszonyiFactorFunction.h"
+#include "ColoringFinderFactor.h"
 
-std::vector<std::pair<unsigned int,bool>>KaszonyiFactorFunction::convertToLinearGraphRepresentation
+std::vector<std::pair<unsigned int,bool>>ColoringFinderFactor::convertToLinearGraphRepresentation
             (std::set<unsigned int>& vertices, std::set<Edge>& edges){
     std::unordered_map<unsigned int, unsigned int> vertexTranslationTable;
     unsigned int indexGenerator = 0;
@@ -69,14 +69,14 @@ std::vector<std::pair<unsigned int,bool>>KaszonyiFactorFunction::convertToLinear
     return linearGraphRepresentation;
 }
 
-KaszonyiFactorFunction::KaszonyiFactorFunction(){
+ColoringFinderFactor::ColoringFinderFactor(){
     kaszonyiValue = 0;
 };
 
 /*zisti ci je kruznica parnej dlzky.
  * Ak je, vykona aj reziu potrebnu na "vymazanie" danych hran z grafovej reprezentacie
  * aby sme tu istu kruznicu nepocitali 2-krat*/
-bool KaszonyiFactorFunction::cycleIsEven
+bool ColoringFinderFactor::cycleIsEven
             (std::vector< std::pair<unsigned int, bool>> &linearGraphRepresentation,
              unsigned int vertex){
 
@@ -109,8 +109,8 @@ bool KaszonyiFactorFunction::cycleIsEven
 
 
 /* rekurzivne zgeneruje vsetky mozne 1-faktory a vypocita pre kazdy z nich pocet ofarbeni */
-void KaszonyiFactorFunction::reccursivellyCountKaszonyi
-            (std::vector<std::pair<unsigned int, bool>> &linearGraphRepresentation,
+void ColoringFinderFactor::reccursivellyCountKaszonyi
+            (std::vector<std::pair<unsigned int, bool>> linearGraphRepresentation,
              unsigned int vertex){
     if(3*vertex >= linearGraphRepresentation.size()){
 
@@ -172,9 +172,9 @@ void KaszonyiFactorFunction::reccursivellyCountKaszonyi
 
 }
 
-int KaszonyiFactorFunction::getKaszonyiValue(std::set<unsigned int>& vertices,
-                                             std::set<Edge>& edges,
-                                             unsigned int numberOfIsolatedCircles) {
+int ColoringFinderFactor::computeColorings(std::set<unsigned int>& vertices,
+                                           std::set<Edge>& edges,
+                                           unsigned int numberOfIsolatedCircles) {
 
     kaszonyiValue = 0;
     std::vector<std::pair<unsigned int, bool>> linearGraphRepresentation =
@@ -200,6 +200,10 @@ int KaszonyiFactorFunction::getKaszonyiValue(std::set<unsigned int>& vertices,
     return kaszonyiValue;
 }
 
-int KaszonyiFactorFunction::getKaszonyiValue(std::set<unsigned int> &vertices, std::set<Edge> &edges){
-    return getKaszonyiValue(vertices, edges, 0);
+int ColoringFinderFactor::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges){
+    return computeColorings(vertices, edges, 0);
+}
+
+bool ColoringFinderFactor::isColorable(std::set<unsigned int> &vertices, std::set<Edge> &edges) {
+    return computeColorings(vertices, edges, 0) > 0;
 }

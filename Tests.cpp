@@ -9,7 +9,7 @@
 #include "Tests.h"
 #include "Edge.h"
 #include "CubicGraph.h"
-#include "KaszonyiFactorFunction.h"
+#include "ColoringFinderFactor.h"
 #include "GraphLoaderAdjLists.h"
 #include "KaszonyiValuesPrinter.h"
 #include "ControlSequentialFormatPrinter.h"
@@ -658,14 +658,14 @@ int Tests::run(){
 
 
     //KASZONYI FUNCTION TESTS
-    KaszonyiFactorFunction kaszonyiFunction;
+    ColoringFinderFactor kaszonyiFunction;
 
-    assert(kaszonyiFunction.getKaszonyiValue(K4_vertices, K4_edges) == 1);
+    assert(kaszonyiFunction.computeColorings(K4_vertices, K4_edges) == 1);
 
     std::set<unsigned int> test21_vertices={1,2};
     std::set<Edge> test21_edges={Edge(1,1), Edge(1,2),
                                  Edge(2,2)};
-    assert(kaszonyiFunction.getKaszonyiValue(test21_vertices, test21_edges) == 0);
+    assert(kaszonyiFunction.computeColorings(test21_vertices, test21_edges) == 0);
 
     std::set<unsigned int> test22_vertices={1,2,3,4};
     std::set<Edge> test22_edges{Edge(1,2), Edge(3,4)};
@@ -675,14 +675,14 @@ int Tests::run(){
     t22e23.incrementMultiplicity();
     test22_edges.insert(t22e23);
     test22_edges.insert(t22e14);
-    assert(kaszonyiFunction.getKaszonyiValue(test22_vertices, test22_edges) == 2);
+    assert(kaszonyiFunction.computeColorings(test22_vertices, test22_edges) == 2);
 
     std::set<unsigned int> test23_vertices={1,2};
     Edge t23e12(1,2);
     t23e12.incrementMultiplicity();
     t23e12.incrementMultiplicity();
     std::set<Edge> test23_edges={t23e12};
-    assert(kaszonyiFunction.getKaszonyiValue(test23_vertices, test23_edges) == 1);
+    assert(kaszonyiFunction.computeColorings(test23_vertices, test23_edges) == 1);
 
 
     std::set<unsigned int> test24_vertices = {1, 2};

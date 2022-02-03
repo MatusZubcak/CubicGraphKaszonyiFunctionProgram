@@ -7,7 +7,7 @@
 
 #include "GraphPrinter.h"
 
-class ResistanceValuesPrinter : GraphPrinter {
+class ResistanceValuesPrinter : public GraphPrinter {
 public:
 
     bool print(CubicGraph &cubicGraph, const std::string &filename, append append) override;

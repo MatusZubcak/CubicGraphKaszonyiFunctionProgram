@@ -42,14 +42,12 @@ void print(CubicGraph graph, const std::string& output, int& counter){
     counter++;
 }
 
-/*
 int main(){
     Tests::run();
     return 0;
 }
-*/
 
-
+/*
 int main(){
     GraphLoaderAdjLists graphLoaderAdjLists = GraphLoaderAdjLists();
     std::string input;
@@ -76,7 +74,7 @@ int main(){
 
     return 0;
 }
-
+*/
 
 /*
 int main() {

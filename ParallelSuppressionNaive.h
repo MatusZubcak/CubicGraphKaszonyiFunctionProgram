@@ -9,7 +9,7 @@
 #include "CubicGraph.h"
 #include "ContinuousSuppression.h"
 
-class ParallelSuppressionNaive : ContinuousSuppression {
+class ParallelSuppressionNaive : public ContinuousSuppression {
 public:
     std::vector<CubicGraph> findSuppressionSequence(CubicGraph cubicGraph) override;
 };
