@@ -773,7 +773,7 @@ int Tests::run(){
     AutomatedSuppressionTester automatedSuppressionTester = AutomatedSuppressionTester();
 
     std::string test26_input = "Tests/test26_14g3e.txt";
-    std::vector<CubicGraph> test26_graphList = GraphLoaderAdjLists().loadNewGraphs(test26_input);
+    std::vector<CubicGraph> test26_graphList = GraphLoaderAdjLists().loadNewGraphs(test26_input, FACTOR);
     std::vector<int> test26_expectedDepthList(test26_graphList.size());
     test26_expectedDepthList[0] = 2;
     for(int i = 1; i < test26_graphList.size(); i++){
@@ -788,7 +788,7 @@ int Tests::run(){
 
 
     std::string test27_input = "Tests/test27_16g3e.txt";
-    std::vector<CubicGraph> test27_graphList = GraphLoaderAdjLists().loadNewGraphs(test27_input);
+    std::vector<CubicGraph> test27_graphList = GraphLoaderAdjLists().loadNewGraphs(test27_input, FACTOR);
     std::vector<int> test27_expectedSequentialDepthList(test27_graphList.size(), 1);
     std::vector<int> test27_expectedParallelDepthList(test27_graphList.size(), 1);
     unsigned int test27_tmpCounter = 0;
@@ -820,6 +820,33 @@ int Tests::run(){
     }
     assert(automatedSuppressionTester.testWithInputFile(test27_input, SEQUENTIAL, test27_expectedSequentialDepthList));
     assert(automatedSuppressionTester.testWithInputFile(test27_input, PARALLEL, test27_expectedParallelDepthList));
+
+
+    //SAT Coloring functions Tests
+    std::string test28_input = "Tests/test27_16g3e.txt";
+    std::vector<CubicGraph> test28_graphListSAT = GraphLoaderAdjLists().loadNewGraphs(test28_input, SAT);
+    std::vector<CubicGraph> test28_graphListFactor = GraphLoaderAdjLists().loadNewGraphs(test28_input, FACTOR);
+    std::vector<unsigned int> test28_SAT_colors;
+    std::vector<bool> test28_SAT_isColorable;
+    std::vector<unsigned int> test28_Factor_colors;
+    std::vector<bool> test28_Factor_isColorable;
+    for(CubicGraph& cubicGraph : test28_graphListSAT){
+        for(auto e : cubicGraph.getEdges()){
+            test28_SAT_colors.push_back(cubicGraph.getKaszonyiValue(e));
+            test28_SAT_isColorable.push_back(cubicGraph.suppressEdge(e).isColorable());
+        }
+    }
+    for(CubicGraph& cubicGraph : test28_graphListFactor){
+        for(auto e : cubicGraph.getEdges()){
+            test28_Factor_colors.push_back(cubicGraph.getKaszonyiValue(e));
+            test28_Factor_isColorable.push_back(cubicGraph.suppressEdge(e).isColorable());
+        }
+    }
+
+    assert(test28_SAT_isColorable == test28_Factor_isColorable);
+    //assert(test28_SAT_colors == test28_Factor_colors);
+
+
 
     std::cout << "ALL TESTS PASSED" << std::endl;
     //assert(0 == 1);

@@ -7,24 +7,12 @@
 #include <unordered_map>
 #include <algorithm>
 #include "GraphLoaderAdjLists.h"
+#include "Enums.h"
+#include "ColoringFinderSAT.h"
+#include "ColoringFinderFactor.h"
 
-/*
-CubicGraph& GraphLoaderAdjLists::nextGraph() {
-    if(graphList.empty()){
-        throw GraphloaderEmptyException();
-    }
-
-    CubicGraph& graph = graphList.front();
-    for(auto e : graph.getEdges()){
-        std::cout << e.toString() << std::endl;
-    } std::cout << "___\n";
-    graphList.pop();
-
-    return graph;
-}
-*/
-
-std::vector<CubicGraph> GraphLoaderAdjLists::loadNewGraphs(const std::string& filename) {
+std::vector<CubicGraph> GraphLoaderAdjLists::loadNewGraphs(const std::string& filename,
+                                                           coloringAlgorithm coloringAlgorithm) {
     std::vector<CubicGraph> graphList;
     std::ifstream f;
     f.open(filename);
@@ -98,7 +86,19 @@ std::vector<CubicGraph> GraphLoaderAdjLists::loadNewGraphs(const std::string& fi
                 if (!correctlyDefinedGraph(vertices, edges)) {
                     throw BadlyDefinedGraphException();
                 }
-                graphList.emplace_back(vertices,edges);
+
+                std::shared_ptr<ColoringFinder> strategySAT = std::shared_ptr<ColoringFinder>(new ColoringFinderSAT);
+                std::shared_ptr<ColoringFinder> strategyFactor = std::shared_ptr<ColoringFinder>(new ColoringFinderFactor);
+                switch(coloringAlgorithm){
+                    case SAT:
+                        graphList.emplace_back(vertices, edges, strategySAT);
+                        break;
+                    case FACTOR:
+                        graphList.emplace_back(vertices, edges, strategyFactor);
+                        break;
+                    default:
+                        graphList.emplace_back(vertices, edges);
+                }
                 edges.clear();
             }
         }
@@ -113,6 +113,10 @@ std::vector<CubicGraph> GraphLoaderAdjLists::loadNewGraphs(const std::string& fi
         f.close();
     }
     return graphList;
+}
+
+std::vector<CubicGraph> GraphLoaderAdjLists::loadNewGraphs(const std::string &filename) {
+    return loadNewGraphs(filename, ANY);
 }
 
 void GraphLoaderAdjLists::insertEdgeWithMultiplicity(std::set<Edge> &edges,

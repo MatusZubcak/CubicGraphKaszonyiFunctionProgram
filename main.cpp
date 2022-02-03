@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 #include <fstream>
 #include "Tests.h"
@@ -42,10 +43,68 @@ void print(CubicGraph graph, const std::string& output, int& counter){
     counter++;
 }
 
+/*
 int main(){
     Tests::run();
     return 0;
 }
+*/
+
+
+int main(){
+    int repeats = 1;
+    int size = 30;
+    int file_index = 18;
+    while(file_index <= 30) {
+        std::cout << "GRAPH SIZE: " << file_index << std::endl;
+        std::string filename = "s" + std::to_string(file_index) + "e3.txt";
+        std::vector<CubicGraph> graphList = GraphLoaderAdjLists().loadNewGraphs(filename, SAT);
+        //graphList.resize(size);
+        auto t1 = std::chrono::high_resolution_clock::now();
+        for (auto graph: graphList) {
+            for (int i = 0; i < repeats; i++) {
+                //graph.isColorable();
+                for (auto e: graph.getEdges()) {
+                    graph.suppressEdge(e).isColorable();
+                }
+            }
+        }
+        auto t2 = std::chrono::high_resolution_clock::now();
+
+        auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+
+        std::chrono::duration<double, std::milli> ms_double = t2 - t1;
+
+        std::cout << "SAT: ";
+        std::cout << ms_int.count() << "ms\n";
+
+
+        graphList = GraphLoaderAdjLists().loadNewGraphs(filename, FACTOR);
+        //graphList.resize(size);
+        t1 = std::chrono::high_resolution_clock::now();
+        for (auto graph: graphList) {
+            for (int i = 0; i < repeats; i++) {
+                //graph.isColorable();
+                for (auto e: graph.getEdges()) {
+                    graph.suppressEdge(e).isColorable();
+                }
+            }
+        }
+        t2 = std::chrono::high_resolution_clock::now();
+
+        ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+
+        ms_double = t2 - t1;
+
+        std::cout << "Factor: ";
+        std::cout << ms_int.count() << "ms\n";
+
+        std::cout << "________________\n";
+        file_index +=2;
+    }
+        return 0;
+}
+
 
 /*
 int main(){

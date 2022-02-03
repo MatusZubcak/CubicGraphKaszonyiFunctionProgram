@@ -5,15 +5,28 @@
 #include <iostream>
 #include "CubicGraph.h"
 #include "ColoringFinderFactor.h"
+#include "ColoringFinderSAT.h"
 
 CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int> &vertices, std::set<Edge> &edges, unsigned int numberOfIsolatedCircles) {
+    // We have experimentally found that graphs with |V(G)| >= 24 are faster computed by SATSolver
+    // and for graphs with |V(G)| < 24 our FactorColoringFinder is better
+
+    // Threshold determining when to use SAT or Factor strategy
+    unsigned int coloringThreshold = 24;
+
     this->unique_id = id;
     this->parent_id = 0;
     this->depth = 0;
     this->vertices = vertices;
     this->edges = edges;
     this->numberOfIsolatedCircles = numberOfIsolatedCircles;
-    strategy = std::shared_ptr<ColoringFinder>(new ColoringFinderFactor());
+
+    this->preserveStrategy = false;
+    if(this->vertices.size() >= coloringThreshold){
+        this->coloringStrategy = std::shared_ptr<ColoringFinder>(new ColoringFinderSAT());
+    }else{
+        this->coloringStrategy = std::shared_ptr<ColoringFinder>(new ColoringFinderFactor());
+    }
 
     for(auto e : edges){
         if( vertices.find(e.getIncidentvertices().first) == vertices.end() ||
@@ -24,9 +37,30 @@ CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int> &vertices, std::s
 
 }
 
-CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int> &vertices, std::set<Edge> &edges) : CubicGraph(id, vertices, edges, 0) {}
-CubicGraph::CubicGraph(std::set<unsigned int> &vertices, std::set<Edge> &edges, unsigned int numberOfIsolatedCircles) : CubicGraph(0, vertices, edges, numberOfIsolatedCircles) {}
-CubicGraph::CubicGraph(std::set<unsigned int> &vertices, std::set<Edge> &edges) : CubicGraph(0,vertices, edges, 0) {};
+CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int>& vertices, std::set<Edge>& edges,
+                       unsigned int numberOfIsolatedCircles, std::shared_ptr<ColoringFinder> &coloringStrategy)
+        : CubicGraph(id, vertices, edges, numberOfIsolatedCircles){
+    this->preserveStrategy = true;
+    this->coloringStrategy = coloringStrategy;
+};
+
+CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int> &vertices, std::set<Edge>&edges)
+        : CubicGraph(id, vertices, edges, 0) {}
+CubicGraph::CubicGraph(std::set<unsigned int> &vertices, std::set<Edge> &edges, unsigned int numberOfIsolatedCircles)
+                       : CubicGraph(0, vertices, edges, numberOfIsolatedCircles) {}
+CubicGraph::CubicGraph(std::set<unsigned int> &vertices, std::set<Edge> &edges)
+        : CubicGraph(0,vertices, edges, 0) {};
+
+
+CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int>& vertices, std::set<Edge>& edges,
+                       std::shared_ptr<ColoringFinder> &coloringStrategy)
+                       : CubicGraph(id, vertices, edges, 0, coloringStrategy){};
+CubicGraph::CubicGraph(std::set<unsigned int>& vertices, std::set<Edge>& edges, unsigned int numberOfIsolatedCircles,
+                       std::shared_ptr<ColoringFinder> &coloringStrategy)
+                       : CubicGraph(0, vertices, edges, numberOfIsolatedCircles, coloringStrategy){};
+CubicGraph::CubicGraph(std::set<unsigned int>& vertices, std::set<Edge>& edges,
+                       std::shared_ptr<ColoringFinder> &coloringStrategy)
+                       : CubicGraph(0, vertices, edges, 0, coloringStrategy){};
 
 
 std::set<Edge> CubicGraph::getEdges() const{
@@ -59,7 +93,7 @@ unsigned int CubicGraph::getParentId() const{
 
 //TODO optimise this function - now it only calls count_all_colorings function and returns true if > 0, which is dumb
 bool CubicGraph::isColorable() {
-    return this->strategy->isColorable(this->vertices, this->edges);
+    return this->coloringStrategy->isColorable(this->vertices, this->edges);
 }
 
 unsigned int CubicGraph::getKaszonyiValue(Edge edge) {
@@ -72,7 +106,7 @@ unsigned int CubicGraph::getKaszonyiValue(Edge edge) {
     }
 
     CubicGraph suppressedGraph = this->suppressEdge(edge);
-    unsigned int KaszonyiValue = this->strategy->computeColorings(suppressedGraph.vertices,
+    unsigned int KaszonyiValue = this->coloringStrategy->computeColorings(suppressedGraph.vertices,
                                               suppressedGraph.edges,
                                               suppressedGraph.numberOfIsolatedCircles);
     return KaszonyiValue;
@@ -110,14 +144,25 @@ CubicGraph CubicGraph::suppressEdge(unsigned int id, Edge edge) {
         throw LoopSuppressionException();
     }
 
+    CubicGraph newGraph;
     switch(suppressedEdge.getMultiplicity()){
         case 1:
-            return suppressEdgeWithMultiplicity1(id, suppressedEdge);
+            newGraph = suppressEdgeWithMultiplicity1(id, suppressedEdge);
+            break;
         case 2:
-            return suppressEdgeWithMultiplicity2(id, suppressedEdge);
+            newGraph = suppressEdgeWithMultiplicity2(id, suppressedEdge);
+            break;
         case 3:
-            return suppressEdgeWithMultiplicity3(id, suppressedEdge);
+            newGraph = suppressEdgeWithMultiplicity3(id, suppressedEdge);
+            break;
     }
+
+    if(this->preserveStrategy){
+        newGraph.preserveStrategy = true;
+        newGraph.coloringStrategy = this->coloringStrategy;
+    }
+
+    return newGraph;
 }
 
 CubicGraph CubicGraph::suppressEdge(unsigned int id, unsigned int v1, unsigned int v2) {

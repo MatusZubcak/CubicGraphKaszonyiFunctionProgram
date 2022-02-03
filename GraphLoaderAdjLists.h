@@ -20,6 +20,7 @@ private:
 public:
     GraphLoaderAdjLists()= default;;
     std::vector<CubicGraph> loadNewGraphs(const std::string& filename) override;
+    std::vector<CubicGraph> loadNewGraphs(const std::string &filename, coloringAlgorithm coloringAlgorithm) override;
 };
 
 

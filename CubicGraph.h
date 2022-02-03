@@ -19,7 +19,8 @@ private:
     std::set<unsigned int> vertices;
     std::set<Edge> edges;
     unsigned int numberOfIsolatedCircles{};
-    std::shared_ptr<ColoringFinder> strategy;
+    std::shared_ptr<ColoringFinder> coloringStrategy;
+    bool preserveStrategy;
 
     void addEdge(Edge e);
     CubicGraph suppressEdgeWithMultiplicity1(unsigned int id, Edge edge);
@@ -31,7 +32,17 @@ private:
     friend bool operator!=(const CubicGraph& cg1, const CubicGraph& cg2);
 
 public:
-    CubicGraph(unsigned int id, std::set<unsigned int>& vertices, std::set<Edge>& edges, unsigned int numberOfIsolatedCircles);
+    CubicGraph(unsigned int id, std::set<unsigned int>& vertices, std::set<Edge>& edges,
+               unsigned int numberOfIsolatedCircles, std::shared_ptr<ColoringFinder> &coloringStrategy);
+    CubicGraph(unsigned int id, std::set<unsigned int>& vertices, std::set<Edge>& edges,
+               std::shared_ptr<ColoringFinder> &coloringStrateg);
+    CubicGraph(std::set<unsigned int>& vertices, std::set<Edge>& edges, unsigned int numberOfIsolatedCircles,
+               std::shared_ptr<ColoringFinder> &coloringStrategy);
+    CubicGraph(std::set<unsigned int>& vertices, std::set<Edge>& edges,
+               std::shared_ptr<ColoringFinder> &coloringStrategy);
+
+    CubicGraph(unsigned int id, std::set<unsigned int>& vertices, std::set<Edge>& edges,
+               unsigned int numberOfIsolatedCircles);
     CubicGraph(unsigned int id, std::set<unsigned int>& vertices, std::set<Edge>& edges);
     CubicGraph(std::set<unsigned int>& vertices, std::set<Edge>& edges, unsigned int numberOfIsolatedCircles);
     CubicGraph(std::set<unsigned int>& vertices, std::set<Edge>& edges);

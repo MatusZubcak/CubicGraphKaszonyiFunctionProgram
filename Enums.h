@@ -20,4 +20,10 @@ enum edgesFormat{
     IGNORE_EDGE_ORIGINALITY
 };
 
+enum coloringAlgorithm{
+    SAT,
+    FACTOR,
+    ANY
+};
+
 #endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_ENUMS_H
