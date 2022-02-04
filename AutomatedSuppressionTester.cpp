@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "AutomatedSuppressionTester.h"
-#include "GraphLoaderAdjLists.h"
+#include "GraphLoaderSimpleAdjListsFormat.h"
 #include "SequentialSuppressionMemoized.h"
 #include "SequentialSuppressionNaive.h"
 #include "ParallelSuppressionMemoized.h"
@@ -15,7 +15,7 @@ bool AutomatedSuppressionTester::testWithInputFile(const std::string &filename, 
                                                    std::vector<int> expectedDepthList) {
     bool isCorrect = true;
     bool firstTime = true;
-    std::vector<CubicGraph> graphList = GraphLoaderAdjLists().loadNewGraphs(filename);
+    std::vector<CubicGraph> graphList = GraphLoaderSimpleAdjListsFormat().loadNewGraphs(filename);
 
     if(graphList.size() != expectedDepthList.size()){
         throw ExpectedDepthListWrongSize();

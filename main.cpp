@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include "Tests.h"
-#include "GraphLoaderAdjLists.h"
+#include "GraphLoaderSimpleAdjListsFormat.h"
 #include "ControlSequentialFormatPrinter.h"
 #include "ControlParallelFormatPrinter.h"
 #include "KaszonyiValuesPrinter.h"
@@ -59,7 +59,7 @@ int main(){
     while(file_index <= 30) {
         std::cout << "GRAPH SIZE: " << file_index << std::endl;
         std::string filename = "s" + std::to_string(file_index) + "e3.txt";
-        std::vector<CubicGraph> graphList = GraphLoaderAdjLists().loadNewGraphs(filename, SAT);
+        std::vector<CubicGraph> graphList = GraphLoaderSimpleAdjListsFormat().loadNewGraphs(filename, SAT);
         //graphList.resize(size);
         auto t1 = std::chrono::high_resolution_clock::now();
         for (auto graph: graphList) {
@@ -80,7 +80,7 @@ int main(){
         std::cout << ms_int.count() << "ms\n";
 
 
-        graphList = GraphLoaderAdjLists().loadNewGraphs(filename, FACTOR);
+        graphList = GraphLoaderSimpleAdjListsFormat().loadNewGraphs(filename, FACTOR);
         //graphList.resize(size);
         t1 = std::chrono::high_resolution_clock::now();
         for (auto graph: graphList) {
@@ -109,7 +109,7 @@ int main(){
 
 /*
 int main(){
-    GraphLoaderAdjLists graphLoaderAdjLists = GraphLoaderAdjLists();
+    GraphLoaderSimpleAdjListsFormat graphLoaderAdjLists = GraphLoaderSimpleAdjListsFormat();
     std::string input;
     std::cin >> input;
 
@@ -138,7 +138,7 @@ int main(){
 
 /*
 int main() {
-    GraphLoaderAdjLists graphLoaderAdjLists = GraphLoaderAdjLists();
+    GraphLoaderSimpleAdjListsFormat graphLoaderAdjLists = GraphLoaderSimpleAdjListsFormat();
     std::string input;
     std::cin >> input;
     int counter = 0;
@@ -175,7 +175,7 @@ int main(){
     std::remove("outP.txt");
     std::string input;
     std::cin >> input;
-    GraphLoaderAdjLists graphLoaderAdjLists;
+    GraphLoaderSimpleAdjListsFormat graphLoaderAdjLists;
     ControlSequentialFormatPrinter graphPrinterSequentialFormat;
     ControlParallelFormatPrinter graphPrinterParallelFormat;
     auto graphs = graphLoaderAdjLists.loadNewGraphs(input);
