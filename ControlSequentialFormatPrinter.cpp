@@ -11,7 +11,7 @@
 
 
 bool ControlSequentialFormatPrinter::print(CubicGraph &cubicGraph, const std::string &filename,
-                                           append append) {
+                                           const std::string &additionalInformation, append append) {
     bool printedSuccessfully = true;
     std::ofstream f;
     if(append == APPEND)
@@ -23,6 +23,8 @@ bool ControlSequentialFormatPrinter::print(CubicGraph &cubicGraph, const std::st
         if (!f) {
             throw FileCannotBeOpenedException();
         }
+        f << additionalInformation;
+
         std::vector<CubicGraph> suppressionSequence = SequentialSuppressionMemoized().findSuppressionSequence(cubicGraph);
 
         f << cubicGraph.size() << std::endl;
@@ -44,7 +46,7 @@ bool ControlSequentialFormatPrinter::print(CubicGraph &cubicGraph, const std::st
 }
 
 bool ControlSequentialFormatPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename,
-                                           append append){
+                                           const std::string &additionalInformation, append append){
         bool printedSuccessfully = true;
         std::ofstream f;
         if(append == APPEND)
@@ -56,6 +58,8 @@ bool ControlSequentialFormatPrinter::print(std::vector<CubicGraph> &graphList, c
             if (!f) {
                 throw FileCannotBeOpenedException();
             }
+            f << additionalInformation;
+
             for(const CubicGraph& cubicGraph : graphList) {
 
                 std::vector<CubicGraph> suppressionSequence = SequentialSuppressionMemoized().findSuppressionSequence(
@@ -96,3 +100,10 @@ bool ControlSequentialFormatPrinter::print(std::vector<CubicGraph> &graphList, c
         return printedSuccessfully;
     }
 
+bool ControlSequentialFormatPrinter::print(CubicGraph &cubicGraph, const std::string &filename, append append) {
+    return print(cubicGraph, filename, "", append);
+}
+
+bool ControlSequentialFormatPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename, append append) {
+    return print(graphList, filename, "", append);
+}

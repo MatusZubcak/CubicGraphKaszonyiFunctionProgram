@@ -11,7 +11,7 @@
 
 
 bool ControlParallelFormatPrinter::print(CubicGraph &cubicGraph, const std::string &filename,
-                                         append append) {
+                                         const std::string &additionalInformation, append append) {
     bool printedSuccessfully = true;
     std::ofstream f;
     if(append == APPEND)
@@ -23,6 +23,8 @@ bool ControlParallelFormatPrinter::print(CubicGraph &cubicGraph, const std::stri
         if (!f) {
             throw FileCannotBeOpenedException();
         }
+        f << additionalInformation;
+
         std::vector<CubicGraph> suppressionSequence = ParallelSuppressionMemoized().findSuppressionSequence(cubicGraph);
 
         f << cubicGraph.size() << std::endl;
@@ -44,7 +46,7 @@ bool ControlParallelFormatPrinter::print(CubicGraph &cubicGraph, const std::stri
 }
 
 bool ControlParallelFormatPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename,
-                                         append append) {
+                                         const std::string &additionalInformation, append append) {
     bool printedSuccessfully = true;
     std::ofstream f;
     if(append == APPEND)
@@ -56,6 +58,8 @@ bool ControlParallelFormatPrinter::print(std::vector<CubicGraph> &graphList, con
         if (!f) {
             throw FileCannotBeOpenedException();
         }
+        f << additionalInformation;
+
         for(const CubicGraph &cubicGraph : graphList) {
             std::vector<CubicGraph> suppressionSequence =
                     ParallelSuppressionMemoized().findSuppressionSequence(cubicGraph);
@@ -97,3 +101,10 @@ bool ControlParallelFormatPrinter::print(std::vector<CubicGraph> &graphList, con
     return printedSuccessfully;
 }
 
+bool ControlParallelFormatPrinter::print(CubicGraph &cubicGraph, const std::string &filename, append append) {
+    return print(cubicGraph, filename, "", append);
+}
+
+bool ControlParallelFormatPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename, append append) {
+    return print(graphList, filename, "", append);
+}

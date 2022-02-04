@@ -9,7 +9,8 @@
 
 
 bool KaszonyiValuesPrinter::print(CubicGraph &cubicGraph, const std::string &filename,
-                                                append append) {
+                                  const std::string &additionalInformation,
+                                  append append) {
     bool printedSuccessfully;
     std::ofstream f;
     if(append == APPEND)
@@ -21,6 +22,8 @@ bool KaszonyiValuesPrinter::print(CubicGraph &cubicGraph, const std::string &fil
         if (!f) {
             throw FileCannotBeOpenedException();
         }
+        f << additionalInformation;
+
         f << cubicGraph.size() << std::endl;
         printedSuccessfully =
                    printGraph(cubicGraph, f)
@@ -36,7 +39,8 @@ bool KaszonyiValuesPrinter::print(CubicGraph &cubicGraph, const std::string &fil
 }
 
 bool KaszonyiValuesPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename,
-                                                append append) {
+                                  const std::string &additionalInformation,
+                                  append append) {
     bool printedSuccesfully = true;
     std::ofstream f;
     if(append == APPEND)
@@ -48,6 +52,8 @@ bool KaszonyiValuesPrinter::print(std::vector<CubicGraph> &graphList, const std:
         if (!f) {
             throw FileCannotBeOpenedException();
         }
+        f << additionalInformation;
+
         f << graphList[0].size() << std::endl;
         for(auto it = graphList.begin(); it != graphList.end(); it++){
             printedSuccesfully &=
@@ -64,4 +70,12 @@ bool KaszonyiValuesPrinter::print(std::vector<CubicGraph> &graphList, const std:
     }
     return printedSuccesfully;
 
+}
+
+bool KaszonyiValuesPrinter::print(CubicGraph &cubicGraph, const std::string &filename, append append) {
+    return print(cubicGraph, filename, "", append);
+}
+
+bool KaszonyiValuesPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename, append append) {
+    return print(graphList, filename, "", append);
 }

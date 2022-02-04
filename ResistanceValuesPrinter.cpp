@@ -32,7 +32,8 @@ bool ResistanceValuesPrinter::printResistanceValues(CubicGraph &cubicGraph, std:
     return true;
 }
 
-bool ResistanceValuesPrinter::print(CubicGraph &cubicGraph, const std::string &filename, append append) {
+bool ResistanceValuesPrinter::print(CubicGraph &cubicGraph, const std::string &filename,
+                                    const std::string &additionalInformation, append append) {
 
     bool printedSuccessfully;
     std::ofstream f;
@@ -45,6 +46,8 @@ bool ResistanceValuesPrinter::print(CubicGraph &cubicGraph, const std::string &f
         if (!f) {
             throw FileCannotBeOpenedException();
         }
+        f << additionalInformation;
+
         f << cubicGraph.size() << std::endl;
         printedSuccessfully =
                 printGraph(cubicGraph, f)
@@ -59,7 +62,8 @@ bool ResistanceValuesPrinter::print(CubicGraph &cubicGraph, const std::string &f
     return printedSuccessfully;
 }
 
-bool ResistanceValuesPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename, append append) {
+bool ResistanceValuesPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename,
+                                    const std::string &additionalInformation, append append) {
     bool printedSuccesfully = true;
     std::ofstream f;
     if(append == APPEND)
@@ -71,6 +75,8 @@ bool ResistanceValuesPrinter::print(std::vector<CubicGraph> &graphList, const st
         if (!f) {
             throw FileCannotBeOpenedException();
         }
+        f << additionalInformation;
+
         f << graphList[0].size() << std::endl;
         for(auto it = graphList.begin(); it != graphList.end(); it++){
             printedSuccesfully &=
@@ -87,4 +93,12 @@ bool ResistanceValuesPrinter::print(std::vector<CubicGraph> &graphList, const st
     }
     return printedSuccesfully;
 
+}
+
+bool ResistanceValuesPrinter::print(CubicGraph &cubicGraph, const std::string &filename, append append) {
+    return print(cubicGraph, filename, "", append);
+}
+
+bool ResistanceValuesPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename, append append) {
+    return print(graphList, filename, "", append);
 }
