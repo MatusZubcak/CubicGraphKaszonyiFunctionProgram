@@ -19,8 +19,8 @@ protected:
     bool loadGraph(std::vector<CubicGraph> &graphList, std::ifstream& f, unsigned int graph_size,
                    coloringAlgorithm coloringAlgorithm);
 public:
-    virtual std::vector<CubicGraph> loadNewGraphs(const std::string& filename, std::string& InformationFromFile) = 0;
-    virtual std::vector<CubicGraph> loadNewGraphs(const std::string& filename, std::string& InformationFromFile,
+    virtual std::vector<CubicGraph> loadNewGraphs(const std::string& filename, std::string& informationFromFile) = 0;
+    virtual std::vector<CubicGraph> loadNewGraphs(const std::string& filename, std::string& informationFromFile,
                                                   coloringAlgorithm coloringAlgorithm) = 0;
     virtual std::vector<CubicGraph> loadNewGraphs(const std::string& filename) = 0;
     virtual std::vector<CubicGraph> loadNewGraphs(const std::string& filename, coloringAlgorithm coloringAlgorithm) = 0;

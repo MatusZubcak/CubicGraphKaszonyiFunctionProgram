@@ -12,8 +12,8 @@ class GraphLoaderSimpleAdjListsFormat : public GraphLoader {
 
 public:
     GraphLoaderSimpleAdjListsFormat()= default;;
-    std::vector<CubicGraph> loadNewGraphs(const std::string& filename, std::string& InformationFromFile) override;
-    std::vector<CubicGraph> loadNewGraphs(const std::string &filename, std::string& InformationFromFile,
+    std::vector<CubicGraph> loadNewGraphs(const std::string& filename, std::string& informationFromFile) override;
+    std::vector<CubicGraph> loadNewGraphs(const std::string &filename, std::string& informationFromFile,
                                           coloringAlgorithm coloringAlgorithm) override;
     std::vector<CubicGraph> loadNewGraphs(const std::string &filename) override;
     std::vector<CubicGraph> loadNewGraphs(const std::string &filename, coloringAlgorithm coloringAlgorithm) override;

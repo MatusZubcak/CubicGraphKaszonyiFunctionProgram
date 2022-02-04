@@ -12,7 +12,7 @@
 #include "ColoringFinderFactor.h"
 
 std::vector<CubicGraph> GraphLoaderSimpleAdjListsFormat::loadNewGraphs(const std::string& filename,
-                                                                       std::string& InformationFromFile,
+                                                                       std::string& informationFromFile,
                                                                        coloringAlgorithm coloringAlgorithm) {
     std::vector<CubicGraph> graphList = {};
     std::ifstream f;
@@ -39,22 +39,22 @@ std::vector<CubicGraph> GraphLoaderSimpleAdjListsFormat::loadNewGraphs(const std
         f.close();
     }
 
-    InformationFromFile.erase();
+    informationFromFile.erase();
     return graphList;
 }
 
 std::vector<CubicGraph> GraphLoaderSimpleAdjListsFormat::loadNewGraphs(const std::string &filename,
-                                                                       std::string& InformationFromFile) {
-    return loadNewGraphs(filename, InformationFromFile, ANY);
+                                                                       std::string& informationFromFile) {
+    return loadNewGraphs(filename, informationFromFile, ANY);
 }
 
 std::vector<CubicGraph> GraphLoaderSimpleAdjListsFormat::loadNewGraphs(const std::string &filename,
                                                                        coloringAlgorithm coloringAlgorithm) {
-    std::string redundant_string;
-    return loadNewGraphs(filename, redundant_string, coloringAlgorithm);
+    std::string dump_string;
+    return loadNewGraphs(filename, dump_string, coloringAlgorithm);
 }
 
 std::vector<CubicGraph> GraphLoaderSimpleAdjListsFormat::loadNewGraphs(const std::string &filename) {
-    std::string redundant_string;
-    return loadNewGraphs(filename, redundant_string, ANY);
+    std::string dump_string;
+    return loadNewGraphs(filename, dump_string, ANY);
 }
