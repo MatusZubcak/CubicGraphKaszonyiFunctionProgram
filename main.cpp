@@ -7,6 +7,7 @@
 #include "ControlParallelFormatPrinter.h"
 #include "KaszonyiValuesPrinter.h"
 #include "ResistanceValuesPrinter.h"
+#include "ColoringFinderSAT.h"
 
 
 void print(CubicGraph graph, const std::string& output, int& counter){
@@ -43,14 +44,14 @@ void print(CubicGraph graph, const std::string& output, int& counter){
     counter++;
 }
 
-/*
+
 int main(){
     Tests::run();
     return 0;
 }
-*/
 
 
+/*
 int main(){
     int repeats = 1;
     int size = 30;
@@ -104,7 +105,7 @@ int main(){
     }
         return 0;
 }
-
+*/
 
 /*
 int main(){

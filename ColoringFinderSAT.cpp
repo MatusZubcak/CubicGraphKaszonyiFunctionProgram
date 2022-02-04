@@ -4,8 +4,8 @@
 
 #include "ColoringFinderSAT.h"
 #include "Hash.h"
-#include <cryptominisat5/cryptominisat.h>
 #include <unordered_map>
+#include <cmath>
 
 std::map<unsigned int, std::vector<unsigned int>>
 ColoringFinderSAT::toIncidenceIndexMap(const std::set<unsigned int> &vertices, const std::set<Edge> &edges) {
@@ -31,38 +31,22 @@ ColoringFinderSAT::toIncidenceIndexMap(const std::set<unsigned int> &vertices, c
     return incidenceIndexMap;
 }
 
-bool ColoringFinderSAT::isColorable(std::set<unsigned int> &vertices, std::set<Edge> &edges) {
+void ColoringFinderSAT::toSATFormula(const std::set<unsigned int> &vertices, const std::set<Edge> &edges,
+                                     CMSat::SATSolver &satSolver) {
     //map vertex -> List of indexes of incident edges
     std::map<unsigned int, std::vector<unsigned int>> incidenceIndexMap = toIncidenceIndexMap(vertices,edges);
-    CMSat::SATSolver solver;
-
-    //Let's use 1 thread
-    solver.set_num_threads(1);
-
-    //We need 3*|E(G)| = 9/2*|V(G)| variables.
-    // Variable numbers are always trivially increasing
-    solver.new_vars(9*vertices.size()/2);
 
     //Clauses for "At least one color for every edge"
     unsigned int e_index = 0;
     for(auto e : edges){
         for(int i = 0; i < e.getMultiplicity(); i++) {
 
-
-            /*std::cout << " ("
-                      << "x_" << e_index + 0 << " OR "
-                      << "x_" << e_index + 1 << " OR "
-                      << "x_" << e_index + 2
-                      << ") ";
-            std::cout << std::endl;*/
-
-
             std::vector<CMSat::Lit> clause = {
                     CMSat::Lit(e_index + 0, false),
                     CMSat::Lit(e_index + 1, false),
                     CMSat::Lit(e_index + 2, false)
-            };
-            solver.add_clause(clause);
+                    };
+            satSolver.add_clause(clause);
             e_index += 3;
         }
     }
@@ -77,56 +61,81 @@ bool ColoringFinderSAT::isColorable(std::set<unsigned int> &vertices, std::set<E
             std::vector<CMSat::Lit> clause = {
                     CMSat::Lit(e0_index + i, true),
                     CMSat::Lit(e1_index + i, true)
-            };
-            solver.add_clause(clause);
+                    };
+            satSolver.add_clause(clause);
 
             clause = {
                     CMSat::Lit(e0_index + i, true),
                     CMSat::Lit(e2_index + i, true)
-            };
-            solver.add_clause(clause);
+                    };
+            satSolver.add_clause(clause);
 
             clause = {
                     CMSat::Lit(e1_index + i, true),
                     CMSat::Lit(e2_index + i, true)
-            };
-            solver.add_clause(clause);
-
-
-            /*std::cout << " ("
-                      << "NOT x_" << e0_index + i << " OR "
-                      << "NOT x_" << e1_index + i
-                      <<  ") ";
-
-            std::cout << " ("
-                      << "NOT x_" << e0_index + i << " OR "
-                      << "NOT x_" << e2_index + i
-                      <<  ") ";
-
-            std::cout << " ("
-                      << "NOT x_" << e1_index + i << " OR "
-                      << "NOT x_" << e2_index + i
-                      <<  ") ";
-
-            std::cout << std::endl;
-             */
-
-
-
+                    };
+            satSolver.add_clause(clause);
         }
     }
-
-
-    return solver.solve() == CMSat::l_True;
-}
-
-int ColoringFinderSAT::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges) {
-    return 0;
 }
 
 int ColoringFinderSAT::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges,
                                         unsigned int numberOfIsolatedCircles) {
-    return 0;
+    CMSat::SATSolver satSolver;
+    int colorings = 0;
+
+    //Let's use 1 thread
+    satSolver.set_num_threads(1);
+
+    //We need 3*|E(G)| = 9/2*|V(G)| variables.
+    // Variable numbers are always trivially increasing
+    satSolver.new_vars(9*vertices.size()/2);
+
+    //generate SAT formula of edge 3-coloring problem
+    toSATFormula(vertices, edges, satSolver);
+
+    while(true) {
+        //If no more solutions exist, return all found colorings
+        if ( satSolver.solve() != CMSat::l_True) {
+            //Do not include permutations of colors
+            colorings = colorings / 6;
+
+            //Take isolated circles into account
+            colorings *= int(std::pow(double(3), double(numberOfIsolatedCircles)));
+
+            return colorings;
+        }
+
+        //Banning found solution
+        std::vector<CMSat::Lit> ban_solution;
+        for (auto var = 0; var < satSolver.nVars(); var++) {
+            if (satSolver.get_model()[var] != CMSat::l_Undef) {
+                ban_solution.emplace_back(var, (satSolver.get_model()[var] == CMSat::l_True));
+            }
+        }
+        satSolver.add_clause(ban_solution);
+
+        //Increase amount of colorings
+        colorings++;
+    }
 }
 
-ColoringFinderSAT::ColoringFinderSAT() = default;
+int ColoringFinderSAT::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges) {
+    return computeColorings(vertices, edges, 0);
+}
+
+bool ColoringFinderSAT::isColorable(std::set<unsigned int> &vertices, std::set<Edge> &edges) {
+    CMSat::SATSolver satSolver;
+
+    //Let's use 1 thread
+    satSolver.set_num_threads(1);
+
+    //We need 3*|E(G)| = 9/2*|V(G)| variables.
+    // Variable numbers are always trivially increasing
+    satSolver.new_vars(9*vertices.size()/2);
+
+    //generate SAT formula of edge 3-coloring problem
+    toSATFormula(vertices, edges, satSolver);
+
+    return satSolver.solve() == CMSat::l_True;
+}

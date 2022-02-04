@@ -15,7 +15,7 @@
 class ColoringFinderFactor : public ColoringFinder {
 
 private:
-    int kaszonyiValue;
+    int colorings;
 
     void reccursivellyCountKaszonyi(std::vector<std::pair<unsigned int,bool>> linearGraphRepresentation,
                                     unsigned int vertex);

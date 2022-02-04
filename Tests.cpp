@@ -15,6 +15,7 @@
 #include "ControlSequentialFormatPrinter.h"
 #include "ControlParallelFormatPrinter.h"
 #include "AutomatedSuppressionTester.h"
+#include "ColoringFinderSAT.h"
 
 int Tests::run(){
 
@@ -84,6 +85,8 @@ int Tests::run(){
     assert(e12.isIncidentWith(1));
     assert(e12.isIncidentWith(2));
     assert(!e12.isIncidentWith(3));
+
+    //Suppression tests
 
     std::set<unsigned int> K4_vertices{1, 2, 3, 4};
     std::set<Edge> K4_edges{e12, e13, e14, e23, e24, e34};
@@ -629,6 +632,9 @@ int Tests::run(){
         else assert(!e.isOriginal());
     }
 
+    //KASZONYI FUNCTION TESTS
+    std::shared_ptr<ColoringFinder> coloringFactor = std::shared_ptr<ColoringFinder>(new ColoringFinderFactor);
+    std::shared_ptr<ColoringFinder> coloringSAT = std::shared_ptr<ColoringFinder>(new ColoringFinderSAT);
 
     std::set<unsigned int> J3_vertices{1,2,3,4,5,6,7,8,9,10,11,12};
     std::set<Edge> J3_edges{Edge(1,2), Edge(2,3),
@@ -640,7 +646,8 @@ int Tests::run(){
                             Edge(7,10), Edge(7,12),
                             Edge(8,9), Edge(8, 11),
                             Edge(9,12), Edge(10,11)};
-    CubicGraph J3(J3_vertices, J3_edges);
+    CubicGraph J3_factor(J3_vertices, J3_edges, coloringFactor);
+    CubicGraph J3_SAT(J3_vertices, J3_edges, coloringSAT);
     std::vector<unsigned int> J3_expectedKaszonyiValues{
         0, 0, 6,
         0, 6,
@@ -650,22 +657,27 @@ int Tests::run(){
         3, 3,
         3, 3, 3, 3, 3, 3
     };
-    std::vector<unsigned int> J3_KaszonyiValuesAll;
+    std::vector<unsigned int> J3_KaszonyiValuesAll_factor;
+    std::vector<unsigned int> J3_KaszonyiValuesAll_SAT;
     for(auto e : J3_edges){
-        J3_KaszonyiValuesAll.push_back(J3.getKaszonyiValue(e));
+        J3_KaszonyiValuesAll_factor.push_back(J3_factor.getKaszonyiValue(e));
+        J3_KaszonyiValuesAll_SAT.push_back(J3_SAT.getKaszonyiValue(e));
     }
-    assert(J3_KaszonyiValuesAll == J3_expectedKaszonyiValues);
+    assert(J3_KaszonyiValuesAll_factor == J3_expectedKaszonyiValues);
+    assert(J3_KaszonyiValuesAll_SAT == J3_expectedKaszonyiValues);
 
 
-    //KASZONYI FUNCTION TESTS
     ColoringFinderFactor kaszonyiFunction;
+    ColoringFinderSAT coloringFinderSat;
 
     assert(kaszonyiFunction.computeColorings(K4_vertices, K4_edges) == 1);
+    assert(coloringFinderSat.computeColorings(K4_vertices, K4_edges) == 1);
 
     std::set<unsigned int> test21_vertices={1,2};
     std::set<Edge> test21_edges={Edge(1,1), Edge(1,2),
                                  Edge(2,2)};
     assert(kaszonyiFunction.computeColorings(test21_vertices, test21_edges) == 0);
+    assert(coloringFinderSat.computeColorings(test21_vertices, test21_edges) == 0);
 
     std::set<unsigned int> test22_vertices={1,2,3,4};
     std::set<Edge> test22_edges{Edge(1,2), Edge(3,4)};
@@ -676,6 +688,8 @@ int Tests::run(){
     test22_edges.insert(t22e23);
     test22_edges.insert(t22e14);
     assert(kaszonyiFunction.computeColorings(test22_vertices, test22_edges) == 2);
+    assert(coloringFinderSat.computeColorings(test22_vertices, test22_edges) == 2);
+
 
     std::set<unsigned int> test23_vertices={1,2};
     Edge t23e12(1,2);
@@ -683,6 +697,7 @@ int Tests::run(){
     t23e12.incrementMultiplicity();
     std::set<Edge> test23_edges={t23e12};
     assert(kaszonyiFunction.computeColorings(test23_vertices, test23_edges) == 1);
+    assert(coloringFinderSat.computeColorings(test23_vertices, test23_edges) == 1);
 
 
     std::set<unsigned int> test24_vertices = {1, 2};
@@ -844,7 +859,7 @@ int Tests::run(){
     }
 
     assert(test28_SAT_isColorable == test28_Factor_isColorable);
-    //assert(test28_SAT_colors == test28_Factor_colors);
+    assert(test28_SAT_colors == test28_Factor_colors);
 
 
 

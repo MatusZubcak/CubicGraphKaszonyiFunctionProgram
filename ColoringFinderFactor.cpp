@@ -70,7 +70,7 @@ std::vector<std::pair<unsigned int,bool>>ColoringFinderFactor::convertToLinearGr
 }
 
 ColoringFinderFactor::ColoringFinderFactor(){
-    kaszonyiValue = 0;
+    colorings = 0;
 };
 
 /*zisti ci je kruznica parnej dlzky.
@@ -126,7 +126,7 @@ void ColoringFinderFactor::reccursivellyCountKaszonyi
             }
         }
         //delime dvomi, lebo v skutocnosti tymto sposobom generujeme nie kombinacie ale permutacie rozdelenia 2-faktoru do 2 farieb
-        kaszonyiValue += potentialPsiForThis1Factor/2;
+        colorings += potentialPsiForThis1Factor/2;
         return;
     }
 
@@ -176,7 +176,7 @@ int ColoringFinderFactor::computeColorings(std::set<unsigned int>& vertices,
                                            std::set<Edge>& edges,
                                            unsigned int numberOfIsolatedCircles) {
 
-    kaszonyiValue = 0;
+    colorings = 0;
     std::vector<std::pair<unsigned int, bool>> linearGraphRepresentation =
             convertToLinearGraphRepresentation(vertices, edges);
 
@@ -193,11 +193,11 @@ int ColoringFinderFactor::computeColorings(std::set<unsigned int>& vertices,
         //pre zvysne volame rekurzivnu funkciu na hladanie 1-faktoru
         reccursivellyCountKaszonyi(linearGraphRepresentation, 1);
     } else{
-        kaszonyiValue = 1;
+        colorings = 1;
     }
 
-    kaszonyiValue *= int(std::pow(double(3), double(numberOfIsolatedCircles)));
-    return kaszonyiValue;
+    colorings *= int(std::pow(double(3), double(numberOfIsolatedCircles)));
+    return colorings;
 }
 
 int ColoringFinderFactor::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges){

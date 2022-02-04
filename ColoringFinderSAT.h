@@ -8,14 +8,17 @@
 #include "ColoringFinder.h"
 #include <map>
 #include <vector>
+#include <cryptominisat5/cryptominisat.h>
 
 class ColoringFinderSAT : public ColoringFinder {
 private:
     std::map<unsigned int, std::vector<unsigned int>> toIncidenceIndexMap(const std::set<unsigned int> &vertices,
                                                                           const std::set<Edge> &edges);
+    void toSATFormula(const std::set<unsigned int> &vertices, const std::set<Edge> &edges,
+                      CMSat::SATSolver &satSolver);
 
 public:
-    ColoringFinderSAT();
+    ColoringFinderSAT()= default;;
 
     int computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges) override;
     int computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges,
