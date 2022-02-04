@@ -80,8 +80,8 @@ bool ResistanceValuesPrinter::print(std::vector<CubicGraph> &graphList, const st
         f << graphList[0].size() << std::endl;
         for(auto it = graphList.begin(); it != graphList.end(); it++){
             printedSuccesfully &=
-                    printGraph(*it, f)
-                    && printResistanceValues(*it, f);
+                    printResistanceValues(*it, f)
+                    && printGraph(*it, f);
             if(next(it) != graphList.end()){f << std::endl;}
         }
 

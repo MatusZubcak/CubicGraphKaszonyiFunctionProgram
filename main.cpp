@@ -3,11 +3,13 @@
 #include <fstream>
 #include "Tests.h"
 #include "GraphLoaderSimpleAdjListsFormat.h"
+#include "GraphLoaderIndexedAdjListsWithDescription.h"
 #include "ControlSequentialFormatPrinter.h"
 #include "ControlParallelFormatPrinter.h"
 #include "KaszonyiValuesPrinter.h"
 #include "ResistanceValuesPrinter.h"
 #include "ColoringFinderSAT.h"
+#include "DirectoryReader.h"
 
 
 void print(CubicGraph graph, const std::string& output, int& counter){
@@ -44,10 +46,33 @@ void print(CubicGraph graph, const std::string& output, int& counter){
     counter++;
 }
 
-
+/*
 int main(){
     Tests::run();
     return 0;
+}
+ */
+
+int main(){
+    DirectoryReader directoryReader;
+    std::vector<std::string> files = directoryReader.fileList("/home/matus/Snarks");
+    GraphLoaderIndexedAdjListsWithDescription graphLoader;
+    ResistanceValuesPrinter printer;
+
+    unsigned int s1, s2=0;
+    s1 = files.size();
+
+    std::string info_string;
+    for(const auto& filename : files){
+        std::vector<CubicGraph> graphList = graphLoader.loadNewGraphs(filename, info_string, ANY);
+
+        std::string output_filename =
+                "/home/matus/Results/"
+                + filename.substr(filename.find_last_of('/') + 1, filename.size())
+                + ".out";
+        std::cout << output_filename << std::endl;
+        printer.print(graphList, output_filename, info_string, NO_APPEND);
+    }
 }
 
 
