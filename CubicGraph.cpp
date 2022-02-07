@@ -91,7 +91,6 @@ unsigned int CubicGraph::getParentId() const{
     return parent_id;
 }
 
-//TODO optimise this function - now it only calls count_all_colorings function and returns true if > 0, which is dumb
 bool CubicGraph::isColorable() {
     return this->coloringStrategy->isColorable(this->vertices, this->edges);
 }

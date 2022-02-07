@@ -8,7 +8,7 @@
 #include "ColoringFinder.h"
 #include <map>
 #include <vector>
-#include <cryptominisat5/cryptominisat.h>
+#include "cryptominisat.h"
 
 class ColoringFinderSAT : public ColoringFinder {
 private:

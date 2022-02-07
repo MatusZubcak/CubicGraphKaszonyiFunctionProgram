@@ -15,19 +15,8 @@ std::vector<std::pair<unsigned int,bool>>ColoringFinderFactor::convertToLinearGr
         indexGenerator++;
     }
 
-    /*for(auto e : vertexTranslationTable){
-        std::cout << "key: " << e.first << " value: " << e.second <<std::endl;
-    }*/
-
     std::vector<std::pair<unsigned int, bool>>linearGraphRepresentation
             (3*vertexTranslationTable.size(), std::pair<int,bool>(0, true));
-
-    /*for(auto i : linearGraphRepresentation){
-        std::cout << i.first << "   ";
-    } std::cout << std::endl;
-    for(auto e : edges){
-        std::cout << e.toString() << "  ";
-    }std::cout <<std::endl;*/
 
     for(auto e : edges){
         unsigned int v1 = vertexTranslationTable[e.getIncidentvertices().first];
@@ -51,21 +40,8 @@ std::vector<std::pair<unsigned int,bool>>ColoringFinderFactor::convertToLinearGr
                 }
             }
         }
-       /*std::cout << "VERTICES: " << v1 << " " << v2 << std::endl;
-        for(auto i : linearGraphRepresentation){
-            std::cout << i.first << "  ";
-        }std::cout << std::endl;
-        for(auto i : linearGraphRepresentation){
-            std::cout << i.second <<"  ";
-        } std::cout << "\n";*/
     }
 
-    /*for(auto i : linearGraphRepresentation){
-        std::cout << i.second <<"   ";
-    } std::cout << "BOOLS\n";
-    for(auto i : linearGraphRepresentation){
-        std::cout << i.first << " ";
-    }std::cout <<std::endl;*/
     return linearGraphRepresentation;
 }
 

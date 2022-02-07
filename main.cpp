@@ -1,3 +1,6 @@
+#include <QApplication>
+#include <QPushButton>
+
 #include <chrono>
 #include <iostream>
 #include <fstream>
@@ -10,7 +13,8 @@
 #include "ResistanceValuesPrinter.h"
 #include "ColoringFinderSAT.h"
 #include "DirectoryReader.h"
-
+#include "ParallelSuppressionMemoized.h"
+#include "SequentialSuppressionMemoized.h"
 
 void print(CubicGraph graph, const std::string& output, int& counter){
 
@@ -47,15 +51,26 @@ void print(CubicGraph graph, const std::string& output, int& counter){
 }
 
 /*
+int main(int argc, char *argv[]) {
+    QApplication a(argc, argv);
+    QPushButton button("Hello world!", nullptr);
+    button.resize(200, 100);
+    button.show();
+    return QApplication::exec();
+}
+*/
+
+
+
 int main(){
     Tests::run();
     return 0;
 }
- */
 
+/*
 int main(){
     DirectoryReader directoryReader;
-    std::vector<std::string> files = directoryReader.fileList("/home/matus/Snarks");
+    std::vector<std::string> files = directoryReader.fileList("/home/matus/testfile");
     GraphLoaderIndexedAdjListsWithDescription graphLoader;
     ResistanceValuesPrinter printer;
 
@@ -63,18 +78,19 @@ int main(){
     s1 = files.size();
 
     std::string info_string;
-    for(const auto& filename : files){
+    for(const auto& filename : files) {
         std::vector<CubicGraph> graphList = graphLoader.loadNewGraphs(filename, info_string, ANY);
 
         std::string output_filename =
-                "/home/matus/Results/"
+                "/home/matus/testfile_output/"
                 + filename.substr(filename.find_last_of('/') + 1, filename.size())
                 + ".out";
         std::cout << output_filename << std::endl;
         printer.print(graphList, output_filename, info_string, NO_APPEND);
+
     }
 }
-
+*/
 
 /*
 int main(){

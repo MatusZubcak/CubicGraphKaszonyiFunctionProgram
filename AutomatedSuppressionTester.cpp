@@ -14,7 +14,6 @@
 bool AutomatedSuppressionTester::testWithInputFile(const std::string &filename, suppression suppression,
                                                    std::vector<int> expectedDepthList) {
     bool isCorrect = true;
-    bool firstTime = true;
     std::vector<CubicGraph> graphList = GraphLoaderSimpleAdjListsFormat().loadNewGraphs(filename);
 
     if(graphList.size() != expectedDepthList.size()){
