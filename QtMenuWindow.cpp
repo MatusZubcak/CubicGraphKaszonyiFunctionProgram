@@ -1,4 +1,10 @@
 //
+// Created by matus on 13. 2. 2022.
+//
+
+#include "QtMenuWindow.h"
+
+//
 // Created by matus on 12. 2. 2022.
 //
 
@@ -12,10 +18,13 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 
-#include "QMainWindow.h"
-#include "QExitButton.h"
+#include "QtMenuWindow.h"
+#include "QtExitButton.h"
+#include "QtCancelButton.h"
 
-MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
+
+QtMenuWindow::QtMenuWindow(QWidget *parent) {
+
 
     //Radio panel
     QLabel *formatLabel = new QLabel("Pick what you want to compute:");
@@ -32,22 +41,22 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
     formatButtonGroup->addButton(kaszonyiValues, 3);
     formatButtonGroup->setExclusive(true);
 
-    QPushButton *inputButton = new QPushButton("Choose files");
-    QPushButton *outputButton = new QPushButton ("Output directory");
 
     //List of selected files
     QListWidget *selectedFilesList = new QListWidget();
     new QListWidgetItem(tr("16g3e.txt"), selectedFilesList);
     new QListWidgetItem(tr("Blanusa.26"), selectedFilesList);
-    new QListWidgetItem(tr("Snarks.92"), selectedFilesList);
+    new QListWidgetItem(tr("Snarksx.92"), selectedFilesList);
 
+    QPushButton *inputButton = new QPushButton("Choose files");
     QPushButton *removeFileButton = new QPushButton("Remove");
     QPushButton *removeAllFilesButton = new QPushButton("Clear");
 
     //Command panel
     QPushButton *runButton = new QPushButton("Run");
-    QPushButton *cancelButton = new QPushButton("Cancel");
-    QExitButton *exitButton = new QExitButton();
+    QPushButton *outputButton = new QPushButton ("Output directory");
+    QtCancelButton *cancelButton = new QtCancelButton();
+    QtExitButton *exitButton = new QtExitButton();
 
 
     //Layouts
@@ -59,8 +68,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
     formatButtonsLayout->addWidget(sequentialPathButton);
     formatButtonsLayout->addWidget(kaszonyiValues);
     formatButtonsLayout->addStretch();
-    //formatButtonsLayout->addWidget(inputButton);
-    //formatButtonsLayout->addWidget(outputButton);
 
     //FileList command buttons layout
     QHBoxLayout *fileListButtonsLayout = new QHBoxLayout();

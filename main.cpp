@@ -15,7 +15,7 @@
 #include "DirectoryReader.h"
 #include "ParallelSuppressionMemoized.h"
 #include "SequentialSuppressionMemoized.h"
-#include "QMainWindow.h"
+#include "QtMainWindow.h"
 
 void print(CubicGraph graph, const std::string& output, int& counter){
 
@@ -54,7 +54,7 @@ void print(CubicGraph graph, const std::string& output, int& counter){
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
-    MainWindow mainWindow;
+    QtMainWindow mainWindow;
     mainWindow.show();
     return QApplication::exec();
 }

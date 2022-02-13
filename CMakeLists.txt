@@ -55,7 +55,15 @@ add_executable(CubicGraphKaszonyiFunctionProgram
         DirectoryReader.cpp
         DirectoryReader.h
         cryptominisat.h
-        solvertypesmini.h QMainWindow.cpp QMainWindow.h QExitButton.cpp QExitButton.h)
+        solvertypesmini.h
+        QtMainWindow.cpp
+        QtMainWindow.h
+        QtExitButton.cpp
+        QtExitButton.h
+        QtCancelButton.cpp
+        QtCancelButton.h
+        QtMenuWindow.cpp
+        QtMenuWindow.h)
 
 find_package(Qt5 COMPONENTS
         Core
