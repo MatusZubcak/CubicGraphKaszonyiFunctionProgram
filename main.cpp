@@ -15,7 +15,7 @@
 #include "DirectoryReader.h"
 #include "ParallelSuppressionMemoized.h"
 #include "SequentialSuppressionMemoized.h"
-#include "MainWindow.h"
+#include "QMainWindow.h"
 
 void print(CubicGraph graph, const std::string& output, int& counter){
 

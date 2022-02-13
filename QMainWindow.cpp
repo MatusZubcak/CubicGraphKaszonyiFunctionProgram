@@ -11,8 +11,9 @@
 #include <QLabel>
 #include <QListWidget>
 #include <QListWidgetItem>
-#include <iostream>
-#include "MainWindow.h"
+
+#include "QMainWindow.h"
+#include "QExitButton.h"
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
 
@@ -46,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
     //Command panel
     QPushButton *runButton = new QPushButton("Run");
     QPushButton *cancelButton = new QPushButton("Cancel");
-    QPushButton *exitButton = new QPushButton("Exit");
+    QExitButton *exitButton = new QExitButton();
 
 
     //Layouts
