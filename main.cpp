@@ -15,6 +15,7 @@
 #include "DirectoryReader.h"
 #include "ParallelSuppressionMemoized.h"
 #include "SequentialSuppressionMemoized.h"
+#include "MainWindow.h"
 
 void print(CubicGraph graph, const std::string& output, int& counter){
 
@@ -50,22 +51,22 @@ void print(CubicGraph graph, const std::string& output, int& counter){
     counter++;
 }
 
-/*
+
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
-    QPushButton button("Hello world!", nullptr);
-    button.resize(200, 100);
-    button.show();
+    MainWindow mainWindow;
+    mainWindow.show();
     return QApplication::exec();
 }
-*/
 
 
 
+/*
 int main(){
     Tests::run();
     return 0;
 }
+*/
 
 /*
 int main(){
