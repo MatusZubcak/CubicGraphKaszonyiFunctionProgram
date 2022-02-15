@@ -16,12 +16,13 @@
 #include <QRadioButton>
 #include <QLabel>
 #include <QListWidget>
-#include <QListWidgetItem>
 
 #include "QtMenuWindow.h"
 #include "QtExitButton.h"
 #include "QtCancelButton.h"
-
+#include "QtClearButton.h"
+#include "QtRemoveButton.h"
+#include "QtFileList.h"
 
 QtMenuWindow::QtMenuWindow(QWidget *parent) {
 
@@ -43,14 +44,14 @@ QtMenuWindow::QtMenuWindow(QWidget *parent) {
 
 
     //List of selected files
-    QListWidget *selectedFilesList = new QListWidget();
-    new QListWidgetItem(tr("16g3e.txt"), selectedFilesList);
-    new QListWidgetItem(tr("Blanusa.26"), selectedFilesList);
-    new QListWidgetItem(tr("Snarksx.92"), selectedFilesList);
+    QtFileList *fileList = new QtFileList();
 
     QPushButton *inputButton = new QPushButton("Choose files");
-    QPushButton *removeFileButton = new QPushButton("Remove");
-    QPushButton *removeAllFilesButton = new QPushButton("Clear");
+    QtRemoveButton *removeButton = new QtRemoveButton();
+    QtClearButton *clearButton = new QtClearButton();
+
+    connect(removeButton, SIGNAL(clicked(bool)), fileList, SLOT(removeSelectedItems()));
+    connect(clearButton, SIGNAL(clicked(bool)), fileList, SLOT(clear()));
 
     //Command panel
     QPushButton *runButton = new QPushButton("Run");
@@ -73,12 +74,12 @@ QtMenuWindow::QtMenuWindow(QWidget *parent) {
     QHBoxLayout *fileListButtonsLayout = new QHBoxLayout();
     fileListButtonsLayout->addWidget(inputButton);
     fileListButtonsLayout->addStretch();
-    fileListButtonsLayout->addWidget(removeFileButton);
-    fileListButtonsLayout->addWidget(removeAllFilesButton);
+    fileListButtonsLayout->addWidget(removeButton);
+    fileListButtonsLayout->addWidget(clearButton);
 
     inputButton->setMinimumWidth(120);
-    removeFileButton->setMinimumWidth(80);
-    removeAllFilesButton->setMinimumWidth(80);
+    removeButton->setMinimumWidth(80);
+    clearButton->setMinimumWidth(80);
 
     //Command buttons layout
     QHBoxLayout *commandButtonsLayout = new QHBoxLayout();
@@ -96,7 +97,7 @@ QtMenuWindow::QtMenuWindow(QWidget *parent) {
     //Main grid
     QGridLayout *mainLayout = new QGridLayout(this);
     mainLayout->addLayout(formatButtonsLayout, 0, 0);
-    mainLayout->addWidget(selectedFilesList, 0, 1);
+    mainLayout->addWidget(fileList, 0, 1);
     mainLayout->addLayout(fileListButtonsLayout, 1, 1);
     mainLayout->addLayout(commandButtonsLayout, 3, 0, 1, 2);
 

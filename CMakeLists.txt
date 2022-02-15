@@ -63,7 +63,7 @@ add_executable(CubicGraphKaszonyiFunctionProgram
         QtCancelButton.cpp
         QtCancelButton.h
         QtMenuWindow.cpp
-        QtMenuWindow.h)
+        QtMenuWindow.h QtClearButton.cpp QtClearButton.h QtRemoveButton.cpp QtRemoveButton.h QtFileList.cpp QtFileList.h)
 
 find_package(Qt5 COMPONENTS
         Core
