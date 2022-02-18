@@ -4,8 +4,8 @@
 
 #include <iostream>
 #include "CubicGraph.h"
-#include "ColoringFinderFactor.h"
-#include "ColoringFinderSAT.h"
+#include "ColoringFinder/FactorColoringFinder.h"
+#include "ColoringFinder/SATColoringFinder.h"
 
 CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int> &vertices, std::set<Edge> &edges, unsigned int numberOfIsolatedCircles) {
     // We have experimentally found that graphs with |V(G)| >= 24 are faster computed by SATSolver
@@ -23,18 +23,10 @@ CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int> &vertices, std::s
 
     this->preserveStrategy = false;
     if(this->vertices.size() >= coloringThreshold){
-        this->coloringStrategy = std::shared_ptr<ColoringFinder>(new ColoringFinderSAT());
+        this->coloringStrategy = std::shared_ptr<ColoringFinder>(new SATColoringFinder());
     }else{
-        this->coloringStrategy = std::shared_ptr<ColoringFinder>(new ColoringFinderFactor());
+        this->coloringStrategy = std::shared_ptr<ColoringFinder>(new FactorColoringFinder());
     }
-
-    for(auto e : edges){
-        if( vertices.find(e.getIncidentvertices().first) == vertices.end() ||
-            vertices.find(e.getIncidentvertices().second) == vertices.end()){
-            throw BadlyDefinedGraphException();
-        }
-    }
-
 }
 
 CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int>& vertices, std::set<Edge>& edges,

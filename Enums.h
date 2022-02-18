@@ -26,4 +26,9 @@ enum coloringAlgorithm{
     ANY
 };
 
+enum colorPrintFormat{
+    EXISTS,
+    NUMBER_OF_COLORS
+};
+
 #endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_ENUMS_H

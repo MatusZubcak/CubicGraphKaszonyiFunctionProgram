@@ -4,17 +4,17 @@
 
 #include <iostream>
 #include "AutomatedSuppressionTester.h"
-#include "GraphLoaderSimpleAdjListsFormat.h"
-#include "SequentialSuppressionMemoized.h"
-#include "SequentialSuppressionNaive.h"
-#include "ParallelSuppressionMemoized.h"
-#include "ParallelSuppressionNaive.h"
+#include "GraphLoader/AdjListsGraphLoader.h"
+#include "Suppression/SequentialSuppressionMemoized.h"
+#include "Suppression/SequentialSuppressionNaive.h"
+#include "Suppression/ParallelSuppressionMemoized.h"
+#include "Suppression/ParallelSuppressionNaive.h"
 #include "GraphExceptions.h"
 
 bool AutomatedSuppressionTester::testWithInputFile(const std::string &filename, suppression suppression,
                                                    std::vector<int> expectedDepthList) {
     bool isCorrect = true;
-    std::vector<CubicGraph> graphList = GraphLoaderSimpleAdjListsFormat().loadNewGraphs(filename);
+    std::vector<CubicGraph> graphList = AdjListsGraphLoader().loadNewGraphs(filename);
 
     if(graphList.size() != expectedDepthList.size()){
         throw ExpectedDepthListWrongSize();

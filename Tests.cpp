@@ -10,13 +10,13 @@
 #include "Tests.h"
 #include "Edge.h"
 #include "CubicGraph.h"
-#include "ColoringFinderFactor.h"
-#include "GraphLoaderSimpleAdjListsFormat.h"
-#include "KaszonyiValuesPrinter.h"
-#include "ControlSequentialFormatPrinter.h"
-#include "ControlParallelFormatPrinter.h"
+#include "ColoringFinder/FactorColoringFinder.h"
+#include "GraphLoader/AdjListsGraphLoader.h"
+#include "GraphPrinter/KaszonyiPrinter.h"
+#include "GraphPrinter/SequentialPathPrinter.h"
+#include "GraphPrinter/ParallelPathPrinter.h"
 #include "AutomatedSuppressionTester.h"
-#include "ColoringFinderSAT.h"
+#include "ColoringFinder/SATColoringFinder.h"
 
 int Tests::run() {
 
@@ -648,8 +648,8 @@ int Tests::run() {
     }
 
     //KASZONYI FUNCTION TESTS
-    std::shared_ptr<ColoringFinder> coloringFactor = std::shared_ptr<ColoringFinder>(new ColoringFinderFactor);
-    std::shared_ptr<ColoringFinder> coloringSAT = std::shared_ptr<ColoringFinder>(new ColoringFinderSAT);
+    std::shared_ptr<ColoringFinder> coloringFactor = std::shared_ptr<ColoringFinder>(new FactorColoringFinder);
+    std::shared_ptr<ColoringFinder> coloringSAT = std::shared_ptr<ColoringFinder>(new SATColoringFinder);
 
     std::set<unsigned int> J3_vertices{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
     std::set<Edge> J3_edges{Edge(1, 2), Edge(2, 3),
@@ -682,8 +682,8 @@ int Tests::run() {
     assert(J3_KaszonyiValuesAll_SAT == J3_expectedKaszonyiValues);
 
 
-    ColoringFinderFactor kaszonyiFunction;
-    ColoringFinderSAT coloringFinderSat;
+    FactorColoringFinder kaszonyiFunction;
+    SATColoringFinder coloringFinderSat;
 
     assert(kaszonyiFunction.computeColorings(K4_vertices, K4_edges) == 1);
     assert(coloringFinderSat.computeColorings(K4_vertices, K4_edges) == 1);
@@ -730,7 +730,7 @@ int Tests::run() {
 
 
     //GRAPH LOADER TESTS
-    GraphLoaderSimpleAdjListsFormat graphLoader;
+    AdjListsGraphLoader graphLoader;
     std::vector<CubicGraph> graphList1 = graphLoader.loadNewGraphs("Tests/test1_GraphLoader.txt");
     std::queue<CubicGraph> graphQueue1(std::deque<CubicGraph>(graphList1.begin(), graphList1.end()));
 
@@ -780,8 +780,8 @@ int Tests::run() {
 
     assert(graphQueue1.empty());
 
-    ControlSequentialFormatPrinter graphPrinterSequentialFormat = ControlSequentialFormatPrinter();
-    ControlParallelFormatPrinter graphPrinterParallelFormat = ControlParallelFormatPrinter();
+    SequentialPathPrinter graphPrinterSequentialFormat = SequentialPathPrinter();
+    ParallelPathPrinter graphPrinterParallelFormat = ParallelPathPrinter();
 
 
 
@@ -803,7 +803,7 @@ int Tests::run() {
     AutomatedSuppressionTester automatedSuppressionTester = AutomatedSuppressionTester();
 
     std::string test26_input = "Tests/test26_14g3e.txt";
-    std::vector<CubicGraph> test26_graphList = GraphLoaderSimpleAdjListsFormat().loadNewGraphs(test26_input, FACTOR);
+    std::vector<CubicGraph> test26_graphList = AdjListsGraphLoader().loadNewGraphs(test26_input, FACTOR);
     std::vector<int> test26_expectedDepthList(test26_graphList.size());
     test26_expectedDepthList[0] = 2;
     for(int i = 1; i < test26_graphList.size(); i++){
@@ -818,7 +818,7 @@ int Tests::run() {
 
 
     std::string test27_input = "Tests/test27_16g3e.txt";
-    std::vector<CubicGraph> test27_graphList = GraphLoaderSimpleAdjListsFormat().loadNewGraphs(test27_input, FACTOR);
+    std::vector<CubicGraph> test27_graphList = AdjListsGraphLoader().loadNewGraphs(test27_input, FACTOR);
     std::vector<int> test27_expectedSequentialDepthList(test27_graphList.size(), 1);
     std::vector<int> test27_expectedParallelDepthList(test27_graphList.size(), 1);
     unsigned int test27_tmpCounter = 0;
@@ -854,8 +854,8 @@ int Tests::run() {
 
     //SAT Coloring functions Tests
     std::string test28_input = "Tests/test27_16g3e.txt";
-    std::vector<CubicGraph> test28_graphListSAT = GraphLoaderSimpleAdjListsFormat().loadNewGraphs(test28_input, SAT);
-    std::vector<CubicGraph> test28_graphListFactor = GraphLoaderSimpleAdjListsFormat().loadNewGraphs(test28_input, FACTOR);
+    std::vector<CubicGraph> test28_graphListSAT = AdjListsGraphLoader().loadNewGraphs(test28_input, SAT);
+    std::vector<CubicGraph> test28_graphListFactor = AdjListsGraphLoader().loadNewGraphs(test28_input, FACTOR);
     std::vector<unsigned int> test28_SAT_colors;
     std::vector<bool> test28_SAT_isColorable;
     std::vector<unsigned int> test28_Factor_colors;

@@ -9,7 +9,7 @@
 #include <set>
 #include <memory>
 #include "Edge.h"
-#include "ColoringFinder.h"
+#include "ColoringFinder/ColoringFinder.h"
 
 class CubicGraph {
 private:

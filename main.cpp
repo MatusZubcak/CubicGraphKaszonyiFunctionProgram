@@ -5,17 +5,17 @@
 #include <iostream>
 #include <fstream>
 #include "Tests.h"
-#include "GraphLoaderSimpleAdjListsFormat.h"
-#include "GraphLoaderIndexedAdjListsWithDescription.h"
-#include "ControlSequentialFormatPrinter.h"
-#include "ControlParallelFormatPrinter.h"
-#include "KaszonyiValuesPrinter.h"
-#include "ResistanceValuesPrinter.h"
-#include "ColoringFinderSAT.h"
-#include "DirectoryReader.h"
-#include "ParallelSuppressionMemoized.h"
-#include "SequentialSuppressionMemoized.h"
-#include "QtMainWindow.h"
+#include "GraphLoader/AdjListsGraphLoader.h"
+#include "GraphLoader/DescriptionAdjListsGraphLoader.h"
+#include "GraphPrinter/SequentialPathPrinter.h"
+#include "GraphPrinter/ParallelPathPrinter.h"
+#include "GraphPrinter/KaszonyiPrinter.h"
+#include "GraphPrinter/ResistancePrinter.h"
+#include "ColoringFinder/SATColoringFinder.h"
+#include "GraphLoader/DirectoryReader.h"
+#include "Suppression/ParallelSuppressionMemoized.h"
+#include "Suppression/SequentialSuppressionMemoized.h"
+#include "Qt/QtMainWindow.h"
 
 void print(CubicGraph graph, const std::string& output, int& counter){
 
@@ -25,8 +25,8 @@ void print(CubicGraph graph, const std::string& output, int& counter){
     }
 
 
-    ControlSequentialFormatPrinter graphPrinterSequentialFormat = ControlSequentialFormatPrinter();
-    ControlParallelFormatPrinter graphPrinterParallelFormat = ControlParallelFormatPrinter();
+    SequentialPathPrinter graphPrinterSequentialFormat = SequentialPathPrinter();
+    ParallelPathPrinter graphPrinterParallelFormat = ParallelPathPrinter();
     std::ofstream f;
     std::ofstream g;
     std::ofstream h;
@@ -51,29 +51,31 @@ void print(CubicGraph graph, const std::string& output, int& counter){
     counter++;
 }
 
-
+/*
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     QtMainWindow mainWindow;
     mainWindow.show();
     return QApplication::exec();
 }
+*/
 
 
 
-/*
 int main(){
     Tests::run();
     return 0;
 }
-*/
+
 
 /*
 int main(){
     DirectoryReader directoryReader;
     std::vector<std::string> files = directoryReader.fileList("/home/matus/testfile");
-    GraphLoaderIndexedAdjListsWithDescription graphLoader;
-    ResistanceValuesPrinter printer;
+    AdjListsGraphLoader graphLoader;
+    ResistancePrinter printer;
+    ParallelPathPrinter parallelPathPrinter;
+    SequentialPathPrinter sequentialPathPrinter;
 
     unsigned int s1, s2=0;
     s1 = files.size();
@@ -89,9 +91,14 @@ int main(){
         std::cout << output_filename << std::endl;
         printer.print(graphList, output_filename, info_string, NO_APPEND);
 
+        std::string ppath = "parallel_path.out",
+                    spath = "sequential_path.out";
+        //parallelPathPrinter.print(graphList, ppath, info_string, NO_APPEND);
+        //sequentialPathPrinter.print(graphList, spath, info_string, NO_APPEND);
     }
 }
 */
+
 
 /*
 int main(){
@@ -101,7 +108,7 @@ int main(){
     while(file_index <= 30) {
         std::cout << "GRAPH SIZE: " << file_index << std::endl;
         std::string filename = "s" + std::to_string(file_index) + "e3.txt";
-        std::vector<CubicGraph> graphList = GraphLoaderSimpleAdjListsFormat().loadNewGraphs(filename, SAT);
+        std::vector<CubicGraph> graphList = AdjListsGraphLoader().loadNewGraphs(filename, SAT);
         //graphList.resize(size);
         auto t1 = std::chrono::high_resolution_clock::now();
         for (auto graph: graphList) {
@@ -122,7 +129,7 @@ int main(){
         std::cout << ms_int.count() << "ms\n";
 
 
-        graphList = GraphLoaderSimpleAdjListsFormat().loadNewGraphs(filename, FACTOR);
+        graphList = AdjListsGraphLoader().loadNewGraphs(filename, FACTOR);
         //graphList.resize(size);
         t1 = std::chrono::high_resolution_clock::now();
         for (auto graph: graphList) {
@@ -151,7 +158,7 @@ int main(){
 
 /*
 int main(){
-    GraphLoaderSimpleAdjListsFormat graphLoaderAdjLists = GraphLoaderSimpleAdjListsFormat();
+    AdjListsGraphLoader graphLoaderAdjLists = AdjListsGraphLoader();
     std::string input;
     std::cin >> input;
 
@@ -166,10 +173,10 @@ int main(){
 
         std::vector<CubicGraph> graphList = graphLoaderAdjLists.loadNewGraphs(input);
 
-        KaszonyiValuesPrinter().print(graphList, kas_output, NO_APPEND);
-        ControlParallelFormatPrinter().print(graphList, parallel_output, NO_APPEND);
-        ControlSequentialFormatPrinter().print(graphList, sequential_output, NO_APPEND);
-        ResistanceValuesPrinter().print(graphList,normal_output,NO_APPEND);
+        KaszonyiPrinter().print(graphList, kas_output, NO_APPEND);
+        ParallelPathPrinter().print(graphList, parallel_output, NO_APPEND);
+        SequentialPathPrinter().print(graphList, sequential_output, NO_APPEND);
+        ResistancePrinter().print(graphList,normal_output,NO_APPEND);
 
         std::cin >> input;
     }
@@ -180,7 +187,7 @@ int main(){
 
 /*
 int main() {
-    GraphLoaderSimpleAdjListsFormat graphLoaderAdjLists = GraphLoaderSimpleAdjListsFormat();
+    AdjListsGraphLoader graphLoaderAdjLists = AdjListsGraphLoader();
     std::string input;
     std::cin >> input;
     int counter = 0;
@@ -217,9 +224,9 @@ int main(){
     std::remove("outP.txt");
     std::string input;
     std::cin >> input;
-    GraphLoaderSimpleAdjListsFormat graphLoaderAdjLists;
-    ControlSequentialFormatPrinter graphPrinterSequentialFormat;
-    ControlParallelFormatPrinter graphPrinterParallelFormat;
+    AdjListsGraphLoader graphLoaderAdjLists;
+    SequentialPathPrinter graphPrinterSequentialFormat;
+    ParallelPathPrinter graphPrinterParallelFormat;
     auto graphs = graphLoaderAdjLists.loadNewGraphs(input);
     while(!graphs.empty()) {
         auto g = graphs.front();

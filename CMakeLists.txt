@@ -16,54 +16,60 @@ add_executable(CubicGraphKaszonyiFunctionProgram
         GraphExceptions.h
         CubicGraph.cpp
         CubicGraph.h
-        ColoringFinder.h
-        ColoringFinderFactor.cpp
-        ColoringFinderFactor.h
-        GraphLoader.h
-        GraphLoaderSimpleAdjListsFormat.cpp
-        GraphLoaderSimpleAdjListsFormat.h
-        KaszonyiValuesPrinter.cpp
-        KaszonyiValuesPrinter.h
+        ColoringFinder/ColoringFinder.h
+        ColoringFinder/FactorColoringFinder.cpp
+        ColoringFinder/FactorColoringFinder.h
+        GraphLoader/GraphLoader.h
+        GraphLoader/AdjListsGraphLoader.cpp
+        GraphLoader/AdjListsGraphLoader.h
+        GraphPrinter/KaszonyiPrinter.cpp
+        GraphPrinter/KaszonyiPrinter.h
         Enums.h
-        GraphPrinter.h
-        GraphPrinter.h
-        ControlSequentialFormatPrinter.cpp
-        ControlSequentialFormatPrinter.h
-        GraphPrinter.cpp
-        ContinuousSuppression.h
-        SequentialSuppressionNaive.cpp
-        SequentialSuppressionNaive.h
-        ControlParallelFormatPrinter.cpp
-        ControlParallelFormatPrinter.h
-        ParallelSuppressionNaive.cpp
-        ParallelSuppressionNaive.h
-        SequentialSuppressionMemoized.cpp
-        SequentialSuppressionMemoized.h
+        GraphPrinter/GraphPrinter.h
+        GraphPrinter/GraphPrinter.h
+        GraphPrinter/SequentialPathPrinter.cpp
+        GraphPrinter/SequentialPathPrinter.h
+        GraphPrinter/GraphPrinter.cpp
+        Suppression/Suppression.h
+        Suppression/SequentialSuppressionNaive.cpp
+        Suppression/SequentialSuppressionNaive.h
+        GraphPrinter/ParallelPathPrinter.cpp
+        GraphPrinter/ParallelPathPrinter.h
+        Suppression/ParallelSuppressionNaive.cpp
+        Suppression/ParallelSuppressionNaive.h
+        Suppression/SequentialSuppressionMemoized.cpp
+        Suppression/SequentialSuppressionMemoized.h
         Hash.h
-        ContinuousSuppression.cpp
-        ParallelSuppressionMemoized.cpp
-        ParallelSuppressionMemoized.h
+        Suppression/Suppression.cpp
+        Suppression/ParallelSuppressionMemoized.cpp
+        Suppression/ParallelSuppressionMemoized.h
         AutomatedSuppressionTester.cpp
         AutomatedSuppressionTester.h
-        ResistanceValuesPrinter.cpp
-        ResistanceValuesPrinter.h
-        ColoringFinderSAT.cpp
-        ColoringFinderSAT.h
-        GraphLoaderIndexedAdjListsWithDescription.cpp
-        GraphLoaderIndexedAdjListsWithDescription.h
-        GraphLoader.cpp
-        DirectoryReader.cpp
-        DirectoryReader.h
-        cryptominisat.h
-        solvertypesmini.h
-        QtMainWindow.cpp
-        QtMainWindow.h
-        QtExitButton.cpp
-        QtExitButton.h
-        QtCancelButton.cpp
-        QtCancelButton.h
-        QtMenuWindow.cpp
-        QtMenuWindow.h QtClearButton.cpp QtClearButton.h QtRemoveButton.cpp QtRemoveButton.h QtFileList.cpp QtFileList.h)
+        GraphPrinter/ResistancePrinter.cpp
+        GraphPrinter/ResistancePrinter.h
+        ColoringFinder/SATColoringFinder.cpp
+        ColoringFinder/SATColoringFinder.h
+        GraphLoader/DescriptionAdjListsGraphLoader.cpp
+        GraphLoader/DescriptionAdjListsGraphLoader.h
+        GraphLoader/GraphLoader.cpp
+        GraphLoader/DirectoryReader.cpp
+        GraphLoader/DirectoryReader.h
+        CMSat/cryptominisat.h
+        CMSat/solvertypesmini.h
+        Qt/QtMainWindow.cpp
+        Qt/QtMainWindow.h
+        Qt/QtExitButton.cpp
+        Qt/QtExitButton.h
+        Qt/QtCancelButton.cpp
+        Qt/QtCancelButton.h
+        Qt/QtMenuWindow.cpp
+        Qt/QtMenuWindow.h
+        Qt/QtClearButton.cpp
+        Qt/QtClearButton.h
+        Qt/QtRemoveButton.cpp
+        Qt/QtRemoveButton.h
+        Qt/QtFileList.cpp
+        Qt/QtFileList.h)
 
 find_package(Qt5 COMPONENTS
         Core
