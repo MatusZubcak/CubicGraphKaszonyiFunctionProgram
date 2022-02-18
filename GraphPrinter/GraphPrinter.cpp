@@ -30,8 +30,15 @@ bool GraphPrinter::printKaszonyiValues(CubicGraph& cubicGraph, std::ofstream& f,
     f << "Kaszonyi values:" << std::endl;
 
     for(auto e : cubicGraph.getEdges()){
-        f << e.toString() << ": "
-          << cubicGraph.suppressEdge(e).isColorable();
+        f << e.toString() << ": ";
+
+        if(cubicGraph.suppressEdge(e).isColorable()){
+           f << "Y";
+        } else{
+            f << "N";
+        }
+
+
         if(edgesFormat == MARK_ORIGINAL_EDGES && e.isOriginal()){
             f << "    Original";
         }
