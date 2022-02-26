@@ -51,22 +51,22 @@ void print(CubicGraph graph, const std::string& output, int& counter){
     counter++;
 }
 
-/*
+
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     QtMainWindow mainWindow;
     mainWindow.show();
     return QApplication::exec();
 }
-*/
 
 
 
+/*
 int main(){
     Tests::run();
     return 0;
 }
-
+*/
 
 /*
 int main(){

@@ -16,16 +16,18 @@
 #include <QRadioButton>
 #include <QLabel>
 #include <QListWidget>
-
+#include <iostream>
 #include "QtMenuWindow.h"
 #include "QtExitButton.h"
 #include "QtCancelButton.h"
 #include "QtClearButton.h"
 #include "QtRemoveButton.h"
 #include "QtFileList.h"
+#include "QtChooseFilesButton.h"
+#include "QtFileWindow.h"
+#include "QtRunButton.h"
 
 QtMenuWindow::QtMenuWindow(QWidget *parent) {
-
 
     //Radio panel
     QLabel *formatLabel = new QLabel("Pick what you want to compute:");
@@ -46,19 +48,21 @@ QtMenuWindow::QtMenuWindow(QWidget *parent) {
     //List of selected files
     QtFileList *fileList = new QtFileList();
 
-    QPushButton *inputButton = new QPushButton("Choose files");
+    QtChooseFilesButton *chooseFilesButton = new QtChooseFilesButton;
     QtRemoveButton *removeButton = new QtRemoveButton();
     QtClearButton *clearButton = new QtClearButton();
 
+    connect(chooseFilesButton, SIGNAL(clicked(bool)), this, SLOT(openFileWindow()));
     connect(removeButton, SIGNAL(clicked(bool)), fileList, SLOT(removeSelectedItems()));
     connect(clearButton, SIGNAL(clicked(bool)), fileList, SLOT(clear()));
 
     //Command panel
-    QPushButton *runButton = new QPushButton("Run");
+    QtRunButton *runButton = new QtRunButton();
     QPushButton *outputButton = new QPushButton ("Output directory");
     QtCancelButton *cancelButton = new QtCancelButton();
     QtExitButton *exitButton = new QtExitButton();
 
+    connect(runButton, SIGNAL(clicked(bool)), this, SLOT(tmpPrintFileList()));
 
     //Layouts
     //Radio group layout
@@ -72,12 +76,12 @@ QtMenuWindow::QtMenuWindow(QWidget *parent) {
 
     //FileList command buttons layout
     QHBoxLayout *fileListButtonsLayout = new QHBoxLayout();
-    fileListButtonsLayout->addWidget(inputButton);
+    fileListButtonsLayout->addWidget(chooseFilesButton);
     fileListButtonsLayout->addStretch();
     fileListButtonsLayout->addWidget(removeButton);
     fileListButtonsLayout->addWidget(clearButton);
 
-    inputButton->setMinimumWidth(120);
+    chooseFilesButton->setMinimumWidth(120);
     removeButton->setMinimumWidth(80);
     clearButton->setMinimumWidth(80);
 
@@ -109,4 +113,34 @@ QtMenuWindow::QtMenuWindow(QWidget *parent) {
     formatButtonsLayout->setSpacing(6);
     fileListButtonsLayout->setSpacing(6);
     commandButtonsLayout->setSpacing(6);
+}
+
+void QtMenuWindow::openFileWindow() {
+    QtFileWindow *fileWindow = new QtFileWindow(nullptr);
+    if (fileWindow->exec() == QDialog::Accepted) {
+        QtFileList *fileList = this->findChild<QtFileList*>("FileList");
+        QStringList filepathList = fileWindow->selectedFiles();
+
+        for(auto filepath : filepathList){
+            QString filename = filepath.split("/").back();
+            QListWidgetItem *listItem = new QListWidgetItem(filename, fileList);
+            listItem->setData(1, filepath);
+        }
+    }
+
+    delete fileWindow;
+}
+
+void QtMenuWindow::tmpPrintFileList() {
+    QtFileList *fileList = this->findChild<QtFileList*>("FileList");
+    QStringList filepathList;
+    for(int i = 0 ; i <fileList->count(); i++){
+        QListWidgetItem *item =  fileList->item(i);
+        QString filepath = item->data(1).toString();
+        filepathList.push_back(filepath);
+    }
+
+    for(auto x : filepathList){
+        std::cout << x.toStdString() << std::endl;
+    }
 }

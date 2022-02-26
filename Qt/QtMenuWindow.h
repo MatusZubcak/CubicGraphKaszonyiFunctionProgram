@@ -10,9 +10,14 @@
 
 class QtMenuWindow : public QWidget {
 Q_OBJECT
+private:
+
 public:
     explicit QtMenuWindow(QWidget *parent = nullptr);
 
+private slots:
+    void openFileWindow();
+    void tmpPrintFileList();
 };
 
 
