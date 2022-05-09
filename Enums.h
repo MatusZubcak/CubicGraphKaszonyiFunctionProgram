@@ -27,8 +27,8 @@ enum coloringAlgorithm{
 };
 
 enum colorPrintFormat{
-    EXISTS,
-    NUMBER_OF_COLORS
+    COLORING_EXISTS,
+    COLORING_NUMBER
 };
 
 #endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_ENUMS_H

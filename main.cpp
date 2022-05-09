@@ -73,9 +73,10 @@ int main(){
     DirectoryReader directoryReader;
     std::vector<std::string> files = directoryReader.fileList("/home/matus/testfile");
     AdjListsGraphLoader graphLoader;
-    ResistancePrinter printer;
+    //ResistancePrinter printer;
     ParallelPathPrinter parallelPathPrinter;
     SequentialPathPrinter sequentialPathPrinter;
+    KaszonyiPrinter kaszonyiPrinter;
 
     unsigned int s1, s2=0;
     s1 = files.size();
@@ -89,7 +90,8 @@ int main(){
                 + filename.substr(filename.find_last_of('/') + 1, filename.size())
                 + ".out";
         std::cout << output_filename << std::endl;
-        printer.print(graphList, output_filename, info_string, NO_APPEND);
+        //printer.print(graphList, output_filename, info_string, NO_APPEND);
+        kaszonyiPrinter.print(graphList, output_filename, info_string, NO_APPEND);
 
         std::string ppath = "parallel_path.out",
                     spath = "sequential_path.out";
@@ -98,7 +100,6 @@ int main(){
     }
 }
 */
-
 
 /*
 int main(){

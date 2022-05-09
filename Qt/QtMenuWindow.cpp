@@ -26,6 +26,8 @@
 #include "QtChooseFilesButton.h"
 #include "QtFileWindow.h"
 #include "QtRunButton.h"
+#include "QtOutputDirectoryButton.h"
+#include "QtDirectoryWindow.h"
 
 QtMenuWindow::QtMenuWindow(QWidget *parent) {
 
@@ -58,11 +60,12 @@ QtMenuWindow::QtMenuWindow(QWidget *parent) {
 
     //Command panel
     QtRunButton *runButton = new QtRunButton();
-    QPushButton *outputButton = new QPushButton ("Output directory");
+    QtOutputDirectoryButton *outputButton = new QtOutputDirectoryButton();
     QtCancelButton *cancelButton = new QtCancelButton();
     QtExitButton *exitButton = new QtExitButton();
 
     connect(runButton, SIGNAL(clicked(bool)), this, SLOT(tmpPrintFileList()));
+    connect(outputButton, SIGNAL(clicked(bool)), this, SLOT(pickOutputDirectory()));
 
     //Layouts
     //Radio group layout
@@ -131,6 +134,15 @@ void QtMenuWindow::openFileWindow() {
     delete fileWindow;
 }
 
+void QtMenuWindow::pickOutputDirectory() {
+    QtDirectoryWindow *directoryWindow = new QtDirectoryWindow(nullptr);
+    if(directoryWindow->exec() == QDialog::Accepted){
+        this->outputDirectory = directoryWindow->selectedFiles().front();
+    }
+
+    delete directoryWindow;
+}
+
 void QtMenuWindow::tmpPrintFileList() {
     QtFileList *fileList = this->findChild<QtFileList*>("FileList");
     QStringList filepathList;
@@ -143,4 +155,7 @@ void QtMenuWindow::tmpPrintFileList() {
     for(auto x : filepathList){
         std::cout << x.toStdString() << std::endl;
     }
+
+    std::cout << std::endl;
+    std::cout << "OUTPUT DIRECTORY: " << outputDirectory.toStdString() << std::endl;
 }

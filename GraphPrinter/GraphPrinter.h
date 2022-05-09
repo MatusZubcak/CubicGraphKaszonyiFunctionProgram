@@ -13,7 +13,8 @@ class GraphPrinter{
 protected:
     std::vector<std::vector<unsigned int>> toAdjacencyList(CubicGraph& cubicGraph);
     bool printGraph(CubicGraph &cubicGraph, std::ofstream &f);
-    bool printKaszonyiValues(CubicGraph &cubicGraph, std::ofstream &f, edgesFormat edgesFormat);
+    bool printKaszonyiValues(CubicGraph &cubicGraph, std::ofstream &f, edgesFormat edgesFormat,
+                             colorPrintFormat colorPrintFormat);
     bool printIdAndDepth(CubicGraph& cubicGraph, std::ofstream &f);
 
 public:

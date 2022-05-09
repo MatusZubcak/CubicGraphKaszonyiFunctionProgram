@@ -11,6 +11,7 @@
 class QtMenuWindow : public QWidget {
 Q_OBJECT
 private:
+    QString outputDirectory;
 
 public:
     explicit QtMenuWindow(QWidget *parent = nullptr);
@@ -18,6 +19,7 @@ public:
 private slots:
     void openFileWindow();
     void tmpPrintFileList();
+    void pickOutputDirectory();
 };
 
 

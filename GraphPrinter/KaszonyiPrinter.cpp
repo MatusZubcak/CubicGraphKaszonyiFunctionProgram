@@ -27,7 +27,7 @@ bool KaszonyiPrinter::print(CubicGraph &cubicGraph, const std::string &filename,
         f << cubicGraph.size() << std::endl;
         printedSuccessfully =
                    printGraph(cubicGraph, f)
-                && printKaszonyiValues(cubicGraph, f, IGNORE_EDGE_ORIGINALITY);
+                && printKaszonyiValues(cubicGraph, f, IGNORE_EDGE_ORIGINALITY, COLORING_NUMBER);
 
         f.close();
     }catch (std::exception &e) {
@@ -58,7 +58,7 @@ bool KaszonyiPrinter::print(std::vector<CubicGraph> &graphList, const std::strin
         for(auto it = graphList.begin(); it != graphList.end(); it++){
             printedSuccesfully &=
                     printGraph(*it, f)
-                    && printKaszonyiValues(*it, f, IGNORE_EDGE_ORIGINALITY);
+                    && printKaszonyiValues(*it, f, IGNORE_EDGE_ORIGINALITY, COLORING_NUMBER);
             if(next(it) != graphList.end()){f << std::endl;}
         }
 

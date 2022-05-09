@@ -26,16 +26,21 @@ bool GraphPrinter::printGraph(CubicGraph &cubicGraph, std::ofstream& f) {
     return true;
 }
 
-bool GraphPrinter::printKaszonyiValues(CubicGraph& cubicGraph, std::ofstream& f, edgesFormat edgesFormat){
+bool GraphPrinter::printKaszonyiValues(CubicGraph& cubicGraph, std::ofstream& f, edgesFormat edgesFormat,
+                                       colorPrintFormat colorPrintFormat){
     f << "Kaszonyi values:" << std::endl;
 
     for(auto e : cubicGraph.getEdges()){
         f << e.toString() << ": ";
 
-        if(cubicGraph.suppressEdge(e).isColorable()){
-           f << "Y";
-        } else{
-            f << "N";
+        if(colorPrintFormat == COLORING_EXISTS) {
+            if (cubicGraph.suppressEdge(e).isColorable()) {
+                f << "Y";
+            } else {
+                f << "N";
+            }
+        }else if (colorPrintFormat == COLORING_NUMBER){
+            f << cubicGraph.getKaszonyiValue(e);
         }
 
 
