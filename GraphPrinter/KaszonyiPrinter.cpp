@@ -13,28 +13,24 @@ bool KaszonyiPrinter::print(CubicGraph &cubicGraph, const std::string &filename,
                             append append) {
     bool printedSuccessfully;
     std::ofstream f;
-    if(append == APPEND)
+    if(append == APPEND) {
         f.open(filename, std::ios::app);
-    else
+    }else {
         f.open(filename);
-
-    try{
-        if (!f) {
-            throw FileCannotBeOpenedException();
-        }
-        f << additionalInformation;
-
-        f << cubicGraph.size() << std::endl;
-        printedSuccessfully =
-                   printGraph(cubicGraph, f)
-                && printKaszonyiValues(cubicGraph, f, IGNORE_EDGE_ORIGINALITY, COLORING_NUMBER);
-
-        f.close();
-    }catch (std::exception &e) {
-        std::cout << "..." << std::endl;
-        std::cout << e.what() << std::endl;
-        f.close();
     }
+
+    if(!f.good()) {
+        throw FileCannotBeOpenedException();
+    }
+    f << additionalInformation;
+
+    f << cubicGraph.size() << std::endl;
+    printedSuccessfully =
+            printGraph(cubicGraph, f)
+            && printKaszonyiValues(cubicGraph, f, IGNORE_EDGE_ORIGINALITY, COLORING_NUMBER);
+
+    f.close();
+
     return printedSuccessfully;
 }
 
@@ -43,31 +39,28 @@ bool KaszonyiPrinter::print(std::vector<CubicGraph> &graphList, const std::strin
                             append append) {
     bool printedSuccesfully = true;
     std::ofstream f;
-    if(append == APPEND)
+    if(append == APPEND) {
         f.open(filename, std::ios::app);
-    else
+    }else {
         f.open(filename);
-
-    try{
-        if (!f) {
-            throw FileCannotBeOpenedException();
-        }
-        f << additionalInformation;
-
-        f << graphList[0].size() << std::endl;
-        for(auto it = graphList.begin(); it != graphList.end(); it++){
-            printedSuccesfully &=
-                    printGraph(*it, f)
-                    && printKaszonyiValues(*it, f, IGNORE_EDGE_ORIGINALITY, COLORING_NUMBER);
-            if(next(it) != graphList.end()){f << std::endl;}
-        }
-
-        f.close();
-    }catch (std::exception &e) {
-        std::cout << "..." << std::endl;
-        std::cout << e.what() << std::endl;
-        f.close();
     }
+
+
+    if (!f) {
+        throw FileCannotBeOpenedException();
+    }
+    f << additionalInformation;
+
+    f << graphList[0].size() << std::endl;
+    for(auto it = graphList.begin(); it != graphList.end(); it++){
+        printedSuccesfully &=
+                printGraph(*it, f)
+                && printKaszonyiValues(*it, f, IGNORE_EDGE_ORIGINALITY, COLORING_NUMBER);
+        if(next(it) != graphList.end()){f << std::endl;}
+    }
+
+    f.close();
+
     return printedSuccesfully;
 
 }

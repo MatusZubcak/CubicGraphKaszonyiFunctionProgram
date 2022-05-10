@@ -14,34 +14,30 @@ bool SequentialPathPrinter::print(CubicGraph &cubicGraph, const std::string &fil
                                   const std::string &additionalInformation, append append) {
     bool printedSuccessfully = true;
     std::ofstream f;
-    if(append == APPEND)
+    if(append == APPEND) {
         f.open(filename, std::ios::app);
-    else
+    }else {
         f.open(filename);
-
-    try{
-        if (!f) {
-            throw FileCannotBeOpenedException();
-        }
-        f << additionalInformation;
-
-        std::vector<CubicGraph> suppressionSequence = SequentialSuppressionMemoized().findSuppressionSequence(cubicGraph);
-
-        f << cubicGraph.size() << std::endl;
-        for(auto it = suppressionSequence.begin(); it != suppressionSequence.end(); it++){
-            printedSuccessfully &=
-                    printIdAndDepth(*it, f)
-                    && printGraph(*it, f)
-                    && printKaszonyiValues(*it, f, IGNORE_EDGE_ORIGINALITY, COLORING_EXISTS);
-            if(next(it) != suppressionSequence.end()) {f << std::endl << std::endl;}
-        }
-
-        f.close();
-    }catch (std::exception &e) {
-        std::cout << "..." << std::endl;
-        std::cout << e.what() << std::endl;
-        f.close();
     }
+
+    if (!f) {
+        throw FileCannotBeOpenedException();
+    }
+    f << additionalInformation;
+
+    std::vector<CubicGraph> suppressionSequence = SequentialSuppressionMemoized().findSuppressionSequence(cubicGraph);
+
+    f << cubicGraph.size() << std::endl;
+    for(auto it = suppressionSequence.begin(); it != suppressionSequence.end(); it++){
+        printedSuccessfully &=
+                printIdAndDepth(*it, f)
+                && printGraph(*it, f)
+                && printKaszonyiValues(*it, f, IGNORE_EDGE_ORIGINALITY, COLORING_EXISTS);
+        if(next(it) != suppressionSequence.end()) {f << std::endl << std::endl;}
+    }
+
+    f.close();
+
     return printedSuccessfully;
 }
 
@@ -54,49 +50,44 @@ bool SequentialPathPrinter::print(std::vector<CubicGraph> &graphList, const std:
         else
             f.open(filename);
 
-        try{
-            if (!f) {
-                throw FileCannotBeOpenedException();
-            }
-            f << additionalInformation;
 
-            for(const CubicGraph& cubicGraph : graphList) {
+    if (!f) {
+        throw FileCannotBeOpenedException();
+    }
+    f << additionalInformation;
 
-                std::vector<CubicGraph> suppressionSequence = SequentialSuppressionMemoized().findSuppressionSequence(
-                        cubicGraph);
-                CubicGraph& lastGraph = suppressionSequence.back();
+    for(const CubicGraph& cubicGraph : graphList) {
 
-                f << cubicGraph.size() << std::endl;
-                if(lastGraph.isColorable()) {
-                    f << "SEQUENTIAL RESISTANCE: " << suppressionSequence.back().getDepth() << std::endl;
-                }
-                else{
-                    f << "SEQUENTIAL RESISTANCE: " << "N/A" << std::endl;
-                }
+        std::vector<CubicGraph> suppressionSequence = SequentialSuppressionMemoized().findSuppressionSequence(
+                cubicGraph);
+        CubicGraph& lastGraph = suppressionSequence.back();
 
-                for (auto it = suppressionSequence.begin(); it != suppressionSequence.end(); it++) {
-                    printedSuccessfully &=
-                            printIdAndDepth(*it, f)
-                            && printGraph(*it, f)
-                            && printKaszonyiValues(*it, f, IGNORE_EDGE_ORIGINALITY, COLORING_EXISTS);
-                    if (next(it) != suppressionSequence.end()) { f << std::endl; }
-                }
-
-                if(&cubicGraph != &graphList.back()){
-                  f << std::endl
-                    << "##############" << std::endl
-                    << "# NEXT GRAPH #" << std::endl
-                    << "##############" << std::endl
-                    << std::endl;
-                }
-            }
-
-            f.close();
-        }catch (std::exception &e) {
-            std::cout << "..." << std::endl;
-            std::cout << e.what() << std::endl;
-            f.close();
+        f << cubicGraph.size() << std::endl;
+        if(lastGraph.isColorable()) {
+            f << "SEQUENTIAL RESISTANCE: " << suppressionSequence.back().getDepth() << std::endl;
         }
+        else{
+            f << "SEQUENTIAL RESISTANCE: " << "N/A" << std::endl;
+        }
+
+        for (auto it = suppressionSequence.begin(); it != suppressionSequence.end(); it++) {
+            printedSuccessfully &=
+                    printIdAndDepth(*it, f)
+                    && printGraph(*it, f)
+                    && printKaszonyiValues(*it, f, IGNORE_EDGE_ORIGINALITY, COLORING_EXISTS);
+            if (next(it) != suppressionSequence.end()) { f << std::endl; }
+        }
+
+        if(&cubicGraph != &graphList.back()){
+            f << std::endl
+              << "##############" << std::endl
+              << "# NEXT GRAPH #" << std::endl
+              << "##############" << std::endl
+              << std::endl;
+        }
+    }
+
+    f.close();
         return printedSuccessfully;
     }
 

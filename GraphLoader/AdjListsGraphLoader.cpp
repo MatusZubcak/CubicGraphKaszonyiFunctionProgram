@@ -56,12 +56,6 @@ std::vector<CubicGraph> AdjListsGraphLoader::loadNewGraphs(const std::string& fi
         //while graph can be loaded, load next graph - function loadGraph does both at once
         while(loadGraph(graphList, f, numberOfVertices, coloringAlgorithm));
 
-    /*} catch (std::exception &e) {
-        std::cout << "..." << std::endl;
-        std::cout << e.what() << std::endl;
-        f.close();
-    }*/
-
     f.close();
     return graphList;
 }

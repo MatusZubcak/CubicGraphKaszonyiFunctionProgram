@@ -14,18 +14,58 @@ bool ParallelPathPrinter::print(CubicGraph &cubicGraph, const std::string &filen
                                 const std::string &additionalInformation, append append) {
     bool printedSuccessfully = true;
     std::ofstream f;
-    if(append == APPEND)
+    if(append == APPEND) {
         f.open(filename, std::ios::app);
-    else
+    }else {
         f.open(filename);
+    }
 
-    try{
-        if (!f) {
-            throw FileCannotBeOpenedException();
-        }
-        f << additionalInformation;
+    if (!f.good()) {
+        throw FileCannotBeOpenedException();
+    }
+    f << additionalInformation;
 
-        std::vector<CubicGraph> suppressionSequence = ParallelSuppressionMemoized().findSuppressionSequence(cubicGraph);
+    std::vector<CubicGraph> suppressionSequence = ParallelSuppressionMemoized().findSuppressionSequence(cubicGraph);
+    CubicGraph& lastGraph = suppressionSequence.back();
+
+    f << cubicGraph.size() << std::endl;
+    if(lastGraph.isColorable()) {
+        f << "PARALLEL RESISTANCE: " << suppressionSequence.back().getDepth() << std::endl;
+    }
+    else{
+        f << "PARALLEL RESISTANCE: " << "N/A" << std::endl;
+    }
+
+    for(auto it = suppressionSequence.begin(); it != suppressionSequence.end(); it++){
+        printedSuccessfully &=
+                printIdAndDepth(*it, f)
+                && printGraph(*it, f)
+                && printKaszonyiValues(*it, f, MARK_ORIGINAL_EDGES, COLORING_EXISTS);
+        if(next(it) != suppressionSequence.end()) {f << std::endl << std::endl;}
+    }
+    f.close();
+
+    return printedSuccessfully;
+}
+
+bool ParallelPathPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename,
+                                const std::string &additionalInformation, append append) {
+    bool printedSuccessfully = true;
+    std::ofstream f;
+    if (append == APPEND) {
+        f.open(filename, std::ios::app);
+    }else{
+        f.open(filename);
+    }
+
+    if (!f) {
+        throw FileCannotBeOpenedException();
+    }
+    f << additionalInformation;
+
+    for(const CubicGraph &cubicGraph : graphList) {
+        std::vector<CubicGraph> suppressionSequence =
+                ParallelSuppressionMemoized().findSuppressionSequence(cubicGraph);
         CubicGraph& lastGraph = suppressionSequence.back();
 
         f << cubicGraph.size() << std::endl;
@@ -36,76 +76,26 @@ bool ParallelPathPrinter::print(CubicGraph &cubicGraph, const std::string &filen
             f << "PARALLEL RESISTANCE: " << "N/A" << std::endl;
         }
 
-        for(auto it = suppressionSequence.begin(); it != suppressionSequence.end(); it++){
+        for (auto it = suppressionSequence.begin(); it != suppressionSequence.end(); it++) {
+
             printedSuccessfully &=
                     printIdAndDepth(*it, f)
                     && printGraph(*it, f)
                     && printKaszonyiValues(*it, f, MARK_ORIGINAL_EDGES, COLORING_EXISTS);
-            if(next(it) != suppressionSequence.end()) {f << std::endl << std::endl;}
+            if (next(it) != suppressionSequence.end()) { f << std::endl; }
         }
 
-        f.close();
-    }catch (std::exception &e) {
-        std::cout << "..." << std::endl;
-        std::cout << e.what() << std::endl;
-        f.close();
+        if(&cubicGraph != &graphList.back()){
+            f << std::endl
+            << "##############" << std::endl
+            << "# NEXT GRAPH #" << std::endl
+            << "##############" << std::endl
+            << std::endl;
+        }
+
     }
-    return printedSuccessfully;
-}
+    f.close();
 
-bool ParallelPathPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename,
-                                const std::string &additionalInformation, append append) {
-    bool printedSuccessfully = true;
-    std::ofstream f;
-    if(append == APPEND)
-        f.open(filename, std::ios::app);
-    else
-        f.open(filename);
-
-    try{
-        if (!f) {
-            throw FileCannotBeOpenedException();
-        }
-        f << additionalInformation;
-
-        for(const CubicGraph &cubicGraph : graphList) {
-            std::vector<CubicGraph> suppressionSequence =
-                    ParallelSuppressionMemoized().findSuppressionSequence(cubicGraph);
-            CubicGraph& lastGraph = suppressionSequence.back();
-
-            f << cubicGraph.size() << std::endl;
-            if(lastGraph.isColorable()) {
-                f << "PARALLEL RESISTANCE: " << suppressionSequence.back().getDepth() << std::endl;
-            }
-            else{
-                f << "PARALLEL RESISTANCE: " << "N/A" << std::endl;
-            }
-
-            for (auto it = suppressionSequence.begin(); it != suppressionSequence.end(); it++) {
-
-                printedSuccessfully &=
-                        printIdAndDepth(*it, f)
-                        && printGraph(*it, f)
-                        && printKaszonyiValues(*it, f, MARK_ORIGINAL_EDGES, COLORING_EXISTS);
-                if (next(it) != suppressionSequence.end()) { f << std::endl; }
-            }
-
-            if(&cubicGraph != &graphList.back()){
-                f << std::endl
-                  << "##############" << std::endl
-                  << "# NEXT GRAPH #" << std::endl
-                  << "##############" << std::endl
-                  << std::endl;
-            }
-
-        }
-
-        f.close();
-    }catch (std::exception &e) {
-        std::cout << "..." << std::endl;
-        std::cout << e.what() << std::endl;
-        f.close();
-    }
     return printedSuccessfully;
 }
 
