@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <QMessageBox>
 #include "QtGraphProgramManager.h"
 #include "../GraphLoader/AdjListsGraphLoader.h"
 #include "../GraphPrinter/ResistancePrinter.h"
@@ -44,7 +45,13 @@ QtGraphProgramManager::runGraphProgram(formatType formatType, QStringList filePa
                         std::cout << "Something went wrong" << std::endl;
                 }
             } catch (std::exception &e){
-                std::cout << e.what() << " ...in file: " << fileName.toStdString() <<std::endl;
+                std::cerr << "Problem was caused by exception: " << e.what() << std::endl;
+                QMessageBox exceptionMessageBox;
+                exceptionMessageBox.setWindowTitle("Exception window");
+                exceptionMessageBox.setText("An error occurred in file: "
+                                            + fileName + "\n\n"
+                                            "Please make sure the graphs in the file are defined correctly and try it again");
+                exceptionMessageBox.exec();
             }
     }
 

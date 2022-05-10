@@ -33,14 +33,18 @@ bool GraphPrinter::printKaszonyiValues(CubicGraph& cubicGraph, std::ofstream& f,
     for(auto e : cubicGraph.getEdges()){
         f << e.toString() << ": ";
 
-        if(colorPrintFormat == COLORING_EXISTS) {
-            if (cubicGraph.suppressEdge(e).isColorable()) {
-                f << "Y";
-            } else {
-                f << "N";
+        if(e.isLoop()){
+            f << "LOOP";
+        }else{
+            if(colorPrintFormat == COLORING_EXISTS) {
+                if (cubicGraph.suppressEdge(e).isColorable()) {
+                    f << "Y";
+                } else {
+                    f << "N";
+                }
+            }else if (colorPrintFormat == COLORING_NUMBER){
+                f << cubicGraph.getKaszonyiValue(e);
             }
-        }else if (colorPrintFormat == COLORING_NUMBER){
-            f << cubicGraph.getKaszonyiValue(e);
         }
 
 

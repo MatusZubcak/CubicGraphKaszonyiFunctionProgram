@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QListWidget>
 #include <iostream>
+#include <QMessageBox>
 #include "QtMenuWindow.h"
 #include "QtExitButton.h"
 #include "QtCancelButton.h"
@@ -29,7 +30,7 @@
 QtMenuWindow::QtMenuWindow(QWidget *parent) {
 
     //Radio panel
-    QLabel *formatLabel = new QLabel("Pick what you want to compute:");
+    QLabel *formatLabel = new QLabel("Select what you want to compute:");
 
     QRadioButton *resistanceButton = new QRadioButton("Parallel and serial resistance values");
     QRadioButton *parallelPathButton = new QRadioButton("Parallel resistance path");
@@ -148,12 +149,26 @@ void QtMenuWindow::tmpPrintFileList() {
     QStringList filenameList = getFilenameList();
 
     if(formatType == NONE){
-        std::cout << "NO FORMAT PICKED" << std::endl;
+        QMessageBox noFormatMessageBox;
+        noFormatMessageBox.setWindowTitle("Information box");
+        noFormatMessageBox.setText("Please select what you want to compute");
+        noFormatMessageBox.exec();
         return;
     }
 
     if(outputDirectory == ""){
-        std::cout << "NO DIRECTORY PICKED" << std::endl;
+        QMessageBox noOutputDirectoryMessageBox;
+        noOutputDirectoryMessageBox.setWindowTitle("Information box");
+        noOutputDirectoryMessageBox.setText("Please select output directory");
+        noOutputDirectoryMessageBox.exec();
+        return;
+    }
+
+    if(filenameList.empty()){
+        QMessageBox noFilesMessageBox;
+        noFilesMessageBox.setWindowTitle("Information box");
+        noFilesMessageBox.setText("Please choose some files");
+        noFilesMessageBox.exec();
         return;
     }
 
@@ -163,7 +178,7 @@ void QtMenuWindow::tmpPrintFileList() {
     connect(qtGraphProgramManager, SIGNAL(enableMainWindow(QtGraphProgramManager*)),
             this, SLOT(enableWindow(QtGraphProgramManager*)));
 
-    this->setEnabled(false);
+    this->setDisabled(true);
     emit startGraphProgram(formatType, filenameList, outputDirectory);
 
 }
@@ -206,5 +221,4 @@ QStringList QtMenuWindow::getFilenameList() {
 void QtMenuWindow::enableWindow(QtGraphProgramManager* qtGraphProgramManager) {
     delete qtGraphProgramManager;
     this->setEnabled(true);
-    std::cout << "Ready again\n";
 }

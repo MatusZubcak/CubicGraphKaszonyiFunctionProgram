@@ -13,6 +13,7 @@ QtMainWindow::QtMainWindow(QWidget *parent) : QWidget(parent) {
 }
 
 void QtMainWindow::initialiseMenuWindow(){
+    this->setWindowTitle("Edge suppression program");
     delete wrapperLayout;
     delete activeWindow;
 
