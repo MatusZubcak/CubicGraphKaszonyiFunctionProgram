@@ -57,6 +57,7 @@ DescriptionAdjListsGraphLoader::loadNewGraphs(const std::string &filename, std::
         f.close();
     }
 
+    f.close();
     return graphList;
 }
 

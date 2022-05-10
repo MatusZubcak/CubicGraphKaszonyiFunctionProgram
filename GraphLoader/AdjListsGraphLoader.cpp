@@ -40,6 +40,7 @@ std::vector<CubicGraph> AdjListsGraphLoader::loadNewGraphs(const std::string& fi
     }
 
     informationFromFile.erase();
+    f.close();
     return graphList;
 }
 

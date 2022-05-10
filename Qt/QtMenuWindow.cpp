@@ -3,11 +3,6 @@
 //
 
 #include "QtMenuWindow.h"
-
-//
-// Created by matus on 12. 2. 2022.
-//
-
 #include <QPushButton>
 #include <QGridLayout>
 #include <QVBoxLayout>
@@ -28,18 +23,21 @@
 #include "QtRunButton.h"
 #include "QtOutputDirectoryButton.h"
 #include "QtDirectoryWindow.h"
+#include "QtGraphProgramManager.h"
+#include "../Enums.h"
 
 QtMenuWindow::QtMenuWindow(QWidget *parent) {
 
     //Radio panel
     QLabel *formatLabel = new QLabel("Pick what you want to compute:");
 
-    QRadioButton *resistanceButton = new QRadioButton("Resistance values");
-    QRadioButton *parallelPathButton = new QRadioButton("Parallel path");
-    QRadioButton *sequentialPathButton = new QRadioButton("Sequential path");
-    QRadioButton *kaszonyiValues = new QRadioButton("Kaszonyi values");
+    QRadioButton *resistanceButton = new QRadioButton("Parallel and serial resistance values");
+    QRadioButton *parallelPathButton = new QRadioButton("Parallel resistance path");
+    QRadioButton *sequentialPathButton = new QRadioButton("Serial resistance path");
+    QRadioButton *kaszonyiValues = new QRadioButton("Kaszonyi function values");
 
     QButtonGroup *formatButtonGroup = new QButtonGroup(this);
+    formatButtonGroup->setObjectName("formatButtonGroup");
     formatButtonGroup->addButton(resistanceButton, 0);
     formatButtonGroup->addButton(parallelPathButton, 1);
     formatButtonGroup->addButton(sequentialPathButton, 2);
@@ -125,9 +123,11 @@ void QtMenuWindow::openFileWindow() {
         QStringList filepathList = fileWindow->selectedFiles();
 
         for(auto filepath : filepathList){
-            QString filename = filepath.split("/").back();
-            QListWidgetItem *listItem = new QListWidgetItem(filename, fileList);
-            listItem->setData(1, filepath);
+            QString filename = filepath.section('/', -1);
+            if(fileList->findItems(filename, Qt::MatchExactly).empty()){
+                QListWidgetItem *listItem = new QListWidgetItem(filename, fileList);
+                listItem->setData(1, filepath);
+            }
         }
     }
 
@@ -144,18 +144,66 @@ void QtMenuWindow::pickOutputDirectory() {
 }
 
 void QtMenuWindow::tmpPrintFileList() {
+    formatType formatType = getFormatType();
+    QStringList filenameList = getFilenameList();
+
+    if(formatType == NONE){
+        std::cout << "NO FORMAT PICKED" << std::endl;
+        return;
+    }
+
+    if(outputDirectory == ""){
+        std::cout << "NO DIRECTORY PICKED" << std::endl;
+        return;
+    }
+
+    QtGraphProgramManager *qtGraphProgramManager = new QtGraphProgramManager();
+    connect(this, SIGNAL(startGraphProgram(formatType, QStringList, QString)),
+            qtGraphProgramManager, SLOT(runGraphProgram(formatType, QStringList, QString)));
+    connect(qtGraphProgramManager, SIGNAL(enableMainWindow(QtGraphProgramManager*)),
+            this, SLOT(enableWindow(QtGraphProgramManager*)));
+
+    this->setEnabled(false);
+    emit startGraphProgram(formatType, filenameList, outputDirectory);
+
+}
+
+formatType QtMenuWindow::getFormatType() {
+    formatType formatType;
+    QButtonGroup *formatButtonGroup = this->findChild<QButtonGroup*>("formatButtonGroup");
+    switch (formatButtonGroup->checkedId()) {
+        case 0:
+            formatType = RESISTANCE_VALUES;
+            break;
+        case 1:
+            formatType = PARALLEL_PATH;
+            break;
+        case 2:
+            formatType = SEQUENTIAL_PATH;
+            break;
+        case 3:
+            formatType = KASZONYI_FUNCTION;
+            break;
+        default:
+            formatType = NONE;
+    }
+    return formatType;
+}
+
+QStringList QtMenuWindow::getFilenameList() {
     QtFileList *fileList = this->findChild<QtFileList*>("FileList");
-    QStringList filepathList;
+    QStringList filenameList;
+
     for(int i = 0 ; i <fileList->count(); i++){
         QListWidgetItem *item =  fileList->item(i);
-        QString filepath = item->data(1).toString();
-        filepathList.push_back(filepath);
+        QString filename = item->data(1).toString();
+        filenameList.push_back(filename);
     }
 
-    for(auto x : filepathList){
-        std::cout << x.toStdString() << std::endl;
-    }
+    return filenameList;
+}
 
-    std::cout << std::endl;
-    std::cout << "OUTPUT DIRECTORY: " << outputDirectory.toStdString() << std::endl;
+void QtMenuWindow::enableWindow(QtGraphProgramManager* qtGraphProgramManager) {
+    delete qtGraphProgramManager;
+    this->setEnabled(true);
 }

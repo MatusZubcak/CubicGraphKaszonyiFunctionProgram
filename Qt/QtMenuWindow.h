@@ -7,19 +7,29 @@
 
 
 #include <QWidget>
+#include "QtFileList.h"
+#include "../Enums.h"
+#include "QtGraphProgramManager.h"
 
 class QtMenuWindow : public QWidget {
 Q_OBJECT
 private:
-    QString outputDirectory;
+    QString outputDirectory = "";
+
+    QStringList getFilenameList();
+    formatType getFormatType();
 
 public:
     explicit QtMenuWindow(QWidget *parent = nullptr);
 
 private slots:
+    void enableWindow(QtGraphProgramManager* qtGraphProgramManager);
     void openFileWindow();
     void tmpPrintFileList();
     void pickOutputDirectory();
+
+signals:
+    void startGraphProgram(formatType formatType, QStringList filenames, QString outputDirector);
 };
 
 
