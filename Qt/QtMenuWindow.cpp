@@ -206,4 +206,5 @@ QStringList QtMenuWindow::getFilenameList() {
 void QtMenuWindow::enableWindow(QtGraphProgramManager* qtGraphProgramManager) {
     delete qtGraphProgramManager;
     this->setEnabled(true);
+    std::cout << "Ready again\n";
 }

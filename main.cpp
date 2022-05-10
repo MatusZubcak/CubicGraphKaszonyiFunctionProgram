@@ -6,7 +6,6 @@
 #include <fstream>
 #include "Tests.h"
 #include "GraphLoader/AdjListsGraphLoader.h"
-#include "GraphLoader/DescriptionAdjListsGraphLoader.h"
 #include "GraphPrinter/SequentialPathPrinter.h"
 #include "GraphPrinter/ParallelPathPrinter.h"
 #include "GraphPrinter/KaszonyiPrinter.h"

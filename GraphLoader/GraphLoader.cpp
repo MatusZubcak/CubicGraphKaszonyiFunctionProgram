@@ -7,6 +7,7 @@
 #include "../ColoringFinder/FactorColoringFinder.h"
 #include <unordered_map>
 #include <fstream>
+#include <sstream>
 
 void GraphLoader::insertEdgeWithMultiplicity(std::set<Edge> &edges,
                                                                  unsigned int vertex,
@@ -18,6 +19,50 @@ void GraphLoader::insertEdgeWithMultiplicity(std::set<Edge> &edges,
 
     edges.insert(normalEdge);
     edges.insert(edgeWithMultiplicity);
+}
+
+std::string GraphLoader::loadAdditionalInformation(std::ifstream &f) {
+    std::string informationString;
+    std::string getline_str;
+
+    while(f.peek() != '{'){
+        if(!std::getline(f, getline_str)){
+            break;
+        }
+    }
+    getline_str.erase();
+
+    while(f.peek() == '{'){
+        std::getline(f, getline_str);
+        informationString += getline_str + '\n';
+    }
+
+    return informationString;
+}
+
+bool GraphLoader::loadNeighbours(std::ifstream &f, unsigned int &neighbour1, unsigned int &neighbour2,
+                                 unsigned int &neighbour3) {
+    std::string buffer, word;
+    std::vector<std::string> stringList;
+
+    while(stringList.empty() && std::getline(f, buffer)) {
+        std::stringstream stringStream(buffer);
+
+        while (stringStream >> word) {
+            stringList.push_back(word);
+        }
+
+
+        if (stringList.size() != 3 && !stringList.empty()) {
+            throw WrongNumberOfVerticesException();
+        } else if (stringList.size() == 3) {
+            neighbour1 = std::stoul(stringList[0]);
+            neighbour2 = std::stoul(stringList[1]);
+            neighbour3 = std::stoul(stringList[2]);
+        }
+    }
+
+    return !stringList.empty();
 }
 
 bool GraphLoader::correctlyDefinedGraph(const std::set<unsigned int>& vertices,
@@ -64,7 +109,7 @@ bool GraphLoader::loadGraph(std::vector<CubicGraph> &graphList, std::ifstream &f
     }
 
     for (int currentVertex = 0; currentVertex < graph_size; currentVertex++) {
-        if (f >> neighbour1 >> neighbour2 >> neighbour3){
+        if(loadNeighbours(f, neighbour1, neighbour2, neighbour3)){
             if (neighbour1 == neighbour2 && neighbour1 == neighbour3) {
                 Edge edgeWithMultiplicity3(currentVertex, neighbour1);
                 edgeWithMultiplicity3.incrementMultiplicity();

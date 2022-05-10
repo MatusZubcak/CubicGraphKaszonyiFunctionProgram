@@ -6,6 +6,8 @@
 #include <iostream>
 #include <unordered_map>
 #include <algorithm>
+#include <sstream>
+#include <cstdlib>
 #include "AdjListsGraphLoader.h"
 #include "../Enums.h"
 #include "../ColoringFinder/SATColoringFinder.h"
@@ -17,29 +19,49 @@ std::vector<CubicGraph> AdjListsGraphLoader::loadNewGraphs(const std::string& fi
     std::vector<CubicGraph> graphList = {};
     std::ifstream f;
     f.open(filename);
+    std::string buffer, word;
+    std::vector<std::string> stringList;
 
 
     unsigned int numberOfVertices;
     /*Pokusi sa pomocou txt suboru vytvorit korektny kubicky graf */
-    try {
-        if (!f) {
+
+        if (!f.good()) {
             throw FileCannotBeOpenedException();
         }
-        f >> numberOfVertices;
-        if (numberOfVertices < 0){
-            throw WrongNumberOfVerticesException();
+
+        informationFromFile = loadAdditionalInformation(f);
+        if(informationFromFile.empty()){
+            f.close();
+            f.open(filename);
+            if (!f.good()) {
+                throw FileCannotBeOpenedException();
+            }
+        }
+
+
+        while(stringList.empty() && std::getline(f, buffer)) {
+            std::stringstream stringStream(buffer);
+
+            while (stringStream >> word) {
+                stringList.push_back(word);
+                if (stringList.size() > 1) {
+                    throw WrongNumberOfVerticesException();
+                } else if (stringList.size() == 1) {
+                    numberOfVertices = std::stoul(stringList.front());
+                }
+            }
         }
 
         //while graph can be loaded, load next graph - function loadGraph does both at once
         while(loadGraph(graphList, f, numberOfVertices, coloringAlgorithm));
 
-    } catch (std::exception &e) {
+    /*} catch (std::exception &e) {
         std::cout << "..." << std::endl;
         std::cout << e.what() << std::endl;
         f.close();
-    }
+    }*/
 
-    informationFromFile.erase();
     f.close();
     return graphList;
 }

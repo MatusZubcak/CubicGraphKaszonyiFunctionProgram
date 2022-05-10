@@ -49,8 +49,6 @@ add_executable(CubicGraphKaszonyiFunctionProgram
         GraphPrinter/ResistancePrinter.h
         ColoringFinder/SATColoringFinder.cpp
         ColoringFinder/SATColoringFinder.h
-        GraphLoader/DescriptionAdjListsGraphLoader.cpp
-        GraphLoader/DescriptionAdjListsGraphLoader.h
         GraphLoader/GraphLoader.cpp
         GraphLoader/DirectoryReader.cpp
         GraphLoader/DirectoryReader.h
