@@ -13,13 +13,14 @@ class QtGraphProgramManager : public QObject {
     Q_OBJECT
 
 public:
-    explicit QtGraphProgramManager(QWidget *parent = nullptr);
+    explicit QtGraphProgramManager(QObject *parent = nullptr);
 
 private slots:
-    void runGraphProgram(formatType formatType, QStringList filePaths, QString outputDirectory);
+    void runGraphProgram(int formatType, QStringList filePaths, QString outputDirectory);
 
 signals:
-    void enableMainWindow(QtGraphProgramManager*);
+    void enableMainWindow();
+    void castException(QString fileName);
 };
 
 

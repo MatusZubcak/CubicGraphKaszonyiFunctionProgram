@@ -63,7 +63,7 @@ QtMenuWindow::QtMenuWindow(QWidget *parent) {
     QtCancelButton *cancelButton = new QtCancelButton();
     QtExitButton *exitButton = new QtExitButton();
 
-    connect(runButton, SIGNAL(clicked(bool)), this, SLOT(tmpPrintFileList()));
+    connect(runButton, SIGNAL(clicked(bool)), this, SLOT(computeGraphs()));
     connect(outputButton, SIGNAL(clicked(bool)), this, SLOT(pickOutputDirectory()));
 
     //Layouts
@@ -144,11 +144,13 @@ void QtMenuWindow::pickOutputDirectory() {
     delete directoryWindow;
 }
 
-void QtMenuWindow::tmpPrintFileList() {
-    formatType formatType = getFormatType();
+void QtMenuWindow::computeGraphs(){
+    invalidFiles.clear();
+    QButtonGroup *formatButtonGroup = this->findChild<QButtonGroup*>("formatButtonGroup");
+    int formatType = formatButtonGroup->checkedId();
     QStringList filenameList = getFilenameList();
 
-    if(formatType == NONE){
+    if(formatType == -1){
         QMessageBox noFormatMessageBox;
         noFormatMessageBox.setWindowTitle("Information box");
         noFormatMessageBox.setText("Please select what you want to compute");
@@ -173,38 +175,21 @@ void QtMenuWindow::tmpPrintFileList() {
     }
 
     QtGraphProgramManager *qtGraphProgramManager = new QtGraphProgramManager();
-    connect(this, SIGNAL(startGraphProgram(formatType, QStringList, QString)),
-            qtGraphProgramManager, SLOT(runGraphProgram(formatType, QStringList, QString)));
-    connect(qtGraphProgramManager, SIGNAL(enableMainWindow(QtGraphProgramManager*)),
-            this, SLOT(enableWindow(QtGraphProgramManager*)));
+    connect(this, SIGNAL(startGraphProgram(int,QStringList,QString)),
+            qtGraphProgramManager, SLOT(runGraphProgram(int,QStringList,QString)));
+    connect(qtGraphProgramManager, SIGNAL(enableMainWindow()),
+            this, SLOT(enableWindow()));
+    connect(qtGraphProgramManager, SIGNAL(castException(QString)),
+            this, SLOT(popException(QString)));
 
     this->setDisabled(true);
+
+    qtGraphProgramManager->moveToThread(&programThread);
+    connect(&programThread, &QThread::finished, qtGraphProgramManager, &QObject::deleteLater);
+    programThread.start();
     emit startGraphProgram(formatType, filenameList, outputDirectory);
 
 }
-
-formatType QtMenuWindow::getFormatType() {
-    formatType formatType;
-    QButtonGroup *formatButtonGroup = this->findChild<QButtonGroup*>("formatButtonGroup");
-    switch (formatButtonGroup->checkedId()) {
-        case 0:
-            formatType = RESISTANCE_VALUES;
-            break;
-        case 1:
-            formatType = PARALLEL_PATH;
-            break;
-        case 2:
-            formatType = SEQUENTIAL_PATH;
-            break;
-        case 3:
-            formatType = KASZONYI_FUNCTION;
-            break;
-        default:
-            formatType = NONE;
-    }
-    return formatType;
-}
-
 QStringList QtMenuWindow::getFilenameList() {
     QtFileList *fileList = this->findChild<QtFileList*>("FileList");
     QStringList filenameList;
@@ -218,7 +203,39 @@ QStringList QtMenuWindow::getFilenameList() {
     return filenameList;
 }
 
-void QtMenuWindow::enableWindow(QtGraphProgramManager* qtGraphProgramManager) {
-    delete qtGraphProgramManager;
+void QtMenuWindow::enableWindow() {
+    programThread.quit();
     this->setEnabled(true);
+
+    QMessageBox successMessageBox;
+    successMessageBox.setWindowTitle("");
+
+    switch(invalidFiles.size()){
+        case 0:
+            successMessageBox.setText("Computation finished successfully");
+            break;
+        case 1:
+            successMessageBox.setText("Computation finished, but an error occurred in file:\n\n" +
+                               invalidFiles.front() +
+                               "\n\n" +
+                               "Please make sure the graphs in the file are defined correctly and try it again");
+            break;
+        default:
+            QString errorSubmessage = "";
+            for(const auto& invalidFile : invalidFiles){
+                errorSubmessage += invalidFile + "\n";
+            }
+            successMessageBox.setText("Computation finished, but several errors occurred in these files:\n\n" +
+                                     errorSubmessage +
+                                      "\n\n" +
+                                      "Please make sure the graphs in the files are defined correctly and try it again");
+    }
+
+    successMessageBox.exec();
+}
+
+void QtMenuWindow::popException(QString fileName) {
+    mutex.lock();
+    invalidFiles.append(fileName);
+    mutex.unlock();
 }

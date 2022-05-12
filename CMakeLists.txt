@@ -54,8 +54,6 @@ add_executable(CubicGraphKaszonyiFunctionProgram
         GraphLoader/DirectoryReader.h
         CMSat/cryptominisat.h
         CMSat/solvertypesmini.h
-        Qt/QtMainWindow.cpp
-        Qt/QtMainWindow.h
         Qt/QtExitButton.cpp
         Qt/QtExitButton.h
         Qt/QtCancelButton.cpp

@@ -12,7 +12,7 @@
 #include "../GraphPrinter/KaszonyiPrinter.h"
 
 void
-QtGraphProgramManager::runGraphProgram(formatType formatType, QStringList filePaths, QString outputDirectory) {
+QtGraphProgramManager::runGraphProgram(int formatType, QStringList filePaths, QString outputDirectory) {
     AdjListsGraphLoader adjListsGraphLoader = AdjListsGraphLoader();
     std::string informationFromFile;
     std::vector<CubicGraph> graphList;
@@ -20,24 +20,28 @@ QtGraphProgramManager::runGraphProgram(formatType formatType, QStringList filePa
 
     for(QString &filePath : filePaths){
         QString fileName = filePath.section('/', -1);
-            std::string outputFilePath = outputDirectory.toStdString() + "/" + fileName.toStdString() + ".out";
+            std::string outputFilePath = outputDirectory.toStdString() + "/" + fileName.toStdString();
             try{
                 graphList = adjListsGraphLoader.loadNewGraphs(filePath.toStdString(), informationFromFile);
 
                 switch(formatType){
-                    case RESISTANCE_VALUES:
+                    case 0:
+                        outputFilePath += ".res";
                         ResistancePrinter().print(graphList,outputFilePath,informationFromFile,
                                                   NO_APPEND);
                         break;
-                    case PARALLEL_PATH:
+                    case 1:
+                        outputFilePath += ".ppath";
                         ParallelPathPrinter().print(graphList,outputFilePath,informationFromFile,
                                                     NO_APPEND);
                         break;
-                    case SEQUENTIAL_PATH:
+                    case 2:
+                        outputFilePath += ".spath";
                         SequentialPathPrinter().print(graphList,outputFilePath,informationFromFile,
                                                       NO_APPEND);
                         break;
-                    case KASZONYI_FUNCTION:
+                    case 3:
+                        outputFilePath += ".kas";
                         KaszonyiPrinter().print(graphList,outputFilePath,informationFromFile,
                                                 NO_APPEND);
                         break;
@@ -46,18 +50,13 @@ QtGraphProgramManager::runGraphProgram(formatType formatType, QStringList filePa
                 }
             } catch (std::exception &e){
                 std::cerr << "Problem was caused by exception: " << e.what() << std::endl;
-                QMessageBox exceptionMessageBox;
-                exceptionMessageBox.setWindowTitle("Exception window");
-                exceptionMessageBox.setText("An error occurred in file: "
-                                            + fileName + "\n\n"
-                                            "Please make sure the graphs in the file are defined correctly and try it again");
-                exceptionMessageBox.exec();
+                emit castException(fileName);
             }
     }
 
-    emit enableMainWindow(this);
+    emit enableMainWindow();
 }
 
-QtGraphProgramManager::QtGraphProgramManager(QWidget *parent) {
+QtGraphProgramManager::QtGraphProgramManager(QObject *parent) : QObject(parent) {
     this->setObjectName("GraphProgramManager");
 }

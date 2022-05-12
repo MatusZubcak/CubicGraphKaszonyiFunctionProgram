@@ -7,6 +7,8 @@
 
 
 #include <QWidget>
+#include <QThread>
+#include <QMutex>
 #include "QtFileList.h"
 #include "../Enums.h"
 #include "QtGraphProgramManager.h"
@@ -15,21 +17,23 @@ class QtMenuWindow : public QWidget {
 Q_OBJECT
 private:
     QString outputDirectory = "";
-
+    QThread programThread;
+    QMutex mutex;
+    QStringList invalidFiles;
     QStringList getFilenameList();
-    formatType getFormatType();
 
 public:
     explicit QtMenuWindow(QWidget *parent = nullptr);
 
 private slots:
-    void enableWindow(QtGraphProgramManager* qtGraphProgramManager);
+    void enableWindow();
     void openFileWindow();
-    void tmpPrintFileList();
+    void computeGraphs();
     void pickOutputDirectory();
+    void popException(QString fileName);
 
 signals:
-    void startGraphProgram(formatType formatType, QStringList filenames, QString outputDirector);
+    void startGraphProgram(int formatType, QStringList filenames, QString outputDirector);
 };
 
 
