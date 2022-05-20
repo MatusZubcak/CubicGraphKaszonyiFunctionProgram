@@ -8,7 +8,11 @@
 #include <unordered_map>
 #include <fstream>
 #include <sstream>
+// interface for different graph loaders
+// also includes different functions that are reusable for now graph loaders
+// currently only single graph loader class inherits from it but provides the possibility of extension in the future
 
+// if you find out cubic graph has edge with multiplicity, you can insert it to the set of edges using this function
 void GraphLoader::insertEdgeWithMultiplicity(std::set<Edge> &edges,
                                                                  unsigned int vertex,
                                                                  unsigned int multipleVertex,
@@ -21,6 +25,9 @@ void GraphLoader::insertEdgeWithMultiplicity(std::set<Edge> &edges,
     edges.insert(edgeWithMultiplicity);
 }
 
+
+// function that loads information in curly brackets - { }
+// from the beginning of cubic graphs text file
 std::string GraphLoader::loadAdditionalInformation(std::ifstream &f) {
     std::string informationString;
     std::string getline_str;
@@ -40,6 +47,7 @@ std::string GraphLoader::loadAdditionalInformation(std::ifstream &f) {
     return informationString;
 }
 
+// load neighbours of current vertex to u_int neighbour1,2,3 variables
 bool GraphLoader::loadNeighbours(std::ifstream &f, unsigned int &neighbour1, unsigned int &neighbour2,
                                  unsigned int &neighbour3) {
     std::string buffer, word;
@@ -65,6 +73,8 @@ bool GraphLoader::loadNeighbours(std::ifstream &f, unsigned int &neighbour1, uns
     return !stringList.empty();
 }
 
+// function that checks whether the loaded graph is defined correctly
+// e.g. is cubic, no oriented edges, every vertex is size <= graph.size, ...
 bool GraphLoader::correctlyDefinedGraph(const std::set<unsigned int>& vertices,
                                         const std::set<Edge>& edges) {
     std::unordered_map<unsigned int, int> map_vertex_degree;
@@ -96,6 +106,7 @@ bool GraphLoader::correctlyDefinedGraph(const std::set<unsigned int>& vertices,
     return true;
 }
 
+// loads single graph from file in ifstream &f
 bool GraphLoader::loadGraph(std::vector<CubicGraph> &graphList, std::ifstream &f, unsigned int graph_size,
                             coloringAlgorithm coloringAlgorithm) {
     unsigned int neighbour1 = 0,

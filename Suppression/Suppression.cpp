@@ -4,6 +4,8 @@
 
 #include "Suppression.h"
 
+// converts queue of all graphs that have been generated during the computation of parallel/serial resistance
+// to graph suppression sequence (first = original graph, last = edge-3-colorable graph
 std::vector<CubicGraph>
 Suppression::toSuppressionSequence(const std::vector<CubicGraph> &graphList) {
 

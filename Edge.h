@@ -10,6 +10,14 @@
 #include <string>
 #include "GraphExceptions.h"
 
+
+// class that represents edge in a cubic graph
+// we choose this design because we want to know different information about the edges in the graph
+// quickly and without much pain
+// most of it was required to program edge suppression while still remaining relatively legible,
+// catching all possible cases and without bugs
+// we have also wanted to store multiple edges as a single edge (good for edge suppression)
+// edge_isOriginal is also useful information when comuputing parallel resistance
 class Edge {
 
 private:

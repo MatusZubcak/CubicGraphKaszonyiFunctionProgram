@@ -8,6 +8,7 @@
 #include <vector>
 #include "GraphLoader.h"
 
+// loads graphs from txt file in format written in program instructions
 class AdjListsGraphLoader : public GraphLoader {
 
 public:

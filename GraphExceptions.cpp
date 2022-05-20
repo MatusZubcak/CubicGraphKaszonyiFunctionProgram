@@ -4,6 +4,9 @@
 
 #include "GraphExceptions.h"
 
+// Exceptions for different problems that can occur during graph loading from file
+// also includes exceptions that can occur while the program is running
+// exception names should be enough descriptive to not need any other comme
 const char* BadlyDefinedGraphException::what() const noexcept
 {
     return "Badly defined Graph exception";

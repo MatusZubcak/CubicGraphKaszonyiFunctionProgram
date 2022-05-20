@@ -1,11 +1,18 @@
 //
-// Created by Dell on 25. 10. 2021.
+// Created by Matus on 25. 10. 2021.
 //
 
 #include <iostream>
 #include <cmath>
 #include "FactorColoringFinder.h"
 
+// 3-edge-coloring finder based on equivalence of the 3-edge-coloring and
+// a 1-factor and a set of cykles with even length
+FactorColoringFinder::FactorColoringFinder(){
+    colorings = 0;
+};
+
+//convert graph format from set of vertices and edges to adjacency lists stored in single array
 std::vector<std::pair<unsigned int,bool>>FactorColoringFinder::convertToLinearGraphRepresentation
             (std::set<unsigned int>& vertices, std::set<Edge>& edges){
     std::unordered_map<unsigned int, unsigned int> vertexTranslationTable;
@@ -45,13 +52,9 @@ std::vector<std::pair<unsigned int,bool>>FactorColoringFinder::convertToLinearGr
     return linearGraphRepresentation;
 }
 
-FactorColoringFinder::FactorColoringFinder(){
-    colorings = 0;
-};
-
-/*zisti ci je kruznica parnej dlzky.
- * Ak je, vykona aj reziu potrebnu na "vymazanie" danych hran z grafovej reprezentacie
- * aby sme tu istu kruznicu nepocitali 2-krat*/
+// find whether cycle is even length
+// if so, removes it from the graph representation as we do not want to compute the same cycle twice
+// otherwise returns information that this is not proper 3-edge-coloring
 bool FactorColoringFinder::cycleIsEven
             (std::vector< std::pair<unsigned int, bool>> &linearGraphRepresentation,
              unsigned int vertex){
@@ -83,11 +86,13 @@ bool FactorColoringFinder::cycleIsEven
     return false;
 }
 
-
-/* rekurzivne zgeneruje vsetky mozne 1-faktory a vypocita pre kazdy z nich pocet ofarbeni */
-void FactorColoringFinder::reccursivellyCountKaszonyi
+// recursively (using backtrack algorithm) generates all 1-factors and for each of them
+// computes the amount of proper 3-edge-colorings
+void FactorColoringFinder::recursivelyCountKaszonyi
             (std::vector<std::pair<unsigned int, bool>> linearGraphRepresentation,
              unsigned int vertex){
+
+    // if every vertex is covered by 1-factor, then look at the set of cycles (are they all even?)
     if(3*vertex >= linearGraphRepresentation.size()){
 
         int potentialPsiForThis1Factor = 1;
@@ -101,19 +106,21 @@ void FactorColoringFinder::reccursivellyCountKaszonyi
                 }
             }
         }
-        //delime dvomi, lebo v skutocnosti tymto sposobom generujeme nie kombinacie ale permutacie rozdelenia 2-faktoru do 2 farieb
+
+        // we divide colorings by two because in reality we ignore colorings that
+        // can obtained by permutation of colors from some different coloring
         colorings += potentialPsiForThis1Factor/2;
         return;
     }
 
-    //ak uz ma hranu tento vrchol, nema zmysel mu ju pridavat, rovno ideme na dalsi vrchol
+    // if vertex already has edge, we do not want to add another incident edge to 1-factor
     if(linearGraphRepresentation[ 3*vertex ].second ||
        linearGraphRepresentation[ 3*vertex + 1 ].second ||
        linearGraphRepresentation[ 3*vertex + 2 ].second){
-        reccursivellyCountKaszonyi(linearGraphRepresentation, vertex+1);
+        recursivelyCountKaszonyi(linearGraphRepresentation, vertex+1);
         return;
     }
-    else{ //ak nema hranu, pokusime sa mu ju pridat
+    else{ // if vertex is not covered by 1-factor, try adding incident edge to 1-factor
         bool edgeAdded = false;
         for(int i = 0; i < 3; i++){
             if(linearGraphRepresentation[ 3*vertex + i].first > vertex){
@@ -134,20 +141,24 @@ void FactorColoringFinder::reccursivellyCountKaszonyi
                     }
 
                     edgeAdded = true;
-                    reccursivellyCountKaszonyi(linearGraphRepresentation, vertex+1);
+                    recursivelyCountKaszonyi(linearGraphRepresentation, vertex+1);
                     linearGraphRepresentation[neighbourAddedEdge].second = false;
                     linearGraphRepresentation[ 3*vertex + i].second = false;
                 }
 
             }
         }
-        //ak sa nepodarilo hranu pridat, nema zmysel dalej uvazovat rekurziu
+        // if none of edges incident with given vertex can be added to 1-factor,
+        // then it is not proper 1-factor and we want to stop computing this branch
         if(!edgeAdded) return;
     }
 
 
 }
 
+// computes all 3-edge-colorings for given graph
+// first, using "convertToLinearGraphRepresentation" function it converts graph to wanted format
+// then using "recursivelyCountKaszonyi" we compute the number of all 3-edge-colorings
 int FactorColoringFinder::computeColorings(std::set<unsigned int>& vertices,
                                            std::set<Edge>& edges,
                                            unsigned int numberOfIsolatedCircles) {
@@ -157,7 +168,9 @@ int FactorColoringFinder::computeColorings(std::set<unsigned int>& vertices,
             convertToLinearGraphRepresentation(vertices, edges);
 
     if(!linearGraphRepresentation.empty()) {
-        //fixne nastavime jednu pevnu hranu v 1-faktore, aby sme negenerovali moznosti navyse
+        // one edge will be in all 1-factors, so we do not generate 3-edge-colorings, that can be
+        // obtained from another 3-edge-coloring with permutation of colors
+        // also speeds things up a bit
         linearGraphRepresentation[0].second = true;
         unsigned int neighbour = linearGraphRepresentation[0].first;
         for (int j = 0; j < 3; j++) {
@@ -166,8 +179,8 @@ int FactorColoringFinder::computeColorings(std::set<unsigned int>& vertices,
                 break;
             }
         }
-        //pre zvysne volame rekurzivnu funkciu na hladanie 1-faktoru
-        reccursivellyCountKaszonyi(linearGraphRepresentation, 1);
+        //for remaining edges we generate all 1-factors using backtracking
+        recursivelyCountKaszonyi(linearGraphRepresentation, 1);
     } else{
         colorings = 1;
     }
@@ -180,6 +193,7 @@ int FactorColoringFinder::computeColorings(std::set<unsigned int> &vertices, std
     return computeColorings(vertices, edges, 0);
 }
 
+// finds if graph is 3-edge-colorable by computing all colorings and comparing result with 0
 bool FactorColoringFinder::isColorable(std::set<unsigned int> &vertices, std::set<Edge> &edges) {
     return computeColorings(vertices, edges, 0) > 0;
 }

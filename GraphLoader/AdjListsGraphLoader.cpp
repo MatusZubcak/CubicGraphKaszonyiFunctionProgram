@@ -13,6 +13,7 @@
 #include "../ColoringFinder/SATColoringFinder.h"
 #include "../ColoringFinder/FactorColoringFinder.h"
 
+// loads graphs from txt file in format written in program instructions
 std::vector<CubicGraph> AdjListsGraphLoader::loadNewGraphs(const std::string& filename,
                                                            std::string& informationFromFile,
                                                            coloringAlgorithm coloringAlgorithm) {
@@ -24,7 +25,7 @@ std::vector<CubicGraph> AdjListsGraphLoader::loadNewGraphs(const std::string& fi
 
 
     unsigned int numberOfVertices;
-    /*Pokusi sa pomocou txt suboru vytvorit korektny kubicky graf */
+    // tries generating correct cubic graph from text file
 
         if (!f.good()) {
             throw FileCannotBeOpenedException();
@@ -53,7 +54,7 @@ std::vector<CubicGraph> AdjListsGraphLoader::loadNewGraphs(const std::string& fi
             }
         }
 
-        //while graph can be loaded, load next graph - function loadGraph does both at once
+        //while graph can be loaded, load next graph using function from GraphLoader
         while(loadGraph(graphList, f, numberOfVertices, coloringAlgorithm));
 
     f.close();

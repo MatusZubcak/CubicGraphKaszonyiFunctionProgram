@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 
+// class that helps to test whether algorithms for parallel and sequential suppression return
+// expected values and if the returned graph suppression sequence is valid
 class AutomatedSuppressionTester {
 
 public:

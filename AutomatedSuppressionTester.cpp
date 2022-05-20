@@ -11,6 +11,8 @@
 #include "Suppression/ParallelSuppressionNaive.h"
 #include "GraphExceptions.h"
 
+// loads graphs from file, computes parallel/serial suppression (enum suppression)
+// and then checks if it matches with expected depth values in list[int]
 bool AutomatedSuppressionTester::testWithInputFile(const std::string &filename, suppression suppression,
                                                    std::vector<int> expectedDepthList) {
     bool isCorrect = true;
@@ -42,6 +44,7 @@ bool AutomatedSuppressionTester::testWithInputFile(const std::string &filename, 
     return isCorrect;
 }
 
+// checks if the graph suppression sequence has expected depth
 bool AutomatedSuppressionTester::validDepth(std::vector<CubicGraph> &suppressionSequenceMemoized,
                                             std::vector<CubicGraph> &suppressionSequenceNaive,
                                             int expectedDepth) {
@@ -57,6 +60,8 @@ bool AutomatedSuppressionTester::validDepth(std::vector<CubicGraph> &suppression
     }
 }
 
+//checks for the suppression graph sequence if it is valid (e.g. every graph can be obtained from the previous
+// one using edge suppression)
 bool AutomatedSuppressionTester::validSequence(std::vector<CubicGraph> &suppressionSequence, suppression suppression) {
     std::set<Edge> originalEdges = suppressionSequence.front().getEdges();
 

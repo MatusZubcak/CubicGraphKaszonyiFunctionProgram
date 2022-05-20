@@ -4,6 +4,11 @@
 
 #include "ParallelSuppressionNaive.h"
 
+// class that computes serial resistance the most primitive way
+// using naive backtrack generates all graphs with suppress edge operation
+// and then for each of them checks if it is 3-edge-colorable
+// does not even check for duplicate graphs
+// useful as benchmark when testing more sophisticated algorithms for computing serial resistance
 std::vector<CubicGraph> ParallelSuppressionNaive::findSuppressionSequence(CubicGraph cubicGraph) {
     if(cubicGraph.isColorable()){
         return std::vector<CubicGraph>{cubicGraph};

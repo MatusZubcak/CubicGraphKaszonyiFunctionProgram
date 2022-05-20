@@ -11,6 +11,12 @@
 #include "Edge.h"
 #include "ColoringFinder/ColoringFinder.h"
 
+// class that represents cubic graph as an ordered set of vertices and Edges
+// takes care for the edge suppression operation
+// delegated 3-edge-colorability to strategy algorithm
+//
+// it is recommended not to choose 3-edge-colorabily strategy, so the class can use
+// its own heuristics to choose the optimal algorithm itself (based on the size of the graph)
 class CubicGraph {
 private:
     unsigned int unique_id{};

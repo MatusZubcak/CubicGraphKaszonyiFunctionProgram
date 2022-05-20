@@ -9,6 +9,9 @@
 #include "../CubicGraph.h"
 #include "../Enums.h"
 
+// interface for different graph loaders
+// also includes different functions that are reusable for now graph loaders
+// currently only single graph loader class inherits from it but provides the possibility of extension in the future
 class GraphLoader{
 protected:
     void insertEdgeWithMultiplicity (std::set<Edge>& edges,

@@ -10,6 +10,8 @@
 #include <vector>
 #include "../CMSat/cryptominisat.h"
 
+// 3-edge-coloring finder based on CMSAT Solver by Mate Soos
+
 class SATColoringFinder : public ColoringFinder {
 private:
     std::map<unsigned int, std::vector<unsigned int>> toIncidenceIndexMap(const std::set<unsigned int> &vertices,

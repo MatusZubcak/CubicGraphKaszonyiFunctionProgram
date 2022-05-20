@@ -5,6 +5,7 @@
 #ifndef CUBICGRAPHKASZONYIFUNCTIONPROGRAM_ENUMS_H
 #define CUBICGRAPHKASZONYIFUNCTIONPROGRAM_ENUMS_H
 
+// different enums used in the program
 enum append{
     APPEND,
     NO_APPEND

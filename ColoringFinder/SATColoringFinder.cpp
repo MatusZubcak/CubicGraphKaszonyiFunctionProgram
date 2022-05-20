@@ -7,6 +7,9 @@
 #include <unordered_map>
 #include <cmath>
 
+
+// generates incidence map: vertex -> list [incident edges]
+// we need this map when we later add clauses "at most one color of each type in edges incident with vertex v"
 std::map<unsigned int, std::vector<unsigned int>>
 SATColoringFinder::toIncidenceIndexMap(const std::set<unsigned int> &vertices, const std::set<Edge> &edges) {
     std::map<unsigned int, std::vector<unsigned int>> incidenceIndexMap;
@@ -31,12 +34,13 @@ SATColoringFinder::toIncidenceIndexMap(const std::set<unsigned int> &vertices, c
     return incidenceIndexMap;
 }
 
+// converts cubic graph 3-edge-coloring problem to SAT problem
 void SATColoringFinder::toSATFormula(const std::set<unsigned int> &vertices, const std::set<Edge> &edges,
                                      CMSat::SATSolver &satSolver) {
-    //map vertex -> List of indexes of incident edges
+    //map: vertex -> list[incident edges]
     std::map<unsigned int, std::vector<unsigned int>> incidenceIndexMap = toIncidenceIndexMap(vertices,edges);
 
-    //Clauses for "At least one color for every edge"
+    //Clauses "At least one color for every edge"
     unsigned int e_index = 0;
     for(auto e : edges){
         for(int i = 0; i < e.getMultiplicity(); i++) {
@@ -51,7 +55,7 @@ void SATColoringFinder::toSATFormula(const std::set<unsigned int> &vertices, con
         }
     }
 
-    //Clause at most one color of each type in edges incident with vertex v
+    //Clause "At most one color of each type in edges incident with vertex v"
     for(auto v : vertices){
         unsigned int e0_index = incidenceIndexMap[v][0];
         unsigned int e1_index = incidenceIndexMap[v][1];
@@ -79,12 +83,14 @@ void SATColoringFinder::toSATFormula(const std::set<unsigned int> &vertices, con
     }
 }
 
+//computes all 3-edge-colorings for given graph
 int SATColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges,
                                         unsigned int numberOfIsolatedCircles) {
     CMSat::SATSolver satSolver;
     int colorings = 0;
 
     //Let's use 1 thread
+    // We have experimentally found this was fastest for some reason
     satSolver.set_num_threads(1);
 
     //We need 3*|E(G)| = 9/2*|V(G)| variables.
@@ -124,10 +130,12 @@ int SATColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::s
     return computeColorings(vertices, edges, 0);
 }
 
+// Finds out whether graph is 3-edge-colorable
 bool SATColoringFinder::isColorable(std::set<unsigned int> &vertices, std::set<Edge> &edges) {
     CMSat::SATSolver satSolver;
 
     //Let's use 1 thread
+    // We have experimentally found this was fastest for some reason
     satSolver.set_num_threads(1);
 
     //We need 3*|E(G)| = 9/2*|V(G)| variables.

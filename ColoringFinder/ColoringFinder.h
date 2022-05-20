@@ -1,5 +1,5 @@
 //
-// Created by Dell on 25. 10. 2021.
+// Created by Matus on 25. 10. 2021.
 //
 
 #ifndef CUBICGRAPHKASZONYIFUNCTIONPROGRAM_COLORINGFINDER_H
@@ -7,6 +7,8 @@
 
 #include <set>
 #include "../Edge.h"
+
+// Interface for 3-edge-coloring algorithms
 
 class ColoringFinder{
 

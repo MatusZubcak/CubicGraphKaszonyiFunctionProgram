@@ -12,12 +12,14 @@
 #include "../Edge.h"
 #include "ColoringFinder.h"
 
+// 3-edge-coloring finder based on equivalence of the 3-edge-coloring and
+// a 1-factor and a set of cykles with even length
 class FactorColoringFinder : public ColoringFinder {
 
 private:
     int colorings;
 
-    void reccursivellyCountKaszonyi(std::vector<std::pair<unsigned int,bool>> linearGraphRepresentation,
+    void recursivelyCountKaszonyi(std::vector<std::pair<unsigned int,bool>> linearGraphRepresentation,
                                     unsigned int vertex);
 
     bool cycleIsEven(std::vector<std::pair<unsigned int, bool>> &linearGraphRepresentation,

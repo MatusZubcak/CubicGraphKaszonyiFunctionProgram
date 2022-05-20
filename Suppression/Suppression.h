@@ -8,6 +8,7 @@
 #include "../CubicGraph.h"
 #include <vector>
 
+// interface for different parallel and serial resistance algorithms
 class Suppression{
 public:
     virtual std::vector<CubicGraph> findSuppressionSequence(CubicGraph cubicGraph) =0;

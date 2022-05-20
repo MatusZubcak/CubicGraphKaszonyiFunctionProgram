@@ -7,6 +7,8 @@
 #include <iostream>
 #include <algorithm>
 
+// old class that finds all filenames from given directory
+// currently obsoleted because Qt graphical interface provides the program only with files
 std::vector<std::string> DirectoryReader::fileList(const std::string &directoryPath) {
     std::vector<std::string> fileList;
 

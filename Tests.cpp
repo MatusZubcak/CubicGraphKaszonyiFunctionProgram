@@ -18,8 +18,19 @@
 #include "AutomatedSuppressionTester.h"
 #include "ColoringFinder/SATColoringFinder.h"
 
+//tests for:
+// Edge class
+// CubicGraph class
+// Edge suppression function
+// Kaszonyi function
+// 1-factor 3-edge-coloring
+// SAT 3-edge-coloring
+// GraphLoader tests
+// automated parallel and resistance suppression tests (for some files)
+
 int Tests::run() {
 
+    //Edge tests
     Edge e12(1, 2);
     Edge e13(1, 3);
     Edge e14(4, 1);
@@ -59,6 +70,7 @@ int Tests::run() {
     e12.decrementMultiplicity();
     assert(e12.getMultiplicity() == 1);
 
+    // CubicGraph tests
     std::set<unsigned int> testVertices1 = {
             0, 1, 5, 7, 10
     };
@@ -87,8 +99,8 @@ int Tests::run() {
     assert(e12.isIncidentWith(2));
     assert(!e12.isIncidentWith(3));
 
-    //Suppression tests
 
+    //Suppression tests
     std::set<unsigned int> K4_vertices{1, 2, 3, 4};
     std::set<Edge> K4_edges{e12, e13, e14, e23, e24, e34};
     CubicGraph K4(K4_vertices, K4_edges);
@@ -517,7 +529,7 @@ int Tests::run() {
 
 
 
-    //test kedy vlavo aj v pravo je nasobna hrana/slucka
+    //loop tests
     std::set<unsigned int> test16_vertices{1, 2, 3, 4};
     std::set<Edge> test16_edges{Edge(1, 2)};
     Edge t16e13(1, 3);
@@ -591,7 +603,7 @@ int Tests::run() {
 
 
 
-    //diamond test
+    //diamond graph test
     std::set<unsigned int> test19_vertices{1, 2, 3, 4, 5, 6};
     std::set<Edge> test19_edges{Edge(1, 2), Edge(2, 3),
                                 Edge(3, 5), Edge(2, 4),
@@ -647,7 +659,7 @@ int Tests::run() {
             assert(!e.isOriginal());
     }
 
-    //KASZONYI FUNCTION TESTS
+    //Kaszonyi colorings function tests
     std::shared_ptr<ColoringFinder> coloringFactor = std::shared_ptr<ColoringFinder>(new FactorColoringFinder);
     std::shared_ptr<ColoringFinder> coloringSAT = std::shared_ptr<ColoringFinder>(new SATColoringFinder);
 
@@ -729,7 +741,7 @@ int Tests::run() {
 
 
 
-    //GRAPH LOADER TESTS
+    //GraphLoader tests
     AdjListsGraphLoader graphLoader;
     std::vector<CubicGraph> graphList1 = graphLoader.loadNewGraphs("Tests/test1_GraphLoader.txt");
     std::queue<CubicGraph> graphQueue1(std::deque<CubicGraph>(graphList1.begin(), graphList1.end()));
@@ -799,7 +811,7 @@ int Tests::run() {
     assert(test25_graph.getKaszonyiValue(Edge(10,9)) > 0);
 
 
-    //AUTOMATED SUPPRESSION TESTS
+    //Automated parallel/serial suppression tests
     AutomatedSuppressionTester automatedSuppressionTester = AutomatedSuppressionTester();
 
     std::string test26_input = "Tests/test26_14g3e.txt";
@@ -879,7 +891,6 @@ int Tests::run() {
 
 
     std::cout << "ALL TESTS PASSED" << std::endl;
-    //assert(0 == 1);
     return 0;
 }
 

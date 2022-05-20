@@ -7,6 +7,12 @@
 #include <unordered_set>
 #include <iostream>
 
+// class that computes parallel resistance using some kind of memoization
+// generates all graphs with suppress edge operation (only on original edges)
+// and then for each of them checks if it is 3-edge-colorable
+//
+// only computes if the graph is 3-edge-colorable once for the same graphs
+// first its checks if it has not already computed 3-edge-colorability for the given graph using memoization table
 std::vector<CubicGraph> ParallelSuppressionMemoized::findSuppressionSequence(CubicGraph cubicGraph) {
     if(cubicGraph.isColorable()){
         return std::vector<CubicGraph>{cubicGraph};

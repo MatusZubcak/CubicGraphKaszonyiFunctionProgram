@@ -10,6 +10,7 @@
 
 #endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_HASH_H
 
+//Graph -> hash (used when graph is added to map)
 struct GraphHash{
 
     std::size_t operator()(const CubicGraph&  graph) const noexcept
