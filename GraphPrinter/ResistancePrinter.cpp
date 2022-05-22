@@ -11,7 +11,7 @@
 
 bool ResistancePrinter::printResistanceValues(CubicGraph &cubicGraph, std::ofstream &f) {
 
-    f << "SEQUENTIAL RESISTANCE: "
+    f << "SERIAL RESISTANCE: "
       << SequentialSuppressionMemoized().findSuppressionSequence(cubicGraph).back().getDepth()
       << std::endl;
 
