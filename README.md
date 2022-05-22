@@ -6,79 +6,57 @@ This is a simple installation guide, that can help you to go through the procces
 To run this program, you need:
 - gcc compiler version 5 or higher (to run c++17)
 - qt version 5 or higher
-- cmake version VERSION 3.17 or higher
+- cmake version VERSION 3.14 or higher
 - CryptoMiniSat SAT solver
 
 Now we will step-by-step show you how to install all those tools on (Ubuntu) Linux and then run the program.
 
-### Installing GCC compiler
+### Installing GCC compiler and CMake
 
 ```
-sudo apt-get update
-sudo apt-get install build-essential manpages-dev
+$ sudo apt update
+$ sudo apt install build-essential cmake
 ```
 
-You can also check your gcc version with command:
+You can also check your gcc and cmake versions with commands:
 ```
-gcc --version
-```
-
-### Installing CMake:
-First check CMake version to know if you have it.
-```
-cmake --version
-```
-
-When cmake is not yet installed:
-```
-sudo apt-get install cmake
-```
-
-When cmake is already installed:
-```
-sudo apt-get upgrade
-```
-
-Now check cmake version and if it still fails, you may need to run these two commands:
-```
-sudo apt-get install build-essential libssl-dev
-export PATH=~/usr/cmake-path/bin:$PATH
+$ gcc --version
+$ cmake --version
 ```
 
 ### Installing Qt visual library:
 ```
-sudo apt-get install build-essential
-sudo apt-get install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+$ sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
 ```
 
 Or you can download qt from their official website: https://www.qt.io/download
 
 ### Installing CryptoMiniSat Solver
-This may be the hardest part actually, but if you closely follow the instruction manual it should do just fine. 
+This may be the hardest part actually, but if you closely follow the instruction manual it should do just fine.
 First, download CMSAT from https://github.com/msoos/cryptominisat (clone repository or download zip).
 Extract files and move to the directory with CryptoMiniSat.
 Compile CryptoMiniSat using the installation guide their page. We also copy-paste their installation guide here:
 
 ```
-sudo apt-get install build-essential cmake
-#not required but very useful
-sudo apt-get install zlib1g-dev libboost-program-options-dev libm4ri-dev libsqlite3-dev help2man
-mkdir build && cd build
-cmake ..
-make
-sudo make install
-sudo ldconfig
+$ #not required but very useful
+$ sudo apt install zlib1g-dev libboost-program-options-dev libm4ri-dev libsqlite3-dev help2man
+$ mkdir build && cd build
+$ cmake ..
+$ make
+$ sudo make install
+$ sudo ldconfig
 ```
+
 ## Compiling and running the CubicGraphKaszonyiFunctionProgram
 First, download the program from this webpage (clone repository or download zip).
 Now go to the directory with the program and run those commands:
 ```
-mkdir build-dir
-#directory name can be anything you want
-cd build-dir
-cmake ..
-make
-./CubicGraphKaszonyiFunctionProgram
+$ mkdir build-dir
+$ #directory name can be anything you want
+$ cd build-dir
+$ cmake ..
+$ make
+$ ./CubicGraphKaszonyiFunctionProgram
 ```
 
 # Program instruction manual
@@ -150,56 +128,56 @@ For example, we will continue our file with five different graphs, each of them 
 Example:
 
 ```
-5 6 7 
-2 3 4 
-1 3 4 
-1 2 5 
-1 2 6 
-0 3 7 
-0 4 7 
-0 5 6 
+5 6 7
+2 3 4
+1 3 4
+1 2 5
+1 2 6
+0 3 7
+0 4 7
+0 5 6
 
-5 6 7 
-2 3 4 
-1 3 5 
-1 2 6 
-1 5 7 
-0 2 4 
-0 3 7 
-0 4 6 
+5 6 7
+2 3 4
+1 3 5
+1 2 6
+1 5 7
+0 2 4
+0 3 7
+0 4 6
 
-4 5 6 
-2 3 4 
-1 3 5 
-1 2 6 
-0 1 7 
-0 2 7 
-0 3 7 
-4 5 6 
+4 5 6
+2 3 4
+1 3 5
+1 2 6
+0 1 7
+0 2 7
+0 3 7
+4 5 6
 
-5 6 7 
-2 3 4 
-1 5 6 
-1 5 7 
-1 6 7 
-0 2 3 
-0 2 4 
-0 3 4 
+5 6 7
+2 3 4
+1 5 6
+1 5 7
+1 6 7
+0 2 3
+0 2 4
+0 3 4
 
-4 5 7 
-2 3 4 
-1 5 6 
-1 5 7 
-0 1 6 
-0 2 3 
-2 4 7 
+4 5 7
+2 3 4
+1 5 6
+1 5 7
+0 1 6
+0 2 3
+2 4 7
 0 3 6
 ```
 
 The input file is then the concatenation of all three parts.
 
 ## Output file format
-All files are stored in the output directory you choose before starting the computation. 
+All files are stored in the output directory you choose before starting the computation.
 The name of the output file will be "Input name" + "Format shortcut" where format shortcut is one of these, depending on used format:
 - .res (parallel and serial resistance values)
 - .ppath (parallel path)
@@ -211,9 +189,9 @@ The output file will include (in following order):
 - information from input file (if provided)
 - size of every graph
 - list of graphs. For every graphs is provided:
-    - SERIAL RESISTANCE: s
-    - PARALLEL RESISTANCE: p
-    - graph in adjacency lists format 
+  - SERIAL RESISTANCE: s
+  - PARALLEL RESISTANCE: p
+  - graph in adjacency lists format
 
 s,p are values of serial and parallel resistance for given graph, if no parallel resistance exists for the graph, p = N/A.
 
@@ -262,8 +240,8 @@ The output file will include (in following order):
 - information from input file (if provided)
 - size of every graph
 - list of graphs. For every graphs is provided:
-    - graph in adjacency lists format 
-    - kaszonyi value for every edge
+  - graph in adjacency lists format
+  - kaszonyi value for every edge
 
 The example is based on the file used as example for the input file format, but only first two graphs and the information part is also omitted:
 ```
