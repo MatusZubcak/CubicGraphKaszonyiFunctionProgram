@@ -18,18 +18,18 @@
 
 // run graphical interface
 
+/*
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     QtMenuWindow menuWindow;
     menuWindow.show();
     return QApplication::exec();
 }
-
+*/
 
 // run tests
-/*
+
 int main(){
     Tests::run();
     return 0;
 }
-*/

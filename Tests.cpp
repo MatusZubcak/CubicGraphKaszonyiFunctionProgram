@@ -743,7 +743,7 @@ int Tests::run() {
 
     //GraphLoader tests
     AdjListsGraphLoader graphLoader;
-    std::vector<CubicGraph> graphList1 = graphLoader.loadNewGraphs("Tests/test1_GraphLoader.txt");
+    std::vector<CubicGraph> graphList1 = graphLoader.loadNewGraphs("../Tests/test1_GraphLoader.txt");
     std::queue<CubicGraph> graphQueue1(std::deque<CubicGraph>(graphList1.begin(), graphList1.end()));
 
     std::set<unsigned int> graphLoader_test1_vertices{0, 1, 2, 3};
@@ -814,7 +814,7 @@ int Tests::run() {
     //Automated parallel/serial suppression tests
     AutomatedSuppressionTester automatedSuppressionTester = AutomatedSuppressionTester();
 
-    std::string test26_input = "Tests/test26_14g3e.txt";
+    std::string test26_input = "../Tests/test26_14g3e.txt";
     std::vector<CubicGraph> test26_graphList = AdjListsGraphLoader().loadNewGraphs(test26_input, FACTOR);
     std::vector<int> test26_expectedDepthList(test26_graphList.size());
     test26_expectedDepthList[0] = 2;
@@ -829,7 +829,7 @@ int Tests::run() {
     assert(automatedSuppressionTester.testWithInputFile(test26_input, PARALLEL, test26_expectedDepthList));
 
 
-    std::string test27_input = "Tests/test27_16g3e.txt";
+    std::string test27_input = "../Tests/test27_16g3e.txt";
     std::vector<CubicGraph> test27_graphList = AdjListsGraphLoader().loadNewGraphs(test27_input, FACTOR);
     std::vector<int> test27_expectedSequentialDepthList(test27_graphList.size(), 1);
     std::vector<int> test27_expectedParallelDepthList(test27_graphList.size(), 1);
@@ -864,8 +864,8 @@ int Tests::run() {
     assert(automatedSuppressionTester.testWithInputFile(test27_input, PARALLEL, test27_expectedParallelDepthList));
 
 
-    //SAT Coloring functions Tests
-    std::string test28_input = "Tests/test27_16g3e.txt";
+    //SAT Coloring functions Tests-
+    std::string test28_input = "../Tests/test27_16g3e.txt";
     std::vector<CubicGraph> test28_graphListSAT = AdjListsGraphLoader().loadNewGraphs(test28_input, SAT);
     std::vector<CubicGraph> test28_graphListFactor = AdjListsGraphLoader().loadNewGraphs(test28_input, FACTOR);
     std::vector<unsigned int> test28_SAT_colors;
@@ -887,7 +887,6 @@ int Tests::run() {
 
     assert(test28_SAT_isColorable == test28_Factor_isColorable);
     assert(test28_SAT_colors == test28_Factor_colors);
-
 
 
     std::cout << "ALL TESTS PASSED" << std::endl;
