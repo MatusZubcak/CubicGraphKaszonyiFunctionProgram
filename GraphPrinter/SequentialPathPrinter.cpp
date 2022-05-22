@@ -64,10 +64,10 @@ bool SequentialPathPrinter::print(std::vector<CubicGraph> &graphList, const std:
 
         f << cubicGraph.size() << std::endl;
         if(lastGraph.isColorable()) {
-            f << "SEQUENTIAL RESISTANCE: " << suppressionSequence.back().getDepth() << std::endl;
+            f << "SERIAL RESISTANCE: " << suppressionSequence.back().getDepth() << std::endl;
         }
         else{
-            f << "SEQUENTIAL RESISTANCE: " << "N/A" << std::endl;
+            f << "SERIAL RESISTANCE: " << "N/A" << std::endl;
         }
 
         for (auto it = suppressionSequence.begin(); it != suppressionSequence.end(); it++) {
