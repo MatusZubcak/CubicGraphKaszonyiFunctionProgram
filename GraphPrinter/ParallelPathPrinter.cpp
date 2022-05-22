@@ -39,8 +39,8 @@ bool ParallelPathPrinter::print(CubicGraph &cubicGraph, const std::string &filen
     for(auto it = suppressionSequence.begin(); it != suppressionSequence.end(); it++){
         printedSuccessfully &=
                 printIdAndDepth(*it, f)
-                && printGraph(*it, f)
-                && printKaszonyiValues(*it, f, MARK_ORIGINAL_EDGES, COLORING_EXISTS);
+                && printGraph(*it, f);
+                //&& printKaszonyiValues(*it, f, MARK_ORIGINAL_EDGES, COLORING_EXISTS);
         if(next(it) != suppressionSequence.end()) {f << std::endl << std::endl;}
     }
     f.close();
@@ -80,8 +80,8 @@ bool ParallelPathPrinter::print(std::vector<CubicGraph> &graphList, const std::s
 
             printedSuccessfully &=
                     printIdAndDepth(*it, f)
-                    && printGraph(*it, f)
-                    && printKaszonyiValues(*it, f, MARK_ORIGINAL_EDGES, COLORING_EXISTS);
+                    && printGraph(*it, f);
+                    //&& printKaszonyiValues(*it, f, MARK_ORIGINAL_EDGES, COLORING_EXISTS);
             if (next(it) != suppressionSequence.end()) { f << std::endl; }
         }
 

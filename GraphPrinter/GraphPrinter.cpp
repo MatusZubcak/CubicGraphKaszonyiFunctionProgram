@@ -14,14 +14,12 @@ bool GraphPrinter::printGraph(CubicGraph &cubicGraph, std::ofstream& f) {
 
     unsigned int i = 0;
     for(auto v : cubicGraph.getVertices()){
-        f << v << ": "
-          << adjacencyList[i][0] << " "
+        f << adjacencyList[i][0] << " "
           << adjacencyList[i][1] << " "
           << adjacencyList[i][2]
           << std::endl;
         i++;
     }
-    f << "Number of isolated circles: " << cubicGraph.getNumberOfIsolatedCircles() << std::endl;
 
     return true;
 }

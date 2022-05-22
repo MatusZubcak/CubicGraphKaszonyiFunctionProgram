@@ -28,6 +28,7 @@
 #include "../Enums.h"
 
 QtMenuWindow::QtMenuWindow(QWidget *parent) {
+    this->setWindowTitle("Edge Suppression Program");
 
     //Radio panel
     QLabel *formatLabel = new QLabel("Select what you want to compute:");
