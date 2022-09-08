@@ -58,4 +58,9 @@ struct ConversionFromListToSequenceFailed : std::exception{
 struct ExpectedDepthListWrongSize : std::exception{
     const char* what() const noexcept override;
 };
+
+struct KaszonyiValueNotDivisibleByThreeException : std::exception{
+    const char* what() const noexcept override;
+};
+
 #endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_GRAPHEXCEPTIONS_H

@@ -9,7 +9,8 @@
 #include "../GraphPrinter/ResistancePrinter.h"
 #include "../GraphPrinter/ParallelPathPrinter.h"
 #include "../GraphPrinter/SequentialPathPrinter.h"
-#include "../GraphPrinter/KaszonyiPrinter.h"
+#include "../GraphPrinter/KaszonyiPrinterTimesThree.h"
+#include "../GraphPrinter/KaszonyiPrinterOriginal.h"
 
 void
 QtGraphProgramManager::runGraphProgram(int formatType, QStringList filePaths, QString outputDirectory) {
@@ -42,7 +43,12 @@ QtGraphProgramManager::runGraphProgram(int formatType, QStringList filePaths, QS
                         break;
                     case 3:
                         outputFilePath += ".kas";
-                        KaszonyiPrinter().print(graphList,outputFilePath,informationFromFile,
+                        KaszonyiPrinterOriginal().print(graphList,outputFilePath,informationFromFile,
+                                                NO_APPEND);
+                        break;
+                    case 4:
+                        outputFilePath += ".3kas";
+                        KaszonyiPrinterTimesThree().print(graphList,outputFilePath,informationFromFile,
                                                 NO_APPEND);
                         break;
                     default:

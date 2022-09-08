@@ -8,7 +8,7 @@
 #include "GraphLoader/AdjListsGraphLoader.h"
 #include "GraphPrinter/SequentialPathPrinter.h"
 #include "GraphPrinter/ParallelPathPrinter.h"
-#include "GraphPrinter/KaszonyiPrinter.h"
+#include "GraphPrinter/KaszonyiPrinterTimesThree.h"
 #include "GraphPrinter/ResistancePrinter.h"
 #include "ColoringFinder/SATColoringFinder.h"
 #include "GraphLoader/DirectoryReader.h"

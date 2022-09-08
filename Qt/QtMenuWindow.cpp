@@ -36,14 +36,16 @@ QtMenuWindow::QtMenuWindow(QWidget *parent) {
     QRadioButton *resistanceButton = new QRadioButton("Parallel and serial resistance values");
     QRadioButton *parallelPathButton = new QRadioButton("Parallel resistance path");
     QRadioButton *sequentialPathButton = new QRadioButton("Serial resistance path");
-    QRadioButton *kaszonyiValues = new QRadioButton("Kaszonyi function values");
+    QRadioButton *kaszonyiValuesOriginal = new QRadioButton ("Kaszonyi function original");
+    QRadioButton *kaszonyiValuesTimesThree = new QRadioButton("Kaszonyi function times three");
 
     QButtonGroup *formatButtonGroup = new QButtonGroup(this);
     formatButtonGroup->setObjectName("formatButtonGroup");
     formatButtonGroup->addButton(resistanceButton, 0);
     formatButtonGroup->addButton(parallelPathButton, 1);
     formatButtonGroup->addButton(sequentialPathButton, 2);
-    formatButtonGroup->addButton(kaszonyiValues, 3);
+    formatButtonGroup->addButton(kaszonyiValuesOriginal, 3);
+    formatButtonGroup->addButton(kaszonyiValuesTimesThree, 4);
     formatButtonGroup->setExclusive(true);
 
 
@@ -74,7 +76,8 @@ QtMenuWindow::QtMenuWindow(QWidget *parent) {
     formatButtonsLayout->addWidget(resistanceButton);
     formatButtonsLayout->addWidget(parallelPathButton);
     formatButtonsLayout->addWidget(sequentialPathButton);
-    formatButtonsLayout->addWidget(kaszonyiValues);
+    formatButtonsLayout->addWidget(kaszonyiValuesOriginal);
+    formatButtonsLayout->addWidget(kaszonyiValuesTimesThree);
     formatButtonsLayout->addStretch();
 
     //FileList command buttons layout

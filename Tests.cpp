@@ -12,7 +12,7 @@
 #include "CubicGraph.h"
 #include "ColoringFinder/FactorColoringFinder.h"
 #include "GraphLoader/AdjListsGraphLoader.h"
-#include "GraphPrinter/KaszonyiPrinter.h"
+#include "GraphPrinter/KaszonyiPrinterTimesThree.h"
 #include "GraphPrinter/SequentialPathPrinter.h"
 #include "GraphPrinter/ParallelPathPrinter.h"
 #include "AutomatedSuppressionTester.h"

@@ -5,12 +5,12 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include "KaszonyiPrinter.h"
+#include "KaszonyiPrinterTimesThree.h"
 
 
-bool KaszonyiPrinter::print(CubicGraph &cubicGraph, const std::string &filename,
-                            const std::string &additionalInformation,
-                            append append) {
+bool KaszonyiPrinterTimesThree::print(CubicGraph &cubicGraph, const std::string &filename,
+                                      const std::string &additionalInformation,
+                                      append append) {
     bool printedSuccessfully;
     std::ofstream f;
     if(append == APPEND) {
@@ -27,16 +27,18 @@ bool KaszonyiPrinter::print(CubicGraph &cubicGraph, const std::string &filename,
     f << cubicGraph.size() << std::endl;
     printedSuccessfully =
             printGraph(cubicGraph, f)
-            && printKaszonyiValues(cubicGraph, f, IGNORE_EDGE_ORIGINALITY, COLORING_NUMBER);
+            && printKaszonyiValues(cubicGraph, f,
+                                   IGNORE_EDGE_ORIGINALITY,
+                                   COLORING_NUMBER_TIMES_THREE);
 
     f.close();
 
     return printedSuccessfully;
 }
 
-bool KaszonyiPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename,
-                            const std::string &additionalInformation,
-                            append append) {
+bool KaszonyiPrinterTimesThree::print(std::vector<CubicGraph> &graphList, const std::string &filename,
+                                      const std::string &additionalInformation,
+                                      append append) {
     bool printedSuccesfully = true;
     std::ofstream f;
     if(append == APPEND) {
@@ -55,7 +57,9 @@ bool KaszonyiPrinter::print(std::vector<CubicGraph> &graphList, const std::strin
     for(auto it = graphList.begin(); it != graphList.end(); it++){
         printedSuccesfully &=
                 printGraph(*it, f)
-                && printKaszonyiValues(*it, f, IGNORE_EDGE_ORIGINALITY, COLORING_NUMBER);
+                && printKaszonyiValues(*it, f,
+                                       IGNORE_EDGE_ORIGINALITY,
+                                       COLORING_NUMBER_TIMES_THREE);
         if(next(it) != graphList.end()){f << std::endl;}
     }
 
@@ -65,10 +69,10 @@ bool KaszonyiPrinter::print(std::vector<CubicGraph> &graphList, const std::strin
 
 }
 
-bool KaszonyiPrinter::print(CubicGraph &cubicGraph, const std::string &filename, append append) {
+bool KaszonyiPrinterTimesThree::print(CubicGraph &cubicGraph, const std::string &filename, append append) {
     return print(cubicGraph, filename, "", append);
 }
 
-bool KaszonyiPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename, append append) {
+bool KaszonyiPrinterTimesThree::print(std::vector<CubicGraph> &graphList, const std::string &filename, append append) {
     return print(graphList, filename, "", append);
 }

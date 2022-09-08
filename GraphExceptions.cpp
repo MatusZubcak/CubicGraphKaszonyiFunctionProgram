@@ -59,3 +59,7 @@ const char* ConversionFromListToSequenceFailed::what() const noexcept
 const char *ExpectedDepthListWrongSize::what() const noexcept {
     return "Size of the expected depth values is different from the number of graphs located in the file";
 }
+
+const char *KaszonyiValueNotDivisibleByThreeException::what() const noexcept {
+    return "Kaszonyi value is not divisible by three";
+}

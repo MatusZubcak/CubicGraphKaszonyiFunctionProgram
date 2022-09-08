@@ -22,8 +22,8 @@ add_executable(CubicGraphKaszonyiFunctionProgram
         GraphLoader/GraphLoader.h
         GraphLoader/AdjListsGraphLoader.cpp
         GraphLoader/AdjListsGraphLoader.h
-        GraphPrinter/KaszonyiPrinter.cpp
-        GraphPrinter/KaszonyiPrinter.h
+        GraphPrinter/KaszonyiPrinterTimesThree.cpp
+        GraphPrinter/KaszonyiPrinterTimesThree.h
         Enums.h
         GraphPrinter/GraphPrinter.h
         GraphPrinter/GraphPrinter.h
@@ -65,7 +65,7 @@ add_executable(CubicGraphKaszonyiFunctionProgram
         Qt/QtRemoveButton.cpp
         Qt/QtRemoveButton.h
         Qt/QtFileList.cpp
-        Qt/QtFileList.h Qt/QtChooseFilesButton.cpp Qt/QtChooseFilesButton.h Qt/QtFileWindow.cpp Qt/QtFileWindow.h Qt/QtRunButton.cpp Qt/QtRunButton.h Qt/QtOutputDirectoryButton.cpp Qt/QtOutputDirectoryButton.h Qt/QtDirectoryWindow.cpp Qt/QtDirectoryWindow.h Qt/QtGraphProgramManager.cpp Qt/QtGraphProgramManager.h)
+        Qt/QtFileList.h Qt/QtChooseFilesButton.cpp Qt/QtChooseFilesButton.h Qt/QtFileWindow.cpp Qt/QtFileWindow.h Qt/QtRunButton.cpp Qt/QtRunButton.h Qt/QtOutputDirectoryButton.cpp Qt/QtOutputDirectoryButton.h Qt/QtDirectoryWindow.cpp Qt/QtDirectoryWindow.h Qt/QtGraphProgramManager.cpp Qt/QtGraphProgramManager.h GraphPrinter/KaszonyiPrinterOriginal.cpp GraphPrinter/KaszonyiPrinterOriginal.h)
 
 find_package(Qt5 COMPONENTS
         Core

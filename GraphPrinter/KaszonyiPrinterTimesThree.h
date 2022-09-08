@@ -2,17 +2,17 @@
 // Created by Dell on 2. 11. 2021.
 //
 
-#ifndef CUBICGRAPHKASZONYIFUNCTIONPROGRAM_KASZONYIPRINTER_H
-#define CUBICGRAPHKASZONYIFUNCTIONPROGRAM_KASZONYIPRINTER_H
+#ifndef CUBICGRAPHKASZONYIFUNCTIONPROGRAM_KASZONYIPRINTERTIMESTHREE_H
+#define CUBICGRAPHKASZONYIFUNCTIONPROGRAM_KASZONYIPRINTERTIMESTHREE_H
 
 
 #include "../CubicGraph.h"
 #include "../Enums.h"
 #include "GraphPrinter.h"
 
-class KaszonyiPrinter : public GraphPrinter {
+class KaszonyiPrinterTimesThree : public GraphPrinter {
 public:
-    KaszonyiPrinter()=default;;
+    KaszonyiPrinterTimesThree()=default;;
 
     bool print(CubicGraph& cubicGraph, const std::string& filename, append append) override;
     bool print(std::vector<CubicGraph>& graphList, const std::string& filename, append append) override;
@@ -23,4 +23,4 @@ public:
 };
 
 
-#endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_KASZONYIPRINTER_H
+#endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_KASZONYIPRINTERTIMESTHREE_H
