@@ -2,7 +2,7 @@
 Computes Kaszonyi function, parallel and serial resistance values for cubic graphs
 
 ## Installation guide
-This is a simple installation guide, that can help you to go through the proccess of installing all tools required to run this program.
+This is a simple installation guide, that can help you to go through the process of installing all tools required to run this program.
 To run this program, you need:
 - gcc compiler version 5 or higher (to run c++17)
 - qt version 5 or higher
@@ -84,8 +84,13 @@ Also computes serial resistance values.
 Rather experimental output format, only useful if you want to know how does the shortest graph path, where last graph is 3-edge-colorable looks like
 
 
-### Kaszonyi function values
-Computes the Kaszonyi function values for every edge of given graphs.
+### Kaszonyi function original
+First checks whether graph is 3-edge-colorable. 
+For graphs that are not 3-edge-colorable computes the Kaszonyi function values for every edge of given graphs according to the original definition by L. Kaszonyi.
+
+### Kaszonyi function times three
+Computes the Kaszonyi function values for every edge of given graphs according to the definition by M.Zubčák in his bachelor thesis. 
+For graphs that are not 3-edge-colorable the values is three times greater than value of the original Kaszonyi function. 
 
 ### Output directory
 Place, where results are stored.
@@ -111,7 +116,7 @@ Example:
 ```
 
 ### Graph class size
-Follow the graph class information (or beggining the file with), graph size of graphs in the file has to be provided.
+Follow the graph class information (or beginning the file with), graph size of graphs in the file has to be provided.
 For example, lets say you have a class of cubic graphs where every graph has 8 vertices. So you begin (or continue after information) the file with 8
 Example:
 ```
@@ -182,13 +187,14 @@ The name of the output file will be "Input name" + "Format shortcut" where forma
 - .res (parallel and serial resistance values)
 - .ppath (parallel path)
 - .spath (sequential path)
-- .kas (Kaszonyi function)
+- .kas (Kaszonyi function original)
+- .3kas (Kaszonyi function times three)
 
 ### Output format for parallel and serial resistance values
 The output file will include (in following order):
 - information from input file (if provided)
 - size of every graph
-- list of graphs. For every graphs is provided:
+- list of graphs. For every graph is provided:
   - SERIAL RESISTANCE: s
   - PARALLEL RESISTANCE: p
   - graph in adjacency lists format
@@ -230,18 +236,51 @@ Different graphs from the input file are divided by:
 ```
 
 For every graph there is written a graph path -- a list of graphs, each of them in adjacency list format.
-Also every graph in graph path has:
+Also, every graph in graph path has:
 - depth (number of edges that has to be suppressed in order to obtain this graph from the original graph)
 - unique id
 - parent graph id
 
-### Output format for Kaszonyi function
+### Output format for Kaszonyi function original
 The output file will include (in following order):
 - information from input file (if provided)
 - size of every graph
-- list of graphs. For every graphs is provided:
+- list of graphs. For every graph is provided:
+  - a notice if the graph is 3-edge-colorable
   - graph in adjacency lists format
-  - kaszonyi value for every edge
+  - Kaszonyi value for every edge, but only if the graph is not 3-edge-colorable
+
+The example is based on the file used as example for the input file format, but only first two graphs and the information part is also omitted:
+```
+8
+3-EDGE-COLORABLE GRAPH
+5 6 7
+2 3 4
+1 3 4
+1 2 5
+1 2 6
+0 3 7
+0 4 7
+0 5 6
+
+3-EDGE-COLORABLE GRAPH
+5 6 7
+2 3 4
+1 3 5
+1 2 6
+1 5 7
+0 2 4
+0 3 7
+0 4 6
+```
+
+### Output format for Kaszonyi function times three
+The output file will include (in following order):
+- information from input file (if provided)
+- size of every graph
+- list of graphs. For every graph is provided:
+  - graph in adjacency lists format
+  - Kaszonyi value for every edge
 
 The example is based on the file used as example for the input file format, but only first two graphs and the information part is also omitted:
 ```
