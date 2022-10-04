@@ -13,10 +13,10 @@
 class ColoringFinder{
 
 public:
-    virtual int computeColorings(std::set<unsigned int>& vertices,
+    virtual unsigned long long computeColorings(std::set<unsigned int>& vertices,
                                  std::set<Edge>& edges,
                                  unsigned int numberOfIsolatedCircles) = 0;
-    virtual int computeColorings(std::set<unsigned int>& vertices,
+    virtual unsigned long long  computeColorings(std::set<unsigned int>& vertices,
                                  std::set<Edge>& edges) = 0;
     virtual bool isColorable(std::set<unsigned int>& vertices,
                              std::set<Edge>& edges) = 0;

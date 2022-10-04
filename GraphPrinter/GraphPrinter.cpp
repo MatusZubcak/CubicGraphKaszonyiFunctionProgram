@@ -45,7 +45,7 @@ bool GraphPrinter::printKaszonyiValues(CubicGraph& cubicGraph, std::ofstream& f,
                 f << cubicGraph.getKaszonyiValue(e);
 
             } else if (colorPrintFormat == COLORING_NUMBER_ORIGINAL){
-                unsigned int kaszonyiValue = cubicGraph.getKaszonyiValue(e);
+                auto kaszonyiValue = cubicGraph.getKaszonyiValue(e);
 
                 if(kaszonyiValue % 3 != 0){
                     throw KaszonyiValueNotDivisibleByThreeException();

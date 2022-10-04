@@ -99,7 +99,7 @@ bool CubicGraph::isColorable() {
 }
 
 // suppresses edge and asks the strategy for new graph whether it is colorable
-unsigned int CubicGraph::getKaszonyiValue(Edge edge) {
+unsigned long long CubicGraph::getKaszonyiValue(Edge edge) {
     if(edges.find(edge) == edges.end()){
         throw EdgeDoesNotExistException();
     }
@@ -109,7 +109,7 @@ unsigned int CubicGraph::getKaszonyiValue(Edge edge) {
     }
 
     CubicGraph suppressedGraph = this->suppressEdge(edge);
-    unsigned int KaszonyiValue = this->coloringStrategy->computeColorings(suppressedGraph.vertices,
+    auto KaszonyiValue = this->coloringStrategy->computeColorings(suppressedGraph.vertices,
                                               suppressedGraph.edges,
                                               suppressedGraph.numberOfIsolatedCircles);
     return KaszonyiValue;

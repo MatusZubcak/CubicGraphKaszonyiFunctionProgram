@@ -31,11 +31,11 @@ private:
 public:
     FactorColoringFinder();
 
-    int computeColorings(std::set<unsigned int>& vertices,
+    unsigned long long computeColorings(std::set<unsigned int>& vertices,
                          std::set<Edge>& edges,
                          unsigned int numberOfIsolatedCircles) override;
 
-    int computeColorings(std::set<unsigned int>& vertices,
+    unsigned long long computeColorings(std::set<unsigned int>& vertices,
                                  std::set<Edge>& edges) override;
 
     bool isColorable(std::set<unsigned int> &vertices, std::set<Edge> &edges) override;

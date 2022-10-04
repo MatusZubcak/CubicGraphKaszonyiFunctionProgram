@@ -159,7 +159,7 @@ void FactorColoringFinder::recursivelyCountKaszonyi
 // computes all 3-edge-colorings for given graph
 // first, using "convertToLinearGraphRepresentation" function it converts graph to wanted format
 // then using "recursivelyCountKaszonyi" we compute the number of all 3-edge-colorings
-int FactorColoringFinder::computeColorings(std::set<unsigned int>& vertices,
+unsigned long long FactorColoringFinder::computeColorings(std::set<unsigned int>& vertices,
                                            std::set<Edge>& edges,
                                            unsigned int numberOfIsolatedCircles) {
 
@@ -189,7 +189,7 @@ int FactorColoringFinder::computeColorings(std::set<unsigned int>& vertices,
     return colorings;
 }
 
-int FactorColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges){
+unsigned long long FactorColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges){
     return computeColorings(vertices, edges, 0);
 }
 

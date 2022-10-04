@@ -84,7 +84,7 @@ void SATColoringFinder::toSATFormula(const std::set<unsigned int> &vertices, con
 }
 
 //computes all 3-edge-colorings for given graph
-int SATColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges,
+unsigned long long SATColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges,
                                         unsigned int numberOfIsolatedCircles) {
     CMSat::SATSolver satSolver;
     int colorings = 0;
@@ -126,7 +126,7 @@ int SATColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::s
     }
 }
 
-int SATColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges) {
+unsigned long long SATColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges) {
     return computeColorings(vertices, edges, 0);
 }
 

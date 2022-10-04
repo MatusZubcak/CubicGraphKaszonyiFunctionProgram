@@ -68,7 +68,7 @@ public:
     unsigned int getParentId() const;
 
 
-    unsigned int getKaszonyiValue(Edge edge);
+    unsigned long long getKaszonyiValue(Edge edge);
     bool isColorable();
 
     CubicGraph suppressEdge(unsigned int id, Edge edge);
