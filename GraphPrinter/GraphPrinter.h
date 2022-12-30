@@ -20,10 +20,10 @@ protected:
 public:
     virtual bool print(CubicGraph& cubicGraph, const std::string& filename, append append) =0;
     virtual bool print(std::vector<CubicGraph>& graphList, const std::string& filename, append append) =0;
-    virtual bool print(CubicGraph& cubicGraph, const std::string& filename, const std::string& additionalInformation,
+    virtual bool print(CubicGraph& cubicGraph, const std::string& filename, const std::vector<std::string>& additionalInformation,
                        append append) =0;
     virtual bool print(std::vector<CubicGraph>& graphList, const std::string& filename,
-                       const std::string& additionalInformation, append append) =0;
+                       const std::vector<std::string>& additionalInformation, append append) =0;
     virtual ~GraphPrinter()= default;;
 
 };

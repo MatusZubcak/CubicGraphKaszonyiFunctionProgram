@@ -96,15 +96,17 @@ For graphs that are not 3-edge-colorable the values is three times greater than 
 Place, where results are stored.
 
 ## Input file format
-The input file has to contain these three parts:
-- graph class information (optional)
-- graph class size
+The input file consists of several Graph information boxes. Each Graph box has to contain these three parts:
+- graph information (optional)
+- graph size
 - cubic graphs of given size in adjacency lists format
 
 ### Graph class information (optional)
-In the beginning of a file you can include some information out the graph class located in the file using curly brackets.
-You can include multiple lines of information but each of them has to start and end with curly brackets.
-The output file will then begin with the information you provided in curly brackets.
+You can include some information about the current graph first.
+You can include multiple lines of information, but it is recommended to start and end each of them with curly brackets.
+Actually any line of text should be fine unless it is a line consisting of three numbers (without those brackets), because our program checks whether there are three numbers in single line to detect the start of adjacency lists.
+In the output file the graph will then begin with the information you provided in curly brackets.
+You can also write some information about the whole graph class before you start describing the first graph (program thinks that this information belongs to the first graph)
 This part is optional and can be omitted.
 Example:
 
@@ -116,14 +118,12 @@ Example:
 ```
 
 ### Graph class size
-Follow the graph class information (or beginning the file with), graph size of graphs in the file has to be provided.
-For example, lets say you have a class of cubic graphs where every graph has 8 vertices. So you begin (or continue after information) the file with 8
+Before you start writing the adjacency lists, graph size has to be provided.
+For example, lets say you have a class of cubic graphs where every graph has 8 vertices. So you write before every graph number 8
 Example:
 ```
 8
 ```
-
-Do note, every graph in the file must have the same size
 
 ### cubic graphs of given size in adjacency lists format
 Following the graph class size number, you now can type any amount of graphs you want.
@@ -141,45 +141,68 @@ Example:
 0 3 7
 0 4 7
 0 5 6
-
-5 6 7
-2 3 4
-1 3 5
-1 2 6
-1 5 7
-0 2 4
-0 3 7
-0 4 6
-
-4 5 6
-2 3 4
-1 3 5
-1 2 6
-0 1 7
-0 2 7
-0 3 7
-4 5 6
-
-5 6 7
-2 3 4
-1 5 6
-1 5 7
-1 6 7
-0 2 3
-0 2 4
-0 3 4
-
-4 5 7
-2 3 4
-1 5 6
-1 5 7
-0 1 6
-0 2 3
-2 4 7
-0 3 6
 ```
 
-The input file is then the concatenation of all three parts.
+### Different accepted input format
+
+The program also accepts a slightly different format of the input file. 
+If you do not want to write addition information for every graph, the input file may also look as following:
+- graph class information before the first graph (optional)
+- graph class size before the first graph, all graphs have the same size
+- cubic graphs of given size in adjacency lists format, divided by blank line
+
+Example:
+```
+{This is a class of cubic graphs}
+{it contains cubic graphs}
+{}
+{previous line is empty but it had to contain curly brackets so we can still type information here}
+8
+5 6 7 
+2 3 4 
+1 3 4 
+1 2 5 
+1 2 6 
+0 3 7 
+0 4 7 
+0 5 6 
+
+5 6 7 
+2 3 4 
+1 3 5 
+1 2 6 
+1 5 7 
+0 2 4 
+0 3 7 
+0 4 6 
+
+4 5 6 
+2 3 4 
+1 3 5 
+1 2 6 
+0 1 7 
+0 2 7 
+0 3 7 
+4 5 6 
+
+5 6 7 
+2 3 4 
+1 5 6 
+1 5 7 
+1 6 7 
+0 2 3 
+0 2 4 
+0 3 4 
+
+4 5 7 
+2 3 4 
+1 5 6 
+1 5 7 
+0 1 6 
+0 2 3 
+2 4 7 
+0 3 6
+```
 
 ## Output file format
 All files are stored in the output directory you choose before starting the computation.

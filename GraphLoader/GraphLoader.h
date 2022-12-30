@@ -9,9 +9,7 @@
 #include "../CubicGraph.h"
 #include "../Enums.h"
 
-// interface for different graph loaders
-// also includes different functions that are reusable for now graph loaders
-// currently only single graph loader class inherits from it but provides the possibility of extension in the future
+// loads graphs in formats described in program instructions
 class GraphLoader{
 protected:
     void insertEdgeWithMultiplicity (std::set<Edge>& edges,
@@ -19,17 +17,17 @@ protected:
                                      unsigned int multipleNeighbour,
                                      unsigned int singleNeighbour);
     bool correctlyDefinedGraph(const std::set<unsigned int>& vertices, const std::set<Edge>& edges);
-    bool loadGraph(std::vector<CubicGraph> &graphList, std::ifstream& f, unsigned int graph_size,
-                   coloringAlgorithm coloringAlgorithm);
+    void loadGraph(std::vector<CubicGraph> &graphList, std::ifstream& f, unsigned int graph_size,
+                   coloringAlgorithm coloringAlgorithm, const std::vector<unsigned int>& firstAdjList);
     bool loadNeighbours(std::ifstream& f, unsigned int& neighbour1, unsigned int& neighbour2, unsigned int& neighbour3);
     std::string loadAdditionalInformation(std::ifstream &f);
 
 public:
-    virtual std::vector<CubicGraph> loadNewGraphs(const std::string& filename, std::string& informationFromFile) = 0;
-    virtual std::vector<CubicGraph> loadNewGraphs(const std::string& filename, std::string& informationFromFile,
-                                                  coloringAlgorithm coloringAlgorithm) = 0;
-    virtual std::vector<CubicGraph> loadNewGraphs(const std::string& filename) = 0;
-    virtual std::vector<CubicGraph> loadNewGraphs(const std::string& filename, coloringAlgorithm coloringAlgorithm) = 0;
+    std::vector<CubicGraph> loadNewGraphs(const std::string& filename, std::vector<std::string>& informationFromFile);
+    std::vector<CubicGraph> loadNewGraphs(const std::string& filename, std::vector<std::string>& informationFromFile,
+                                                  coloringAlgorithm coloringAlgorithm);
+    std::vector<CubicGraph> loadNewGraphs(const std::string& filename);
+    std::vector<CubicGraph> loadNewGraphs(const std::string& filename, coloringAlgorithm coloringAlgorithm);
 };
 
 #endif //CUBICGRAPHKASZONYIFUNCTIONPROGRAM_GRAPHLOADER_H

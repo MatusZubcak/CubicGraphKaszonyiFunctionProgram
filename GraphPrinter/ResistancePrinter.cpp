@@ -33,7 +33,7 @@ bool ResistancePrinter::printResistanceValues(CubicGraph &cubicGraph, std::ofstr
 }
 
 bool ResistancePrinter::print(CubicGraph &cubicGraph, const std::string &filename,
-                              const std::string &additionalInformation, append append) {
+                              const std::vector<std::string> &additionalInformation, append append) {
 
     bool printedSuccessfully;
     std::ofstream f;
@@ -46,9 +46,8 @@ bool ResistancePrinter::print(CubicGraph &cubicGraph, const std::string &filenam
     if (!f) {
         throw FileCannotBeOpenedException();
     }
-    f << additionalInformation;
+    f << additionalInformation.front();
 
-    f << cubicGraph.size() << std::endl;
     printedSuccessfully =
             printGraph(cubicGraph, f)
             && printResistanceValues(cubicGraph, f);
@@ -59,7 +58,7 @@ bool ResistancePrinter::print(CubicGraph &cubicGraph, const std::string &filenam
 }
 
 bool ResistancePrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename,
-                              const std::string &additionalInformation, append append) {
+                              const std::vector<std::string> &additionalInformation, append append) {
     bool printedSuccesfully = true;
     std::ofstream f;
     if(append == APPEND) {
@@ -71,10 +70,12 @@ bool ResistancePrinter::print(std::vector<CubicGraph> &graphList, const std::str
     if (!f) {
         throw FileCannotBeOpenedException();
     }
-    f << additionalInformation;
 
-    f << graphList[0].size() << std::endl;
+    int i = 0;
     for(auto it = graphList.begin(); it != graphList.end(); it++){
+        f << additionalInformation[i];
+        i++;
+
         printedSuccesfully &=
                 printResistanceValues(*it, f)
                 && printGraph(*it, f);
@@ -88,9 +89,9 @@ bool ResistancePrinter::print(std::vector<CubicGraph> &graphList, const std::str
 }
 
 bool ResistancePrinter::print(CubicGraph &cubicGraph, const std::string &filename, append append) {
-    return print(cubicGraph, filename, "", append);
+    return print(cubicGraph, filename, {}, append);
 }
 
 bool ResistancePrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename, append append) {
-    return print(graphList, filename, "", append);
+    return print(graphList, filename, {}, append);
 }

@@ -112,10 +112,9 @@ boost::multiprecision::int1024_t CubicGraph::getKaszonyiValue(Edge edge) {
     }
 
     CubicGraph suppressedGraph = this->suppressEdge(edge);
-    if(suppressedGraph.vertices.size() < this->factorColoringThreshold){
+    if(this->vertices.size() < this->factorColoringThreshold){
         return this->coloringStrategy->computeColorings(suppressedGraph.vertices, suppressedGraph.edges, suppressedGraph.numberOfIsolatedCircles);
-
-    } else if(suppressedGraph.vertices.size() < this->SATColoringThreshold){
+    } else if(this->vertices.size() < this->SATColoringThreshold){
         return this->SATcoloring->computeColorings(suppressedGraph.vertices, suppressedGraph.edges, suppressedGraph.numberOfIsolatedCircles);
 
     }else{

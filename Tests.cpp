@@ -11,13 +11,13 @@
 #include "Edge.h"
 #include "CubicGraph.h"
 #include "ColoringFinder/FactorColoringFinder.h"
-#include "GraphLoader/AdjListsGraphLoader.h"
 #include "GraphPrinter/KaszonyiPrinterTimesThree.h"
 #include "GraphPrinter/SequentialPathPrinter.h"
 #include "GraphPrinter/ParallelPathPrinter.h"
 #include "AutomatedSuppressionTester.h"
 #include "ColoringFinder/SATColoringFinder.h"
 #include "ColoringFinder/PDColoringFinder.h"
+#include "GraphLoader/GraphLoader.h"
 
 //tests for:
 // Edge class
@@ -743,7 +743,7 @@ int Tests::run() {
 
 
     //GraphLoader tests
-    AdjListsGraphLoader graphLoader;
+    GraphLoader graphLoader;
     std::vector<CubicGraph> graphList1 = graphLoader.loadNewGraphs("../Tests/test1_GraphLoader.txt");
     std::queue<CubicGraph> graphQueue1(std::deque<CubicGraph>(graphList1.begin(), graphList1.end()));
 
@@ -816,7 +816,7 @@ int Tests::run() {
     AutomatedSuppressionTester automatedSuppressionTester = AutomatedSuppressionTester();
 
     std::string test26_input = "../Tests/test26_14g3e.txt";
-    std::vector<CubicGraph> test26_graphList = AdjListsGraphLoader().loadNewGraphs(test26_input, FACTOR);
+    std::vector<CubicGraph> test26_graphList = GraphLoader().loadNewGraphs(test26_input, FACTOR);
     std::vector<int> test26_expectedDepthList(test26_graphList.size());
     test26_expectedDepthList[0] = 2;
     for(int i = 1; i < test26_graphList.size(); i++){
@@ -829,9 +829,8 @@ int Tests::run() {
     assert(automatedSuppressionTester.testWithInputFile(test26_input, SEQUENTIAL, test26_expectedDepthList));
     assert(automatedSuppressionTester.testWithInputFile(test26_input, PARALLEL, test26_expectedDepthList));
 
-
     std::string test27_input = "../Tests/test27_16g3e.txt";
-    std::vector<CubicGraph> test27_graphList = AdjListsGraphLoader().loadNewGraphs(test27_input, FACTOR);
+    std::vector<CubicGraph> test27_graphList = GraphLoader().loadNewGraphs(test27_input, FACTOR);
     std::vector<int> test27_expectedSequentialDepthList(test27_graphList.size(), 1);
     std::vector<int> test27_expectedParallelDepthList(test27_graphList.size(), 1);
     unsigned int test27_tmpCounter = 0;
@@ -867,8 +866,8 @@ int Tests::run() {
 
     //SAT Coloring functions Tests-
     std::string test28_input = "../Tests/test27_16g3e.txt";
-    std::vector<CubicGraph> test28_graphListSAT = AdjListsGraphLoader().loadNewGraphs(test28_input, SAT);
-    std::vector<CubicGraph> test28_graphListFactor = AdjListsGraphLoader().loadNewGraphs(test28_input, FACTOR);
+    std::vector<CubicGraph> test28_graphListSAT = GraphLoader().loadNewGraphs(test28_input, SAT);
+    std::vector<CubicGraph> test28_graphListFactor = GraphLoader().loadNewGraphs(test28_input, FACTOR);
     std::vector<boost::multiprecision::int1024_t> test28_SAT_colors;
     std::vector<bool> test28_SAT_isColorable;
     std::vector<boost::multiprecision::int1024_t> test28_Factor_colors;
@@ -888,6 +887,8 @@ int Tests::run() {
 
     assert(test28_SAT_isColorable == test28_Factor_isColorable);
     assert(test28_SAT_colors == test28_Factor_colors);
+
+
 
     // PD Coloring Finder tests
     std::set<unsigned int> test29_petersenVertices = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
@@ -949,7 +950,7 @@ int Tests::run() {
             test29_Facmult3Graph.getKaszonyiValue(test29_e67));
 
 
-    AdjListsGraphLoader test30_graphLoader;
+    GraphLoader test30_graphLoader;
     std::vector<std::string> test30_inputFiles = {
             "../Tests/test30_blanusa1.txt",
             "../Tests/test30_blanusa3.txt",
@@ -988,7 +989,6 @@ int Tests::run() {
             }
         }
     }
-
 
     std::cout << "ALL TESTS PASSED" << std::endl;
     return 0;

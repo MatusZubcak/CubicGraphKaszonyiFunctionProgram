@@ -20,8 +20,6 @@ add_executable(CubicGraphKaszonyiFunctionProgram
         ColoringFinder/FactorColoringFinder.cpp
         ColoringFinder/FactorColoringFinder.h
         GraphLoader/GraphLoader.h
-        GraphLoader/AdjListsGraphLoader.cpp
-        GraphLoader/AdjListsGraphLoader.h
         GraphPrinter/KaszonyiPrinterTimesThree.cpp
         GraphPrinter/KaszonyiPrinterTimesThree.h
         Enums.h
@@ -50,8 +48,6 @@ add_executable(CubicGraphKaszonyiFunctionProgram
         ColoringFinder/SATColoringFinder.cpp
         ColoringFinder/SATColoringFinder.h
         GraphLoader/GraphLoader.cpp
-        GraphLoader/DirectoryReader.cpp
-        GraphLoader/DirectoryReader.h
         CMSat/cryptominisat.h
         CMSat/solvertypesmini.h
         Qt/QtExitButton.cpp

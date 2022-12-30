@@ -9,9 +9,101 @@
 #include <unordered_map>
 #include <fstream>
 #include <sstream>
-// interface for different graph loaders
-// also includes different functions that are reusable for now graph loaders
-// currently only single graph loader class inherits from it but provides the possibility of extension in the future
+
+// loads graphs in formats described in program instructions
+std::vector<CubicGraph> GraphLoader::loadNewGraphs(const std::string& filename,
+                                                   std::vector<std::string>& informationFromFile,
+                                                   coloringAlgorithm coloringAlgorithm) {
+    informationFromFile = {};
+    std::vector<CubicGraph> graphList = {};
+    std::ifstream f;
+    f.open(filename);
+    std::string infoString;
+    std::string buffer, word, prev_buffer;
+    unsigned int firstGraphSize = 0;
+
+    if (!f.good()) {
+        throw FileCannotBeOpenedException();
+    }
+
+    while(std::getline(f, buffer)) {
+        bool addStringStreamToInfoString = true;
+        std::stringstream stringStream(buffer);
+
+        std::vector<std::string> stringList;
+        while (stringStream >> word) {
+            stringList.push_back(word);
+        }
+
+        if (stringList.size() == 3) {
+
+            std::vector<unsigned int> firstAdjList;
+            bool all_are_vertex_numbers = true;
+
+            for(auto s : stringList){
+                if(!(std::find_if(s.begin(), s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end())){
+                    all_are_vertex_numbers = false;
+                }else{
+                    firstAdjList.push_back(std::stoul(s));
+                }
+            }
+
+            if(all_are_vertex_numbers){
+                informationFromFile.push_back(infoString);
+                infoString = "";
+                addStringStreamToInfoString = false;
+
+                unsigned int currentGraphSize;
+                if(!prev_buffer.empty()){
+                    currentGraphSize = std::stoul(prev_buffer);
+                    if(firstGraphSize == 0){
+                        firstGraphSize = currentGraphSize;
+                    }
+                }else{
+                    currentGraphSize = firstGraphSize;
+                }
+
+                loadGraph(graphList, f, currentGraphSize, coloringAlgorithm, firstAdjList);
+            }
+        }
+
+        if(addStringStreamToInfoString && !stringStream.str().empty()) {
+            infoString += stringStream.str() + "\n";
+        }
+
+        if(stringList.empty()){
+            prev_buffer = "";
+        }else{
+            prev_buffer = stringList.front();
+        }
+    }
+
+    f.close();
+
+    if(graphList.size() != informationFromFile.size()){
+        throw BadFileInfoSizeException();
+    }
+
+    return graphList;
+}
+
+std::vector<CubicGraph> GraphLoader::loadNewGraphs(const std::string &filename,
+                                                   std::vector<std::string>& informationFromFile) {
+    return loadNewGraphs(filename, informationFromFile, ANY);
+}
+
+std::vector<CubicGraph> GraphLoader::loadNewGraphs(const std::string &filename,
+                                                           coloringAlgorithm coloringAlgorithm) {
+    std::vector<std::string> dump_string;
+    return loadNewGraphs(filename, dump_string, coloringAlgorithm);
+}
+
+std::vector<CubicGraph> GraphLoader::loadNewGraphs(const std::string &filename) {
+    std::vector<std::string> dump_string;
+    return loadNewGraphs(filename, dump_string, ANY);
+}
+
+
 
 // if you find out cubic graph has edge with multiplicity, you can insert it to the set of edges using this function
 void GraphLoader::insertEdgeWithMultiplicity(std::set<Edge> &edges,
@@ -54,7 +146,7 @@ bool GraphLoader::loadNeighbours(std::ifstream &f, unsigned int &neighbour1, uns
     std::string buffer, word;
     std::vector<std::string> stringList;
 
-    while(stringList.empty() && std::getline(f, buffer)) {
+    if(std::getline(f, buffer)) {
         std::stringstream stringStream(buffer);
 
         while (stringStream >> word) {
@@ -69,9 +161,10 @@ bool GraphLoader::loadNeighbours(std::ifstream &f, unsigned int &neighbour1, uns
             neighbour2 = std::stoul(stringList[1]);
             neighbour3 = std::stoul(stringList[2]);
         }
-    }
+        return true;
+    }else
 
-    return !stringList.empty();
+    return false;
 }
 
 // function that checks whether the loaded graph is defined correctly
@@ -108,11 +201,12 @@ bool GraphLoader::correctlyDefinedGraph(const std::set<unsigned int>& vertices,
 }
 
 // loads single graph from file in ifstream &f
-bool GraphLoader::loadGraph(std::vector<CubicGraph> &graphList, std::ifstream &f, unsigned int graph_size,
-                            coloringAlgorithm coloringAlgorithm) {
-    unsigned int neighbour1 = 0,
-                 neighbour2 = 0,
-                 neighbour3 = 0;
+void GraphLoader::loadGraph(std::vector<CubicGraph> &graphList, std::ifstream &f, unsigned int graph_size,
+                            coloringAlgorithm coloringAlgorithm, const std::vector<unsigned int>& firstAdjList) {
+    unsigned int neighbour1 = firstAdjList[0],
+                 neighbour2 = firstAdjList[1],
+                 neighbour3 = firstAdjList[2];
+    bool firstRun = true;
 
     std::set<unsigned int> vertices;
     std::set<Edge> edges;
@@ -121,55 +215,57 @@ bool GraphLoader::loadGraph(std::vector<CubicGraph> &graphList, std::ifstream &f
     }
 
     for (int currentVertex = 0; currentVertex < graph_size; currentVertex++) {
-        if(loadNeighbours(f, neighbour1, neighbour2, neighbour3)){
-            if (neighbour1 == neighbour2 && neighbour1 == neighbour3) {
-                Edge edgeWithMultiplicity3(currentVertex, neighbour1);
-                edgeWithMultiplicity3.incrementMultiplicity();
-                edgeWithMultiplicity3.incrementMultiplicity();
-
-                edges.insert(edgeWithMultiplicity3);
-            } else if (neighbour1 == neighbour2) {
-                if (currentVertex != neighbour1) {
-                    insertEdgeWithMultiplicity(edges, currentVertex,
-                                               neighbour1,
-                                               neighbour3);
-                } else {
-                    edges.insert(Edge(currentVertex, currentVertex));
-                    edges.insert(Edge(currentVertex, neighbour3));
-                }
-            } else if (neighbour1 == neighbour3) {
-                if (currentVertex != neighbour1) {
-                    insertEdgeWithMultiplicity(edges, currentVertex,
-                                               neighbour1,
-                                               neighbour2);
-                } else {
-                    edges.insert(Edge(currentVertex, currentVertex));
-                    edges.insert(Edge(currentVertex, neighbour2));
-                }
-            } else if (neighbour2 == neighbour3) {
-                if (currentVertex != neighbour2) {
-                    insertEdgeWithMultiplicity(edges, currentVertex,
-                                               neighbour2,
-                                               neighbour1);
-                } else {
-                    edges.insert(Edge(currentVertex, currentVertex));
-                    edges.insert(Edge(currentVertex, neighbour1));
-                }
-            } else {
-                Edge edgeWithNeighbour1(currentVertex, neighbour1);
-                Edge edgeWithNeighbour2(currentVertex, neighbour2);
-                Edge edgeWithNeighbour3(currentVertex, neighbour3);
-
-                edges.insert(edgeWithNeighbour1);
-                edges.insert(edgeWithNeighbour2);
-                edges.insert(edgeWithNeighbour3);
+        //we want to add first vertices from firstAdjList not from fstream file
+        if(firstRun){
+            firstRun = false;
+        //otherwise we can load new triple of neighbours from the file
+        }else{
+            if(!loadNeighbours(f, neighbour1, neighbour2, neighbour3)){
+                //Not enough vertices to load full graph
+                throw BadFileException();
             }
-        } else if(currentVertex == 0){
-            //There are no more graphs to be loaded
-            return false;
-        } else{
-            //Some, but not enough vertices in file to load full graph
-            throw BadFileEndingException();
+        }
+        if (neighbour1 == neighbour2 && neighbour1 == neighbour3) {
+            Edge edgeWithMultiplicity3(currentVertex, neighbour1);
+            edgeWithMultiplicity3.incrementMultiplicity();
+            edgeWithMultiplicity3.incrementMultiplicity();
+
+            edges.insert(edgeWithMultiplicity3);
+        } else if (neighbour1 == neighbour2) {
+            if (currentVertex != neighbour1) {
+                insertEdgeWithMultiplicity(edges, currentVertex,
+                                           neighbour1,
+                                           neighbour3);
+            } else {
+                edges.insert(Edge(currentVertex, currentVertex));
+                edges.insert(Edge(currentVertex, neighbour3));
+            }
+        } else if (neighbour1 == neighbour3) {
+            if (currentVertex != neighbour1) {
+                insertEdgeWithMultiplicity(edges, currentVertex,
+                                           neighbour1,
+                                           neighbour2);
+            } else {
+                edges.insert(Edge(currentVertex, currentVertex));
+                edges.insert(Edge(currentVertex, neighbour2));
+            }
+        } else if (neighbour2 == neighbour3) {
+            if (currentVertex != neighbour2) {
+                insertEdgeWithMultiplicity(edges, currentVertex,
+                                           neighbour2,
+                                           neighbour1);
+            } else {
+                edges.insert(Edge(currentVertex, currentVertex));
+                edges.insert(Edge(currentVertex, neighbour1));
+            }
+        } else {
+            Edge edgeWithNeighbour1(currentVertex, neighbour1);
+            Edge edgeWithNeighbour2(currentVertex, neighbour2);
+            Edge edgeWithNeighbour3(currentVertex, neighbour3);
+
+            edges.insert(edgeWithNeighbour1);
+            edges.insert(edgeWithNeighbour2);
+            edges.insert(edgeWithNeighbour3);
         }
     }
 
@@ -193,7 +289,6 @@ bool GraphLoader::loadGraph(std::vector<CubicGraph> &graphList, std::ifstream &f
                 graphList.emplace_back(vertices, edges);
         }
 
-        return true;
     } else{
         throw BadlyDefinedGraphException();
     }

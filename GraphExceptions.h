@@ -43,7 +43,11 @@ struct WrongNumberOfVerticesException : std::exception {
     const char* what() const noexcept override;
 };
 
-struct BadFileEndingException : std::exception{
+struct BadFileException : std::exception{
+    const char* what() const noexcept override;
+};
+
+struct BadFileInfoSizeException : std::exception{
     const char* what() const noexcept override;
 };
 

@@ -11,7 +11,7 @@
 
 
 bool ParallelPathPrinter::print(CubicGraph &cubicGraph, const std::string &filename,
-                                const std::string &additionalInformation, append append) {
+                                const std::vector<std::string> &additionalInformation, append append) {
     bool printedSuccessfully = true;
     std::ofstream f;
     if(append == APPEND) {
@@ -23,12 +23,11 @@ bool ParallelPathPrinter::print(CubicGraph &cubicGraph, const std::string &filen
     if (!f.good()) {
         throw FileCannotBeOpenedException();
     }
-    f << additionalInformation;
+    f << additionalInformation.front();
 
     std::vector<CubicGraph> suppressionSequence = ParallelSuppressionMemoized().findSuppressionSequence(cubicGraph);
     CubicGraph& lastGraph = suppressionSequence.back();
 
-    f << cubicGraph.size() << std::endl;
     if(lastGraph.isColorable()) {
         f << "PARALLEL RESISTANCE: " << suppressionSequence.back().getDepth() << std::endl;
     }
@@ -49,7 +48,7 @@ bool ParallelPathPrinter::print(CubicGraph &cubicGraph, const std::string &filen
 }
 
 bool ParallelPathPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename,
-                                const std::string &additionalInformation, append append) {
+                                const std::vector<std::string> &additionalInformation, append append) {
     bool printedSuccessfully = true;
     std::ofstream f;
     if (append == APPEND) {
@@ -61,14 +60,16 @@ bool ParallelPathPrinter::print(std::vector<CubicGraph> &graphList, const std::s
     if (!f) {
         throw FileCannotBeOpenedException();
     }
-    f << additionalInformation;
 
+    int i = 0;
     for(const CubicGraph &cubicGraph : graphList) {
+        f << additionalInformation[i];
+        i++;
+
         std::vector<CubicGraph> suppressionSequence =
                 ParallelSuppressionMemoized().findSuppressionSequence(cubicGraph);
         CubicGraph& lastGraph = suppressionSequence.back();
 
-        f << cubicGraph.size() << std::endl;
         if(lastGraph.isColorable()) {
             f << "PARALLEL RESISTANCE: " << suppressionSequence.back().getDepth() << std::endl;
         }
@@ -100,9 +101,9 @@ bool ParallelPathPrinter::print(std::vector<CubicGraph> &graphList, const std::s
 }
 
 bool ParallelPathPrinter::print(CubicGraph &cubicGraph, const std::string &filename, append append) {
-    return print(cubicGraph, filename, "", append);
+    return print(cubicGraph, filename, {}, append);
 }
 
 bool ParallelPathPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename, append append) {
-    return print(graphList, filename, "", append);
+    return print(graphList, filename, {}, append);
 }

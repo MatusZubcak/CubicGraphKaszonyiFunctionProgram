@@ -22,6 +22,7 @@ PDColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::set<Ed
     }
 
     int graphHasPath = findPathDecomposition();
+    std::cout << this->pathDepth << std::endl;
 
     colorings = coloringAlgorithm();
     //Take into account isolated circles

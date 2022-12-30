@@ -4,19 +4,19 @@
 
 #include <iostream>
 #include "AutomatedSuppressionTester.h"
-#include "GraphLoader/AdjListsGraphLoader.h"
 #include "Suppression/SequentialSuppressionMemoized.h"
 #include "Suppression/SequentialSuppressionNaive.h"
 #include "Suppression/ParallelSuppressionMemoized.h"
 #include "Suppression/ParallelSuppressionNaive.h"
 #include "GraphExceptions.h"
+#include "GraphLoader/GraphLoader.h"
 
 // loads graphs from file, computes parallel/serial suppression (enum suppression)
 // and then checks if it matches with expected depth values in list[int]
 bool AutomatedSuppressionTester::testWithInputFile(const std::string &filename, suppression suppression,
                                                    std::vector<int> expectedDepthList) {
     bool isCorrect = true;
-    std::vector<CubicGraph> graphList = AdjListsGraphLoader().loadNewGraphs(filename);
+    std::vector<CubicGraph> graphList = GraphLoader().loadNewGraphs(filename);
 
     if(graphList.size() != expectedDepthList.size()){
         throw ExpectedDepthListWrongSize();

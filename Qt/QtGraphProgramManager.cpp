@@ -5,17 +5,17 @@
 #include <iostream>
 #include <QMessageBox>
 #include "QtGraphProgramManager.h"
-#include "../GraphLoader/AdjListsGraphLoader.h"
 #include "../GraphPrinter/ResistancePrinter.h"
 #include "../GraphPrinter/ParallelPathPrinter.h"
 #include "../GraphPrinter/SequentialPathPrinter.h"
 #include "../GraphPrinter/KaszonyiPrinterTimesThree.h"
 #include "../GraphPrinter/KaszonyiPrinterOriginal.h"
+#include "../GraphLoader/GraphLoader.h"
 
 void
 QtGraphProgramManager::runGraphProgram(int formatType, QStringList filePaths, QString outputDirectory) {
-    AdjListsGraphLoader adjListsGraphLoader = AdjListsGraphLoader();
-    std::string informationFromFile;
+    GraphLoader graphLoader = GraphLoader();
+    std::vector<std::string> informationFromFile;
     std::vector<CubicGraph> graphList;
 
 
@@ -23,7 +23,7 @@ QtGraphProgramManager::runGraphProgram(int formatType, QStringList filePaths, QS
         QString fileName = filePath.section('/', -1);
             std::string outputFilePath = outputDirectory.toStdString() + "/" + fileName.toStdString();
             try{
-                graphList = adjListsGraphLoader.loadNewGraphs(filePath.toStdString(), informationFromFile);
+                graphList = graphLoader.loadNewGraphs(filePath.toStdString(), informationFromFile);
 
                 switch(formatType){
                     case 0:

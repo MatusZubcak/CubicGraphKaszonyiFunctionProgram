@@ -11,7 +11,7 @@
 
 
 bool SequentialPathPrinter::print(CubicGraph &cubicGraph, const std::string &filename,
-                                  const std::string &additionalInformation, append append) {
+                                  const std::vector<std::string> &additionalInformation, append append) {
     bool printedSuccessfully = true;
     std::ofstream f;
     if(append == APPEND) {
@@ -23,11 +23,10 @@ bool SequentialPathPrinter::print(CubicGraph &cubicGraph, const std::string &fil
     if (!f) {
         throw FileCannotBeOpenedException();
     }
-    f << additionalInformation;
+    f << additionalInformation.front();
 
     std::vector<CubicGraph> suppressionSequence = SequentialSuppressionMemoized().findSuppressionSequence(cubicGraph);
 
-    f << cubicGraph.size() << std::endl;
     for(auto it = suppressionSequence.begin(); it != suppressionSequence.end(); it++){
         printedSuccessfully &=
                 printIdAndDepth(*it, f)
@@ -42,7 +41,7 @@ bool SequentialPathPrinter::print(CubicGraph &cubicGraph, const std::string &fil
 }
 
 bool SequentialPathPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename,
-                                  const std::string &additionalInformation, append append){
+                                  const std::vector<std::string> &additionalInformation, append append){
         bool printedSuccessfully = true;
         std::ofstream f;
         if(append == APPEND)
@@ -54,15 +53,16 @@ bool SequentialPathPrinter::print(std::vector<CubicGraph> &graphList, const std:
     if (!f) {
         throw FileCannotBeOpenedException();
     }
-    f << additionalInformation;
 
+    int i = 0;
     for(const CubicGraph& cubicGraph : graphList) {
+        f << additionalInformation[i];
+        i++;
 
         std::vector<CubicGraph> suppressionSequence = SequentialSuppressionMemoized().findSuppressionSequence(
                 cubicGraph);
         CubicGraph& lastGraph = suppressionSequence.back();
 
-        f << cubicGraph.size() << std::endl;
         if(lastGraph.isColorable()) {
             f << "SERIAL RESISTANCE: " << suppressionSequence.back().getDepth() << std::endl;
         }
@@ -92,9 +92,9 @@ bool SequentialPathPrinter::print(std::vector<CubicGraph> &graphList, const std:
     }
 
 bool SequentialPathPrinter::print(CubicGraph &cubicGraph, const std::string &filename, append append) {
-    return print(cubicGraph, filename, "", append);
+    return print(cubicGraph, filename, {}, append);
 }
 
 bool SequentialPathPrinter::print(std::vector<CubicGraph> &graphList, const std::string &filename, append append) {
-    return print(graphList, filename, "", append);
+    return print(graphList, filename, {}, append);
 }

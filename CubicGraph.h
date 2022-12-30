@@ -32,7 +32,7 @@ private:
 
     // Threshold determining when to use SAT, PD or Factor strategy
     unsigned int factorColoringThreshold = 25;
-    unsigned int SATColoringThreshold = 50;
+    unsigned int SATColoringThreshold = 1000;
 
     void addEdge(Edge e);
     CubicGraph suppressEdgeWithMultiplicity1(unsigned int id, Edge edge);

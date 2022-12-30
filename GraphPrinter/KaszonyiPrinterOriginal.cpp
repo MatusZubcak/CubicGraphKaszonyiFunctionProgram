@@ -8,7 +8,7 @@
 
 
 bool KaszonyiPrinterOriginal::print(CubicGraph &cubicGraph, const std::string &filename,
-                                      const std::string &additionalInformation,
+                                      const std::vector<std::string> &additionalInformation,
                                       append append) {
     bool printedSuccessfully;
     std::ofstream f;
@@ -21,9 +21,7 @@ bool KaszonyiPrinterOriginal::print(CubicGraph &cubicGraph, const std::string &f
     if(!f.good()) {
         throw FileCannotBeOpenedException();
     }
-    f << additionalInformation;
-
-    f << cubicGraph.size() << std::endl;
+    f << additionalInformation.front();
 
     if(cubicGraph.isColorable()){
         f << "3-EDGE-COLORABLE GRAPH" << std::endl;
@@ -43,7 +41,7 @@ bool KaszonyiPrinterOriginal::print(CubicGraph &cubicGraph, const std::string &f
 
 
 bool KaszonyiPrinterOriginal::print(std::vector<CubicGraph> &graphList, const std::string &filename,
-                                      const std::string &additionalInformation,
+                                      const std::vector<std::string> &additionalInformation,
                                       append append) {
     bool printedSuccessfully = true;
     std::ofstream f;
@@ -57,10 +55,11 @@ bool KaszonyiPrinterOriginal::print(std::vector<CubicGraph> &graphList, const st
     if (!f) {
         throw FileCannotBeOpenedException();
     }
-    f << additionalInformation;
 
-    f << graphList[0].size() << std::endl;
+    int i = 0;
     for(auto it = graphList.begin(); it != graphList.end(); it++){
+        f << additionalInformation[i];
+        i++;
 
        if(it->isColorable()){
            f << "3-EDGE-COLORABLE GRAPH" << std::endl;
@@ -83,9 +82,9 @@ bool KaszonyiPrinterOriginal::print(std::vector<CubicGraph> &graphList, const st
 }
 
 bool KaszonyiPrinterOriginal::print(CubicGraph &cubicGraph, const std::string &filename, append append) {
-    return print(cubicGraph, filename, "", append);
+    return print(cubicGraph, filename, {}, append);
 }
 
 bool KaszonyiPrinterOriginal::print(std::vector<CubicGraph> &graphList, const std::string &filename, append append) {
-    return print(graphList, filename, "", append);
+    return print(graphList, filename, {}, append);
 }

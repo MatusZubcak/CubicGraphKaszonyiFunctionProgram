@@ -5,7 +5,6 @@
 #include <iostream>
 #include <fstream>
 #include "Tests.h"
-#include "GraphLoader/AdjListsGraphLoader.h"
 #include "GraphPrinter/SequentialPathPrinter.h"
 #include "GraphPrinter/ParallelPathPrinter.h"
 #include "GraphPrinter/KaszonyiPrinterTimesThree.h"
@@ -13,14 +12,12 @@
 #include "GraphPrinter/ResistancePrinter.h"
 #include "ColoringFinder/SATColoringFinder.h"
 #include "ColoringFinder/PDColoringFinder.h"
-#include "GraphLoader/DirectoryReader.h"
 #include "Suppression/ParallelSuppressionMemoized.h"
 #include "Suppression/SequentialSuppressionMemoized.h"
 #include "Qt/QtMenuWindow.h"
 #include "ColoringFinder/FactorColoringFinder.h"
 
 // run graphical interface
-
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     QtMenuWindow menuWindow;

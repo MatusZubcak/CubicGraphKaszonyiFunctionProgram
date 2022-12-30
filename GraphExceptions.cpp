@@ -41,9 +41,14 @@ const char* WrongNumberOfVerticesException::what() const noexcept
     return "Bad number of vertices in file from which you tried loading CubicGraph";
 }
 
-const char* BadFileEndingException::what() const noexcept
+const char* BadFileException::what() const noexcept
 {
-    return "There is a small amount of remaining adjacency lists at the end of the file that cannot belong to any graph of given size";
+    return "There is a small amount of remaining adjacency lists to finish graph of given size";
+}
+
+const char* BadFileInfoSizeException::what() const noexcept
+{
+    return "GraphList and informationStringList size does not match";
 }
 
 const char* FileCannotBeOpenedException::what() const noexcept

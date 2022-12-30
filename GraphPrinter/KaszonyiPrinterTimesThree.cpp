@@ -9,7 +9,7 @@
 
 
 bool KaszonyiPrinterTimesThree::print(CubicGraph &cubicGraph, const std::string &filename,
-                                      const std::string &additionalInformation,
+                                      const std::vector<std::string> &additionalInformation,
                                       append append) {
     bool printedSuccessfully;
     std::ofstream f;
@@ -22,9 +22,8 @@ bool KaszonyiPrinterTimesThree::print(CubicGraph &cubicGraph, const std::string 
     if(!f.good()) {
         throw FileCannotBeOpenedException();
     }
-    f << additionalInformation;
+    f << additionalInformation.front();
 
-    f << cubicGraph.size() << std::endl;
     printedSuccessfully =
             printGraph(cubicGraph, f)
             && printKaszonyiValues(cubicGraph, f,
@@ -37,7 +36,7 @@ bool KaszonyiPrinterTimesThree::print(CubicGraph &cubicGraph, const std::string 
 }
 
 bool KaszonyiPrinterTimesThree::print(std::vector<CubicGraph> &graphList, const std::string &filename,
-                                      const std::string &additionalInformation,
+                                      const std::vector<std::string> &additionalInformation,
                                       append append) {
     bool printedSuccesfully = true;
     std::ofstream f;
@@ -51,10 +50,12 @@ bool KaszonyiPrinterTimesThree::print(std::vector<CubicGraph> &graphList, const 
     if (!f) {
         throw FileCannotBeOpenedException();
     }
-    f << additionalInformation;
 
-    f << graphList[0].size() << std::endl;
+    int i = 0;
     for(auto it = graphList.begin(); it != graphList.end(); it++){
+        f << additionalInformation[i];
+        i++;
+
         printedSuccesfully &=
                 printGraph(*it, f)
                 && printKaszonyiValues(*it, f,
@@ -70,9 +71,9 @@ bool KaszonyiPrinterTimesThree::print(std::vector<CubicGraph> &graphList, const 
 }
 
 bool KaszonyiPrinterTimesThree::print(CubicGraph &cubicGraph, const std::string &filename, append append) {
-    return print(cubicGraph, filename, "", append);
+    return print(cubicGraph, filename, {}, append);
 }
 
 bool KaszonyiPrinterTimesThree::print(std::vector<CubicGraph> &graphList, const std::string &filename, append append) {
-    return print(graphList, filename, "", append);
+    return print(graphList, filename, {}, append);
 }
