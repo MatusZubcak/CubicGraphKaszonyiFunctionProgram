@@ -63,3 +63,11 @@ const char *ExpectedDepthListWrongSize::what() const noexcept {
 const char *KaszonyiValueNotDivisibleByThreeException::what() const noexcept {
     return "Kaszonyi value is not divisible by three";
 }
+
+const char *PDColoringAlgorithmFailedException ::what() const noexcept {
+    return "Something went wrong during color computation in PDColoringAlgorithm";
+}
+
+const char *PathDecompositionException ::what() const noexcept {
+    return "Something went wrong while finding the path decomposition";
+}

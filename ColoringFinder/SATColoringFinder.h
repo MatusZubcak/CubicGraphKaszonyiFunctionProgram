@@ -22,8 +22,8 @@ private:
 public:
     SATColoringFinder()= default;;
 
-    unsigned long long computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges) override;
-    unsigned long long computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges,
+    boost::multiprecision::int1024_t computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges) override;
+    boost::multiprecision::int1024_t computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges,
                          unsigned int numberOfIsolatedCircles) override;
     bool isColorable(std::set<unsigned int> &vertices, std::set<Edge> &edges) override;
 };

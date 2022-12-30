@@ -24,6 +24,7 @@ enum edgesFormat{
 enum coloringAlgorithm{
     SAT,
     FACTOR,
+    PD,
     ANY
 };
 

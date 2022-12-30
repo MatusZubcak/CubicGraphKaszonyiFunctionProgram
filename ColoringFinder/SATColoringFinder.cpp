@@ -84,10 +84,10 @@ void SATColoringFinder::toSATFormula(const std::set<unsigned int> &vertices, con
 }
 
 //computes all 3-edge-colorings for given graph
-unsigned long long SATColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges,
+boost::multiprecision::int1024_t SATColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges,
                                         unsigned int numberOfIsolatedCircles) {
     CMSat::SATSolver satSolver;
-    int colorings = 0;
+    boost::multiprecision::int1024_t colorings = 0;
 
     //Let's use 1 thread
     // We have experimentally found this was fastest for some reason
@@ -126,7 +126,7 @@ unsigned long long SATColoringFinder::computeColorings(std::set<unsigned int> &v
     }
 }
 
-unsigned long long SATColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges) {
+boost::multiprecision::int1024_t SATColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges) {
     return computeColorings(vertices, edges, 0);
 }
 

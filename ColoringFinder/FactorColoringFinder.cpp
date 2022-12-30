@@ -95,7 +95,7 @@ void FactorColoringFinder::recursivelyCountKaszonyi
     // if every vertex is covered by 1-factor, then look at the set of cycles (are they all even?)
     if(3*vertex >= linearGraphRepresentation.size()){
 
-        int potentialPsiForThis1Factor = 1;
+        boost::multiprecision::int1024_t potentialPsiForThis1Factor = 1;
         int lGR_size = linearGraphRepresentation.size();
         for(int i = 0; i < lGR_size; i++){
             if(!linearGraphRepresentation[i].second){
@@ -159,7 +159,7 @@ void FactorColoringFinder::recursivelyCountKaszonyi
 // computes all 3-edge-colorings for given graph
 // first, using "convertToLinearGraphRepresentation" function it converts graph to wanted format
 // then using "recursivelyCountKaszonyi" we compute the number of all 3-edge-colorings
-unsigned long long FactorColoringFinder::computeColorings(std::set<unsigned int>& vertices,
+boost::multiprecision::int1024_t FactorColoringFinder::computeColorings(std::set<unsigned int>& vertices,
                                            std::set<Edge>& edges,
                                            unsigned int numberOfIsolatedCircles) {
 
@@ -184,12 +184,11 @@ unsigned long long FactorColoringFinder::computeColorings(std::set<unsigned int>
     } else{
         colorings = 1;
     }
-
     colorings *= int(std::pow(double(3), double(numberOfIsolatedCircles)));
     return colorings;
 }
 
-unsigned long long FactorColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges){
+boost::multiprecision::int1024_t FactorColoringFinder::computeColorings(std::set<unsigned int> &vertices, std::set<Edge> &edges){
     return computeColorings(vertices, edges, 0);
 }
 

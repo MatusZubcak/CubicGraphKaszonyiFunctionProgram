@@ -65,7 +65,7 @@ add_executable(CubicGraphKaszonyiFunctionProgram
         Qt/QtRemoveButton.cpp
         Qt/QtRemoveButton.h
         Qt/QtFileList.cpp
-        Qt/QtFileList.h Qt/QtChooseFilesButton.cpp Qt/QtChooseFilesButton.h Qt/QtFileWindow.cpp Qt/QtFileWindow.h Qt/QtRunButton.cpp Qt/QtRunButton.h Qt/QtOutputDirectoryButton.cpp Qt/QtOutputDirectoryButton.h Qt/QtDirectoryWindow.cpp Qt/QtDirectoryWindow.h Qt/QtGraphProgramManager.cpp Qt/QtGraphProgramManager.h GraphPrinter/KaszonyiPrinterOriginal.cpp GraphPrinter/KaszonyiPrinterOriginal.h)
+        Qt/QtFileList.h Qt/QtChooseFilesButton.cpp Qt/QtChooseFilesButton.h Qt/QtFileWindow.cpp Qt/QtFileWindow.h Qt/QtRunButton.cpp Qt/QtRunButton.h Qt/QtOutputDirectoryButton.cpp Qt/QtOutputDirectoryButton.h Qt/QtDirectoryWindow.cpp Qt/QtDirectoryWindow.h Qt/QtGraphProgramManager.cpp Qt/QtGraphProgramManager.h GraphPrinter/KaszonyiPrinterOriginal.cpp GraphPrinter/KaszonyiPrinterOriginal.h ColoringFinder/PDColoringFinder.cpp ColoringFinder/PDColoringFinder.h)
 
 find_package(Qt5 COMPONENTS
         Core

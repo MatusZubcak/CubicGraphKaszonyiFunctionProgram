@@ -17,7 +17,7 @@
 class FactorColoringFinder : public ColoringFinder {
 
 private:
-    int colorings;
+    boost::multiprecision::int1024_t colorings;
 
     void recursivelyCountKaszonyi(std::vector<std::pair<unsigned int,bool>> linearGraphRepresentation,
                                     unsigned int vertex);
@@ -31,11 +31,11 @@ private:
 public:
     FactorColoringFinder();
 
-    unsigned long long computeColorings(std::set<unsigned int>& vertices,
+    boost::multiprecision::int1024_t computeColorings(std::set<unsigned int>& vertices,
                          std::set<Edge>& edges,
                          unsigned int numberOfIsolatedCircles) override;
 
-    unsigned long long computeColorings(std::set<unsigned int>& vertices,
+    boost::multiprecision::int1024_t computeColorings(std::set<unsigned int>& vertices,
                                  std::set<Edge>& edges) override;
 
     bool isColorable(std::set<unsigned int> &vertices, std::set<Edge> &edges) override;

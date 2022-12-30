@@ -5,6 +5,7 @@
 #include "GraphLoader.h"
 #include "../ColoringFinder/SATColoringFinder.h"
 #include "../ColoringFinder/FactorColoringFinder.h"
+#include "../ColoringFinder/PDColoringFinder.h"
 #include <unordered_map>
 #include <fstream>
 #include <sstream>
@@ -176,11 +177,14 @@ bool GraphLoader::loadGraph(std::vector<CubicGraph> &graphList, std::ifstream &f
         //Graph loaded successfully
         // time to add it to graphList
         std::shared_ptr<ColoringFinder> strategySAT = std::shared_ptr<ColoringFinder>(new SATColoringFinder);
-        std::shared_ptr<ColoringFinder> strategyFactor = std::shared_ptr<ColoringFinder>(
-                new FactorColoringFinder);
+        std::shared_ptr<ColoringFinder> strategyPD = std::shared_ptr<ColoringFinder>(new PDColoringFinder);
+        std::shared_ptr<ColoringFinder> strategyFactor = std::shared_ptr<ColoringFinder>(new FactorColoringFinder);
         switch (coloringAlgorithm){
             case SAT:
                 graphList.emplace_back(vertices, edges, strategySAT);
+                break;
+            case PD:
+                graphList.emplace_back(vertices, edges, strategyPD);
                 break;
             case FACTOR:
                 graphList.emplace_back(vertices, edges, strategyFactor);

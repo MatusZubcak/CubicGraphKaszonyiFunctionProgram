@@ -21,7 +21,7 @@ Edge::Edge(unsigned int vertex1, unsigned int vertex2, bool isOriginal) :
 Edge::Edge(unsigned int vertex1, unsigned int vertex2) : Edge(vertex1, vertex2, true) {};
 Edge::Edge(std::pair<unsigned int, unsigned int> vertices, bool isOriginal) : Edge(vertices.first, vertices.second, isOriginal) {}
 
-std::pair<unsigned int, unsigned int> Edge::getIncidentvertices() {
+std::pair<unsigned int, unsigned int> Edge::getIncidentvertices() const{
     return incidentVertices;
 }
 

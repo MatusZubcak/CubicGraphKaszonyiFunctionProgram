@@ -17,6 +17,7 @@
 #include "GraphPrinter/ParallelPathPrinter.h"
 #include "AutomatedSuppressionTester.h"
 #include "ColoringFinder/SATColoringFinder.h"
+#include "ColoringFinder/PDColoringFinder.h"
 
 //tests for:
 // Edge class
@@ -27,9 +28,9 @@
 // SAT 3-edge-coloring
 // GraphLoader tests
 // automated parallel and resistance suppression tests (for some files)
+// automated PD coloring finder tests (for some files)
 
 int Tests::run() {
-
     //Edge tests
     Edge e12(1, 2);
     Edge e13(1, 3);
@@ -675,7 +676,7 @@ int Tests::run() {
                             Edge(9, 12), Edge(10, 11)};
     CubicGraph J3_factor(J3_vertices, J3_edges, coloringFactor);
     CubicGraph J3_SAT(J3_vertices, J3_edges, coloringSAT);
-    std::vector<unsigned int> J3_expectedKaszonyiValues{
+    std::vector<boost::multiprecision::int1024_t> J3_expectedKaszonyiValues{
             0, 0, 6,
             0, 6,
             6,
@@ -684,8 +685,8 @@ int Tests::run() {
             3, 3,
             3, 3, 3, 3, 3, 3
     };
-    std::vector<unsigned int> J3_KaszonyiValuesAll_factor;
-    std::vector<unsigned int> J3_KaszonyiValuesAll_SAT;
+    std::vector<boost::multiprecision::int1024_t> J3_KaszonyiValuesAll_factor;
+    std::vector<boost::multiprecision::int1024_t> J3_KaszonyiValuesAll_SAT;
     for (auto e: J3_edges) {
         J3_KaszonyiValuesAll_factor.push_back(J3_factor.getKaszonyiValue(e));
         J3_KaszonyiValuesAll_SAT.push_back(J3_SAT.getKaszonyiValue(e));
@@ -868,9 +869,9 @@ int Tests::run() {
     std::string test28_input = "../Tests/test27_16g3e.txt";
     std::vector<CubicGraph> test28_graphListSAT = AdjListsGraphLoader().loadNewGraphs(test28_input, SAT);
     std::vector<CubicGraph> test28_graphListFactor = AdjListsGraphLoader().loadNewGraphs(test28_input, FACTOR);
-    std::vector<unsigned int> test28_SAT_colors;
+    std::vector<boost::multiprecision::int1024_t> test28_SAT_colors;
     std::vector<bool> test28_SAT_isColorable;
-    std::vector<unsigned int> test28_Factor_colors;
+    std::vector<boost::multiprecision::int1024_t> test28_Factor_colors;
     std::vector<bool> test28_Factor_isColorable;
     for(CubicGraph& cubicGraph : test28_graphListSAT){
         for(auto e : cubicGraph.getEdges()){
@@ -887,6 +888,106 @@ int Tests::run() {
 
     assert(test28_SAT_isColorable == test28_Factor_isColorable);
     assert(test28_SAT_colors == test28_Factor_colors);
+
+    // PD Coloring Finder tests
+    std::set<unsigned int> test29_petersenVertices = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+    std::set<Edge> test29_petersenEdges = {
+            Edge(0, 1),
+            Edge(1,2),
+            Edge(2,3),
+            Edge(3,4),
+            Edge(0,4),
+
+            Edge(0,5),
+            Edge(1,6),
+            Edge(2,7),
+            Edge(3,8),
+            Edge(4,9),
+
+            Edge(5,7),
+            Edge(7,9),
+            Edge(9,6),
+            Edge(6,8),
+            Edge(8,5)
+    };
+
+    Edge test29_suppEdge = Edge(10,11);
+    test29_suppEdge.incrementMultiplicity();
+    test29_suppEdge.incrementMultiplicity();
+    test29_petersenEdges.insert(test29_suppEdge);
+
+    auto test29_PDcoloringStrategy = std::shared_ptr<ColoringFinder>(new PDColoringFinder());
+    auto test29_FactorcoloringStrategy = std::shared_ptr<ColoringFinder>(new FactorColoringFinder());
+    CubicGraph test29_PDpetersenGraph = CubicGraph(test29_petersenVertices, test29_petersenEdges, test29_PDcoloringStrategy);
+    CubicGraph test29_FactorpetersenGraph = CubicGraph(test29_petersenVertices, test29_petersenEdges, test29_FactorcoloringStrategy);
+
+    test29_PDpetersenGraph = test29_PDpetersenGraph.suppressEdge(Edge(9,7));
+    test29_FactorpetersenGraph = test29_FactorpetersenGraph.suppressEdge(Edge(9,7));
+
+    assert( test29_PDpetersenGraph.getKaszonyiValue(Edge(0,5)) ==
+            test29_FactorpetersenGraph.getKaszonyiValue(Edge(0,5)));
+
+    std::set<unsigned int> test29_mult3GraphVertices = {0, 1, 2, 3, 4, 5, 6, 7};
+    std::set<Edge> test29_mult3GraphEdges = {Edge(0,1),
+                                      Edge(0,2),
+                                      Edge(0,3),
+                                      Edge(1,2),
+                                      Edge(1,3),
+                                      Edge(2,3)};
+    Edge test29_e45 = Edge(4,5);
+    Edge test29_e67 = Edge(6,7);
+    test29_e45.incrementMultiplicity();
+    test29_e45.incrementMultiplicity();
+    test29_e67.incrementMultiplicity();
+    test29_e67.incrementMultiplicity();
+    test29_mult3GraphEdges.insert(test29_e45);
+    test29_mult3GraphEdges.insert(test29_e67);
+    CubicGraph test29_PDmult3Graph = CubicGraph(test29_mult3GraphVertices, test29_mult3GraphEdges, test29_PDcoloringStrategy);
+    CubicGraph test29_Facmult3Graph = CubicGraph(test29_mult3GraphVertices, test29_mult3GraphEdges, test29_FactorcoloringStrategy);
+
+    assert( test29_PDmult3Graph.getKaszonyiValue(test29_e67) ==
+            test29_Facmult3Graph.getKaszonyiValue(test29_e67));
+
+
+    AdjListsGraphLoader test30_graphLoader;
+    std::vector<std::string> test30_inputFiles = {
+            "../Tests/test30_blanusa1.txt",
+            "../Tests/test30_blanusa3.txt",
+            "../Tests/test30_blanusa5.txt",
+            "../Tests/test30_binSnark2.txt",
+            "../Tests/test30_binSnark3.txt",
+            "../Tests/test26_14g3e.txt",
+            "../Tests/test27_16g3e.txt",
+            "../Tests/test30_STRONG38.txt",
+    };
+
+    for(const std::string& test30_input_file : test30_inputFiles) {
+        auto test30_factorGraphVector = test30_graphLoader.loadNewGraphs(test30_input_file, FACTOR);
+        auto test30_pdGraphVector = test30_graphLoader.loadNewGraphs(test30_input_file, PD);
+
+        if(test30_input_file == "./Tests/test30_binSnark3.txt"){
+            test30_factorGraphVector = test30_graphLoader.loadNewGraphs(test30_input_file, SAT);
+        }
+
+        for (int i = 0; i < test30_factorGraphVector.size(); i++) {
+            CubicGraph test30_facGraph = test30_factorGraphVector[i];
+            CubicGraph test30_pdGraph = test30_pdGraphVector[i];
+
+            auto test30_facEdges = test30_facGraph.getEdges();
+            auto test30_pdEdges = test30_pdGraph.getEdges();
+            for (auto test30_it_fac = test30_facEdges.cbegin(), test30_end_fac = test30_facEdges.cend(),
+                         test30_it_pd = test30_pdEdges.cbegin(), test30_end_pd = test30_pdEdges.cend();
+                 test30_it_fac != test30_end_fac || test30_it_pd != test30_end_pd;) {
+
+                auto test30_kasFac = test30_facGraph.getKaszonyiValue(*test30_it_fac);
+                auto test30_kasPD = test30_pdGraph.getKaszonyiValue(*test30_it_pd);
+                assert(test30_kasFac == test30_kasPD);
+
+                test30_it_pd++;
+                test30_it_fac++;
+            }
+        }
+    }
 
 
     std::cout << "ALL TESTS PASSED" << std::endl;

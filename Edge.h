@@ -37,7 +37,7 @@ public:
     Edge(std::pair<unsigned int, unsigned int> vertices, bool isOriginal);
     Edge(unsigned int vertex1,unsigned int vertex2);
 
-    std::pair<unsigned int, unsigned int> getIncidentvertices();
+    std::pair<unsigned int, unsigned int> getIncidentvertices() const;
 
     std::string toString() const;
 

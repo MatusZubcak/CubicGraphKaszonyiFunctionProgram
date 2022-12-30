@@ -10,6 +10,7 @@
 #include <memory>
 #include "Edge.h"
 #include "ColoringFinder/ColoringFinder.h"
+#include <boost/multiprecision/cpp_int.hpp>
 
 // class that represents cubic graph as an ordered set of vertices and Edges
 // takes care for the edge suppression operation
@@ -26,7 +27,12 @@ private:
     std::set<Edge> edges;
     unsigned int numberOfIsolatedCircles{};
     std::shared_ptr<ColoringFinder> coloringStrategy;
+    std::shared_ptr<ColoringFinder> SATcoloring;
     bool preserveStrategy;
+
+    // Threshold determining when to use SAT, PD or Factor strategy
+    unsigned int factorColoringThreshold = 25;
+    unsigned int SATColoringThreshold = 50;
 
     void addEdge(Edge e);
     CubicGraph suppressEdgeWithMultiplicity1(unsigned int id, Edge edge);
@@ -68,7 +74,7 @@ public:
     unsigned int getParentId() const;
 
 
-    unsigned long long getKaszonyiValue(Edge edge);
+    boost::multiprecision::int1024_t getKaszonyiValue(Edge edge);
     bool isColorable();
 
     CubicGraph suppressEdge(unsigned int id, Edge edge);

@@ -6,6 +6,7 @@
 #include "CubicGraph.h"
 #include "ColoringFinder/FactorColoringFinder.h"
 #include "ColoringFinder/SATColoringFinder.h"
+#include "ColoringFinder/PDColoringFinder.h"
 
 // class that represents cubic graph as an ordered set of vertices and Edges
 // takes care for the edge suppression operation
@@ -17,9 +18,6 @@ CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int> &vertices, std::s
     // We have experimentally found that graphs with |V(G)| >= 24 are faster computed by SATSolver
     // and for graphs with |V(G)| < 24 our FactorColoringFinder is better
 
-    // Threshold determining when to use SAT or Factor strategy
-    unsigned int coloringThreshold = 24;
-
     this->unique_id = id;
     this->parent_id = 0;
     this->depth = 0;
@@ -27,11 +25,12 @@ CubicGraph::CubicGraph(unsigned int id, std::set<unsigned int> &vertices, std::s
     this->edges = edges;
     this->numberOfIsolatedCircles = numberOfIsolatedCircles;
 
+    this->SATcoloring = std::shared_ptr<ColoringFinder>(new SATColoringFinder());
     this->preserveStrategy = false;
-    if(this->vertices.size() >= coloringThreshold){
-        this->coloringStrategy = std::shared_ptr<ColoringFinder>(new SATColoringFinder());
-    }else{
+    if(this->vertices.size() < factorColoringThreshold){
         this->coloringStrategy = std::shared_ptr<ColoringFinder>(new FactorColoringFinder());
+    }else{
+        this->coloringStrategy = std::shared_ptr<ColoringFinder>(new PDColoringFinder());
     }
 }
 
@@ -93,13 +92,17 @@ unsigned int CubicGraph::getParentId() const{
     return parent_id;
 }
 
-// asks strategy whether the raph is colorable
+// asks strategy whether the graph is colorable
 bool CubicGraph::isColorable() {
-    return this->coloringStrategy->isColorable(this->vertices, this->edges);
+    if(this->vertices.size() < this->factorColoringThreshold) {
+        return this->coloringStrategy->isColorable(this->vertices, this->edges);
+    }else {
+        return this->SATcoloring->isColorable(this->vertices, this->edges);
+    }
 }
 
-// suppresses edge and asks the strategy for new graph whether it is colorable
-unsigned long long CubicGraph::getKaszonyiValue(Edge edge) {
+// suppresses edge and asks the strategy for new graphs Kaszonyi value
+boost::multiprecision::int1024_t CubicGraph::getKaszonyiValue(Edge edge) {
     if(edges.find(edge) == edges.end()){
         throw EdgeDoesNotExistException();
     }
@@ -109,10 +112,19 @@ unsigned long long CubicGraph::getKaszonyiValue(Edge edge) {
     }
 
     CubicGraph suppressedGraph = this->suppressEdge(edge);
-    auto KaszonyiValue = this->coloringStrategy->computeColorings(suppressedGraph.vertices,
-                                              suppressedGraph.edges,
-                                              suppressedGraph.numberOfIsolatedCircles);
-    return KaszonyiValue;
+    if(suppressedGraph.vertices.size() < this->factorColoringThreshold){
+        return this->coloringStrategy->computeColorings(suppressedGraph.vertices, suppressedGraph.edges, suppressedGraph.numberOfIsolatedCircles);
+
+    } else if(suppressedGraph.vertices.size() < this->SATColoringThreshold){
+        return this->SATcoloring->computeColorings(suppressedGraph.vertices, suppressedGraph.edges, suppressedGraph.numberOfIsolatedCircles);
+
+    }else{
+        if(suppressedGraph.isColorable()){
+            return this->coloringStrategy->computeColorings(suppressedGraph.vertices, suppressedGraph.edges, suppressedGraph.numberOfIsolatedCircles);
+        }else{
+            return 0;
+        }
+    }
 }
 
 
