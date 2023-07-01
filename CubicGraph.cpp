@@ -101,6 +101,22 @@ bool CubicGraph::isColorable() {
     }
 }
 
+// computes amount of edge colorings for given graph
+boost::multiprecision::int1024_t CubicGraph::getNumberOfColorings() {
+    if(this->vertices.size() < this->factorColoringThreshold){
+        return this->coloringStrategy->computeColorings(vertices, edges, numberOfIsolatedCircles);
+    } else if(this->vertices.size() < this->SATColoringThreshold){
+        return this->SATcoloring->computeColorings(vertices, edges, numberOfIsolatedCircles);
+
+    }else{
+        if(isColorable()){
+            return this->coloringStrategy->computeColorings(vertices, edges, numberOfIsolatedCircles);
+        }else{
+            return 0;
+        }
+    }
+}
+
 // suppresses edge and asks the strategy for new graphs Kaszonyi value
 boost::multiprecision::int1024_t CubicGraph::getKaszonyiValue(Edge edge) {
     if(edges.find(edge) == edges.end()){
@@ -112,6 +128,7 @@ boost::multiprecision::int1024_t CubicGraph::getKaszonyiValue(Edge edge) {
     }
 
     CubicGraph suppressedGraph = this->suppressEdge(edge);
+    //return suppressedGraph.getNumberOfColorings();
     if(this->vertices.size() < this->factorColoringThreshold){
         return this->coloringStrategy->computeColorings(suppressedGraph.vertices, suppressedGraph.edges, suppressedGraph.numberOfIsolatedCircles);
     } else if(this->vertices.size() < this->SATColoringThreshold){

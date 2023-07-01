@@ -38,6 +38,7 @@ QtMenuWindow::QtMenuWindow(QWidget *parent) {
     QRadioButton *sequentialPathButton = new QRadioButton("Serial resistance path");
     QRadioButton *kaszonyiValuesOriginal = new QRadioButton ("Kaszonyi function original");
     QRadioButton *kaszonyiValuesTimesThree = new QRadioButton("Kaszonyi function times three");
+    QRadioButton *computeGraphColorings = new QRadioButton("Compute graph colorings");
 
     QButtonGroup *formatButtonGroup = new QButtonGroup(this);
     formatButtonGroup->setObjectName("formatButtonGroup");
@@ -46,6 +47,7 @@ QtMenuWindow::QtMenuWindow(QWidget *parent) {
     formatButtonGroup->addButton(sequentialPathButton, 2);
     formatButtonGroup->addButton(kaszonyiValuesOriginal, 3);
     formatButtonGroup->addButton(kaszonyiValuesTimesThree, 4);
+    formatButtonGroup->addButton(computeGraphColorings, 5);
     formatButtonGroup->setExclusive(true);
 
 
@@ -78,6 +80,7 @@ QtMenuWindow::QtMenuWindow(QWidget *parent) {
     formatButtonsLayout->addWidget(sequentialPathButton);
     formatButtonsLayout->addWidget(kaszonyiValuesOriginal);
     formatButtonsLayout->addWidget(kaszonyiValuesTimesThree);
+    formatButtonsLayout->addWidget(computeGraphColorings);
     formatButtonsLayout->addStretch();
 
     //FileList command buttons layout

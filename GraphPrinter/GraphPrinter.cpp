@@ -24,6 +24,12 @@ bool GraphPrinter::printGraph(CubicGraph &cubicGraph, std::ofstream& f) {
     return true;
 }
 
+bool GraphPrinter::printGraphColorings(CubicGraph &cubicGraph, std::ofstream &f) {
+    f << "Edge colorings: " << cubicGraph.getNumberOfColorings() << std::endl;
+
+    return true;
+}
+
 bool GraphPrinter::printKaszonyiValues(CubicGraph& cubicGraph, std::ofstream& f, edgesFormat edgesFormat,
                                        colorPrintFormat colorPrintFormat){
     f << "Kaszonyi values:" << std::endl;

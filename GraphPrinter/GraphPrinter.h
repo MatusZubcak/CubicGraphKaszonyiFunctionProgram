@@ -16,6 +16,7 @@ protected:
     bool printKaszonyiValues(CubicGraph &cubicGraph, std::ofstream &f, edgesFormat edgesFormat,
                              colorPrintFormat colorPrintFormat);
     bool printIdAndDepth(CubicGraph& cubicGraph, std::ofstream &f);
+    bool printGraphColorings(CubicGraph& cubicGraph, std::ofstream &f);
 
 public:
     virtual bool print(CubicGraph& cubicGraph, const std::string& filename, append append) =0;

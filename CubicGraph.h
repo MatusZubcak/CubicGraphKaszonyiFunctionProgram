@@ -75,6 +75,7 @@ public:
 
 
     boost::multiprecision::int1024_t getKaszonyiValue(Edge edge);
+    boost::multiprecision::int1024_t getNumberOfColorings();
     bool isColorable();
 
     CubicGraph suppressEdge(unsigned int id, Edge edge);

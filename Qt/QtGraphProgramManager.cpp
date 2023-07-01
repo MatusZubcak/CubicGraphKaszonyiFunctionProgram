@@ -10,6 +10,7 @@
 #include "../GraphPrinter/SequentialPathPrinter.h"
 #include "../GraphPrinter/KaszonyiPrinterTimesThree.h"
 #include "../GraphPrinter/KaszonyiPrinterOriginal.h"
+#include "../GraphPrinter/GraphColoringsPrinter.h"
 #include "../GraphLoader/GraphLoader.h"
 
 void
@@ -50,6 +51,11 @@ QtGraphProgramManager::runGraphProgram(int formatType, QStringList filePaths, QS
                         outputFilePath += ".3kas";
                         KaszonyiPrinterTimesThree().print(graphList,outputFilePath,informationFromFile,
                                                 NO_APPEND);
+                        break;
+                    case 5:
+                        outputFilePath += ".colorings";
+                        GraphColoringsPrinter().print(graphList, outputFilePath, informationFromFile,
+                                                      NO_APPEND);
                         break;
                     default:
                         std::cout << "Something went wrong" << std::endl;
