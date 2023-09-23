@@ -83,7 +83,6 @@ Computes the minimal graph path for serial resistance.
 Also computes serial resistance values.
 Rather experimental output format, only useful if you want to know how does the shortest graph path, where last graph is 3-edge-colorable looks like
 
-
 ### Kaszonyi function original
 First checks whether graph is 3-edge-colorable. 
 For graphs that are not 3-edge-colorable computes the Kaszonyi function values for every edge of given graphs according to the original definition by L. Kaszonyi.
@@ -91,6 +90,11 @@ For graphs that are not 3-edge-colorable computes the Kaszonyi function values f
 ### Kaszonyi function times three
 Computes the Kaszonyi function values for every edge of given graphs according to the definition by M.Zubčák in his bachelor thesis. 
 For graphs that are not 3-edge-colorable the values is three times greater than value of the original Kaszonyi function. 
+
+### Compute graph colorings
+Computes the number of distinct 3-edge-colorings for given graph. 
+Does not take into account color permutations.
+
 
 ### Output directory
 Place, where results are stored.
@@ -212,6 +216,7 @@ The name of the output file will be "Input name" + "Format shortcut" where forma
 - .spath (sequential path)
 - .kas (Kaszonyi function original)
 - .3kas (Kaszonyi function times three)
+- .colorings (compute graph colorings)
 
 ### Output format for parallel and serial resistance values
 The output file will include (in following order):
@@ -351,4 +356,37 @@ Kaszonyi values:
 (4, 5): 1
 (4, 7): 2
 (6, 7): 1
+```
+
+
+### Output format for compute graph colorings
+The output file will include (in following order):
+- information from input file (if provided)
+- size of every graph
+- list of graphs. For every graph is provided:
+  - graph in adjacency lists format
+  - number of 3-edge-colorings for given graph
+
+The example is based on the file used as example for the input file format, but only first two graphs and the information part is also omitted:
+```
+8
+5 6 7
+2 3 4
+1 3 4
+1 2 5
+1 2 6
+0 3 7
+0 4 7
+0 5 6
+Edge colorings: 2
+
+5 6 7
+2 3 4
+1 3 5
+1 2 6
+1 5 7
+0 2 4
+0 3 7
+0 4 6
+Edge colorings: 1
 ```
